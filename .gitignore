@@ -1,0 +1,25 @@
+# ===================================
+# ARCHIVOS Y CARPETAS GENERALES
+# ===================================
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Dependencias
+/vendor/
+composer.lock
+
+# Configuración del entorno
+.env
+.env.*
+!.env.example
+
+# Archivos temporales o de caché
+*.log
+*.cache
+*.tmp
+*.bak
+*.swp
+
+# Archivos de IDE o editor
+.vscode/
