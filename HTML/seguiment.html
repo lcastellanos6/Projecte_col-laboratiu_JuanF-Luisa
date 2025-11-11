@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar seguiment</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; border-radius:5px; border:1px solid #ccc; }
+        button { background-color: #4CAF50; color: white; border:none; margin-top:15px; cursor:pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+      <h1>Registrar nova plantacio</h1>
+      <form action="guardar_seguiment.php" method="post">
+
+    <label>Sector:</label>
+    <input type="number" name="id_sector" required placeholder="ID del sector">
+
+    <label>Plantació:</label>
+    <input type="number" name="id_plantacio" placeholder="ID de la plantació">
+
+    <label>Data de registre:</label>
+    <input type="date" name="data_registre" required>
+
+    <label>Estat fenològic:</label>
+    <input type="text" name="estat_fenologic">
+
+    <label>Creixement vegetatiu:</label>
+    <textarea name="creixement_vegetatiu"></textarea>
+
+    <label>Incidències detectades:</label>
+    <textarea name="incidencies_detectades"></textarea>
+
+    <label>Intervencions realitzades:</label>
+    <textarea name="intervencions_realitzades"></textarea>
+
+    <label>Estimació actualitzada de collita:</label>
+    <input type="number" step="0.01" name="estimacio_actualizada_collita">
+
+    <button type="submit">Guardar Seguiment</button>
+</form>
+</body>

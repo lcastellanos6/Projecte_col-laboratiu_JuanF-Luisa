@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Equip</title>
+<style>
+body { font-family: 'Times New Roman', Times, serif; margin: 20px; }
+label { display:block; margin-top: 10px; font-weight: bold; }
+input, textarea, button { width: 100%; padding: 8px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+button { background-color:#2f7d2f; color:white; border:none; cursor:pointer; margin-top:15px; }
+button:hover { background-color:#1e5d1e; }
+</style>
+</head>
+<body>
+<h1>Registrar nou Equip</h1>
+
+<form action="guardar_equip.php" method="post">
+
+    <label>Tipus:</label>
+    <input type="text" name="tipus" required placeholder="Tipus de l'equip">
+
+    <label>Descripció:</label>
+    <textarea name="descripcio" placeholder="Descripció opcional"></textarea>
+
+    <button type="submit">Guardar Equip</button>
+</form>
+</body>
+</html>

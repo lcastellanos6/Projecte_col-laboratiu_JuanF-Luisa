@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Tractament</title>
+<style>
+body { font-family: 'Times New Roman', Times, serif; margin: 20px; }
+label { display:block; margin-top: 10px; font-weight: bold; }
+input, button { width: 100%; padding: 8px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+button { background-color:#2f7d2f; color:white; border:none; cursor:pointer; margin-top:15px; }
+button:hover { background-color:#1e5d1e; }
+</style>
+</style>
+</head>
+<body>
+
+<h1>Registrar nou Tractament</h1>
+
+<form action="guardar_tractament.php" method="post">
+    <label for="id_fila">ID Fila:</label>
+    <input type="number" name="id_fila" required placeholder="Introdueix l'ID de la fila">
+
+    <label for="data">Data:</label>
+    <input type="date" name="data" required>
+
+    <label for="tipus">Tipus de tractament:</label>
+    <select name="tipus">
+        <option value="Fitosanitari">Fitosanitari</option>
+        <option value="Fertilitzant">Fertilitzant</option>
+        <option value="Altre">Altre</option>
+    </select>
+
+    <label for="producte">Producte:</label>
+    <input type="text" name="producte" placeholder="Nom del producte">
+
+    <label for="dosi_ml">Dosi (ml):</label>
+    <input type="text" name="dosi_ml" placeholder="Quantitat aplicada en ml">
+
+    <button type="submit">Guardar Tractament</button>
+</form>
+
+</body>
+</html>
