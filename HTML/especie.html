@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registre de Varietat</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select, textarea, button {
+            width: 100%; padding: 8px; margin-top: 5px;
+            border-radius: 5px; border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50; color: white;
+            border: none; margin-top: 15px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Registrar nova especie</h1>
+
+    <form action="guardar_especie.php" method="post">
+
+        <label>Nom cientific:</label>
+        <input type="text" name="nom_cientific" required>
+
+        <label>Nom comu:</label>
+        <input type="text" name="nom_comu" required>
+
+        <button type="submit">Guardar especie</button>
+    </form>
+</body>
+</html>

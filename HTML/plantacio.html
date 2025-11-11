@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar plantacio</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; border-radius:5px; border:1px solid #ccc; }
+        button { background-color: #4CAF50; color: white; border:none; margin-top:15px; cursor:pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+     <h1>Registrar nova plantacio</h1>
+     <form action="guardar_plantacio.php" method="post">
+
+    <label>Sector:</label>
+    <input type="number" name="id_sector" required placeholder="ID de sector">
+
+    <label>Varietat:</label>
+    <input type="number" name="id_varietat" required placeholder="ID de varietat">
+
+    <label>Data de plantació:</label>
+    <input type="date" name="data_plantacio" required>
+
+    <label>Data d'inici:</label>
+    <input type="date" name="data_inici" required>
+
+    <label>Data de fi (opcional):</label>
+    <input type="date" name="data_fi">
+
+    <label>Marc plantació (files):</label>
+    <input type="number" step="0.01" name="marc_plantacio_files">
+
+    <label>Marc plantació (arbres):</label>
+    <input type="number" step="0.01" name="marc_plantacio_arbres">
+
+    <label>Nombre total d'arbres:</label>
+    <input type="number" name="num_arbres_total">
+
+    <label>Origen del material:</label>
+    <input type="text" name="origen_material">
+
+    <label>Certificacions:</label>
+    <input type="text" name="certificacions">
+
+    <label>Sistema de formació:</label>
+    <input type="text" name="sistema_formacio">
+
+    <label>Inversió inicial (€):</label>
+    <input type="number" step="0.01" name="inversio_inicial">
+
+    <label>Entrada en producció prevista (any):</label>
+    <input type="number" name="entrada_produccio_prevista" min="1900" max="2100">
+
+    <label>Sistema de reg:</label>
+    <select name="sistema_reg">
+        <option value="Goteig">Goteig</option>
+        <option value="Aspersió">Aspersió</option>
+        <option value="Fertirrigació">Fertirrigació</option>
+        <option value="Altres">Altres</option>
+    </select>
+
+    <label>Observacions:</label>
+    <textarea name="observacions"></textarea>
+
+    <button type="submit">Guardar Plantació</button>
+</form>
+</body>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Varietat</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; border-radius:5px; border:1px solid #ccc; }
+        button { background-color: #4CAF50; color: white; border:none; margin-top:15px; cursor:pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Registrar nova varietat</h1>
+
+    <form action="guardar_varietat.php" method="post">
+        <label>ID de Espècie:</label>
+        <input type="number" name="id_especie" min="1" placeholder="Introdueix l'ID de l'espècie" required>
+
+        <label>Nom científic de la varietat:</label>
+        <input type="text" name="nom_cientific" required>
+
+        <label>Nom comú:</label>
+        <input type="text" name="nom_comu" required>
+
+        <label>Característiques agronòmiques:</label>
+        <textarea name="caracteristiques_agronomiques"></textarea>
+
+        <label>Cicle vegetatiu:</label>
+        <textarea name="cicle_vegetatiu"></textarea>
+
+        <label>Requisits de pol·linització:</label>
+        <textarea name="requisits_pollinitzacio"></textarea>
+
+        <label>Productivitat mitjana:</label>
+        <input type="number" step="0.01" name="productivitat_mitjana">
+
+        <label>Qualitats organolèptiques:</label>
+        <textarea name="qualitats_organoleptiques"></textarea>
+
+        <button type="submit">Guardar varietat</button>
+    </form>
+</body>
+</html>
