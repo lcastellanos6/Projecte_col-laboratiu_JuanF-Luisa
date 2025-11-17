@@ -3,7 +3,7 @@
 -- Host: 127.0.0.1    Database: projecte_sintesis
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.32-MariaDB
-
+-- Versió: 2025-11-17_112100
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -14,6 +14,65 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `absencia`
+--
+
+DROP TABLE IF EXISTS `absencia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `absencia` (
+  `id_absencia` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `tipus` enum('Vacances','Permis','Baixa','Altres') NOT NULL,
+  `data_inici` date NOT NULL,
+  `data_fi` date NOT NULL,
+  `justificacio_url` varchar(255) DEFAULT NULL,
+  `estat` enum('Sol·licitada','Aprovada','Rebutjada','Tancada') DEFAULT 'Sol·licitada',
+  `observacions` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_absencia`),
+  KEY `fk_absencia_treballador` (`id_treballador`),
+  CONSTRAINT `fk_absencia_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `absencia`
+--
+
+/*!40000 ALTER TABLE `absencia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `absencia` ENABLE KEYS */;
+
+--
+-- Table structure for table `alerta`
+--
+
+DROP TABLE IF EXISTS `alerta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `alerta` (
+  `id_alerta` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `tipus_alerta` enum('Contracte','Permis','Certificacio','Reconeixement_medic','Formacio','Altres') NOT NULL,
+  `data_avis` date NOT NULL,
+  `estat` enum('Pendent','Completada','Caducada') DEFAULT 'Pendent',
+  `observacions` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_alerta`),
+  KEY `fk_alerta_treballador` (`id_treballador`),
+  KEY `idx_alerta_data` (`data_avis`),
+  CONSTRAINT `fk_alerta_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `alerta`
+--
+
+/*!40000 ALTER TABLE `alerta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `alerta` ENABLE KEYS */;
 
 --
 -- Table structure for table `aplicacio`
@@ -110,6 +169,29 @@ CREATE TABLE `aplicacio_producte` (
 /*!40000 ALTER TABLE `aplicacio_producte` DISABLE KEYS */;
 INSERT INTO `aplicacio_producte` VALUES (1,1,20.000,'L','2%','L001'),(2,2,12.000,'L','1%','L002'),(3,3,25.000,'kg','—','L003'),(4,8,10.000,'kg','—','L008'),(5,7,5.000,'L','—','L007'),(6,6,3.000,'L','—','L006'),(7,9,6.000,'L','—','L009'),(8,4,8.000,'L','—','L004'),(9,5,10.000,'kg','—','L005'),(10,10,4.000,'L','—','L010'),(11,11,6.000,'L','—','L011'),(12,12,7.000,'kg','—','L012'),(13,13,8.000,'L','—','L013'),(14,14,9.000,'kg','—','L014'),(15,15,5.000,'L','—','L015'),(16,16,6.000,'kg','—','L016'),(17,17,7.000,'L','—','L017'),(18,18,8.000,'kg','—','L018'),(19,19,9.000,'L','—','L019'),(20,20,5.000,'kg','—','L020');
 /*!40000 ALTER TABLE `aplicacio_producte` ENABLE KEYS */;
+
+--
+-- Table structure for table `calendari_model`
+--
+
+DROP TABLE IF EXISTS `calendari_model`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `calendari_model` (
+  `id_calendari_model` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(120) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_calendari_model`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `calendari_model`
+--
+
+/*!40000 ALTER TABLE `calendari_model` DISABLE KEYS */;
+/*!40000 ALTER TABLE `calendari_model` ENABLE KEYS */;
 
 --
 -- Table structure for table `clima`
@@ -256,6 +338,37 @@ INSERT INTO `collita_operari` VALUES (1,1,'Cap_equip'),(1,5,'Recol·lector'),(1,
 /*!40000 ALTER TABLE `collita_operari` ENABLE KEYS */;
 
 --
+-- Table structure for table `contracte`
+--
+
+DROP TABLE IF EXISTS `contracte`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contracte` (
+  `id_contracte` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `tipus_contracte` enum('Fix','Temporal','Autonom','Altres') DEFAULT NULL,
+  `durada_contracte` varchar(50) DEFAULT NULL,
+  `categoria_professional` varchar(100) DEFAULT NULL,
+  `lloc_treball` varchar(150) DEFAULT NULL,
+  `data_incorporacio` date DEFAULT NULL,
+  `data_finalitzacio` date DEFAULT NULL,
+  `historial_laboral` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_contracte`),
+  KEY `fk_contracte_treballador` (`id_treballador`),
+  CONSTRAINT `fk_contracte_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contracte`
+--
+
+/*!40000 ALTER TABLE `contracte` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contracte` ENABLE KEYS */;
+
+--
 -- Table structure for table `control_qualitat`
 --
 
@@ -312,6 +425,29 @@ INSERT INTO `data` VALUES (1,'2025-01-01','2025-12-31'),(2,'2024-01-01','2024-12
 /*!40000 ALTER TABLE `data` ENABLE KEYS */;
 
 --
+-- Table structure for table `departament`
+--
+
+DROP TABLE IF EXISTS `departament`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `departament` (
+  `id_departament` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(150) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_departament`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `departament`
+--
+
+/*!40000 ALTER TABLE `departament` DISABLE KEYS */;
+/*!40000 ALTER TABLE `departament` ENABLE KEYS */;
+
+--
 -- Table structure for table `desti_client`
 --
 
@@ -341,6 +477,88 @@ INSERT INTO `desti_client` VALUES (1,'Cooperativa La Ribera',NULL,'B12345678','9
 /*!40000 ALTER TABLE `desti_client` ENABLE KEYS */;
 
 --
+-- Table structure for table `document_tipus`
+--
+
+DROP TABLE IF EXISTS `document_tipus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `document_tipus` (
+  `id_document_tipus` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(120) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  PRIMARY KEY (`id_document_tipus`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `document_tipus`
+--
+
+/*!40000 ALTER TABLE `document_tipus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `document_tipus` ENABLE KEYS */;
+
+--
+-- Table structure for table `epi_lliurament`
+--
+
+DROP TABLE IF EXISTS `epi_lliurament`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `epi_lliurament` (
+  `id_lliurament` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `id_epi_tipus` int(11) NOT NULL,
+  `talla` varchar(30) DEFAULT NULL,
+  `quantitat` int(11) DEFAULT 1,
+  `data_lliurament` date NOT NULL,
+  `data_devolucio` date DEFAULT NULL,
+  `data_caducitat` date DEFAULT NULL,
+  `document_signat_url` varchar(255) DEFAULT NULL,
+  `observacions` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_lliurament`),
+  KEY `fk_epill_treballador` (`id_treballador`),
+  KEY `fk_epill_tipus` (`id_epi_tipus`),
+  KEY `idx_epill_caducitat` (`data_caducitat`),
+  CONSTRAINT `fk_epill_tipus` FOREIGN KEY (`id_epi_tipus`) REFERENCES `epi_tipus` (`id_epi_tipus`),
+  CONSTRAINT `fk_epill_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `epi_lliurament`
+--
+
+/*!40000 ALTER TABLE `epi_lliurament` DISABLE KEYS */;
+/*!40000 ALTER TABLE `epi_lliurament` ENABLE KEYS */;
+
+--
+-- Table structure for table `epi_tipus`
+--
+
+DROP TABLE IF EXISTS `epi_tipus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `epi_tipus` (
+  `id_epi_tipus` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(150) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  `stock_inicial` int(11) NOT NULL DEFAULT 0,
+  `stock_actual` int(11) NOT NULL DEFAULT 0,
+  `stock_minim` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_epi_tipus`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `epi_tipus`
+--
+
+/*!40000 ALTER TABLE `epi_tipus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `epi_tipus` ENABLE KEYS */;
+
+--
 -- Table structure for table `equip`
 --
 
@@ -362,6 +580,59 @@ CREATE TABLE `equip` (
 /*!40000 ALTER TABLE `equip` DISABLE KEYS */;
 INSERT INTO `equip` VALUES (1,'Polvoritzador','Equip de motxilla manual'),(2,'Tractor','Tractor John Deere 5050E'),(3,'Atomitzador','Atomitzador de arrastre 1000L'),(4,'Bomba elèctrica','Bomba de reg portàtil'),(5,'Sistema de degoteig','Instal·lació de reg per degoteig'),(6,'Desbrossadora','Desbrossadora Stihl FS 260'),(7,'Sembradora','Sembradora mecánica'),(8,'Cisterna','Cisterna d’aigua 3000L'),(9,'Carretó','Carretó manual de transporte'),(10,'Equip de protecció','EPI per a aplicació de productes'),(11,'Podadora elèctrica','Tisora elèctrica de poda'),(12,'Remolc agrícola','Remolc basculant 3T'),(13,'Estació meteorològica','Registre meteo automàtic'),(14,'Dron agrícola','Dron per a monitoratge NDVI'),(15,'GPS agrícola','Guia paral·lela en tractor'),(16,'Motocultor','Motocultor gasolina 7HP'),(17,'Hidronetejadora','Neteja d’equips'),(18,'Mesurador pH','Mesurador pH/CE portátil'),(19,'Cuba 2000L','Dipòsit mòbil 2000L'),(20,'Trituradora de restes','Trituradora de martells');
 /*!40000 ALTER TABLE `equip` ENABLE KEYS */;
+
+--
+-- Table structure for table `equip_treball`
+--
+
+DROP TABLE IF EXISTS `equip_treball`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equip_treball` (
+  `id_equip` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(150) NOT NULL,
+  `id_departament` int(11) DEFAULT NULL,
+  `descripcio` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_equip`),
+  KEY `fk_equip_departament` (`id_departament`),
+  CONSTRAINT `fk_equip_departament` FOREIGN KEY (`id_departament`) REFERENCES `departament` (`id_departament`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equip_treball`
+--
+
+/*!40000 ALTER TABLE `equip_treball` DISABLE KEYS */;
+/*!40000 ALTER TABLE `equip_treball` ENABLE KEYS */;
+
+--
+-- Table structure for table `equip_treball_membre`
+--
+
+DROP TABLE IF EXISTS `equip_treball_membre`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equip_treball_membre` (
+  `id_equip` int(11) NOT NULL,
+  `id_treballador` int(11) NOT NULL,
+  `rol_equip` varchar(100) DEFAULT NULL,
+  `data_alta` date DEFAULT NULL,
+  `data_baixa` date DEFAULT NULL,
+  PRIMARY KEY (`id_equip`,`id_treballador`),
+  KEY `fk_eqm_treballador` (`id_treballador`),
+  CONSTRAINT `fk_eqm_equip` FOREIGN KEY (`id_equip`) REFERENCES `equip_treball` (`id_equip`) ON DELETE CASCADE,
+  CONSTRAINT `fk_eqm_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equip_treball_membre`
+--
+
+/*!40000 ALTER TABLE `equip_treball_membre` DISABLE KEYS */;
+/*!40000 ALTER TABLE `equip_treball_membre` ENABLE KEYS */;
 
 --
 -- Table structure for table `especie`
@@ -436,6 +707,101 @@ INSERT INTO `fila` VALUES (1,1,1,0xE61000000102000000020000000000000000000000000
 /*!40000 ALTER TABLE `fila` ENABLE KEYS */;
 
 --
+-- Table structure for table `formacio_certificacio`
+--
+
+DROP TABLE IF EXISTS `formacio_certificacio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `formacio_certificacio` (
+  `id_formacio_cert` int(11) NOT NULL AUTO_INCREMENT,
+  `tipus` enum('Formacio','Certificacio','Altres') NOT NULL,
+  `nom` varchar(150) NOT NULL,
+  `entitat_emissora` varchar(150) DEFAULT NULL,
+  `ambit_aplicacio` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_formacio_cert`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `formacio_certificacio`
+--
+
+/*!40000 ALTER TABLE `formacio_certificacio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `formacio_certificacio` ENABLE KEYS */;
+
+--
+-- Table structure for table `habilitat`
+--
+
+DROP TABLE IF EXISTS `habilitat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `habilitat` (
+  `id_habilitat` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(120) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  PRIMARY KEY (`id_habilitat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `habilitat`
+--
+
+/*!40000 ALTER TABLE `habilitat` DISABLE KEYS */;
+/*!40000 ALTER TABLE `habilitat` ENABLE KEYS */;
+
+--
+-- Table structure for table `horari_model`
+--
+
+DROP TABLE IF EXISTS `horari_model`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `horari_model` (
+  `id_horari_model` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(120) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  `hora_inici` time DEFAULT NULL,
+  `hora_fi` time DEFAULT NULL,
+  `pausa_minuts` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_horari_model`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `horari_model`
+--
+
+/*!40000 ALTER TABLE `horari_model` DISABLE KEYS */;
+/*!40000 ALTER TABLE `horari_model` ENABLE KEYS */;
+
+--
+-- Table structure for table `idioma`
+--
+
+DROP TABLE IF EXISTS `idioma`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `idioma` (
+  `id_idioma` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(120) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  PRIMARY KEY (`id_idioma`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `idioma`
+--
+
+/*!40000 ALTER TABLE `idioma` DISABLE KEYS */;
+/*!40000 ALTER TABLE `idioma` ENABLE KEYS */;
+
+--
 -- Table structure for table `infra_parcela`
 --
 
@@ -490,6 +856,37 @@ CREATE TABLE `infraestructura` (
 /*!40000 ALTER TABLE `infraestructura` DISABLE KEYS */;
 INSERT INTO `infraestructura` VALUES (1,1,'Reg','Sistema de reg per degoteig',0xE61000000101000000000000000000E03F000000000000E03F,'<kml></kml>','riego.jpg','2025-09-30 07:58:01'),(2,2,'Camí','Accés principal',0xE61000000101000000000000000000F83F000000000000F83F,'<kml></kml>','camino.jpg','2025-09-30 07:58:01'),(3,3,'Pou','Infraestructura Pou 3',0xE61000000101000000E27A14AE47C143405D8FC2F5285CDFBF,'<kml></kml>','infra3.jpg','2025-10-14 08:53:14'),(4,4,'Caseta','Infraestructura Caseta 4',0xE61000000101000000A4703D0AD7C3434015AE47E17A14DEBF,'<kml></kml>','infra4.jpg','2025-10-14 08:53:14'),(5,5,'Bassa','Infraestructura Bassa 5',0xE610000001010000006766666666C64340CECCCCCCCCCCDCBF,'<kml></kml>','infra5.jpg','2025-10-14 08:53:14'),(6,6,'Tanca','Infraestructura Tanca 6',0xE61000000101000000295C8FC2F5C8434086EB51B81E85DBBF,'<kml></kml>','infra6.jpg','2025-10-14 08:53:14'),(7,7,'Camí','Infraestructura Camí 7',0xE61000000101000000EC51B81E85CB43403E0AD7A3703DDABF,'<kml></kml>','infra7.jpg','2025-10-14 08:53:14'),(8,8,'Reg','Infraestructura Reg 8',0xE61000000101000000AE47E17A14CE4340F6285C8FC2F5D8BF,'<kml></kml>','infra8.jpg','2025-10-14 08:53:14'),(9,9,'Aljibe','Infraestructura Aljub 9',0xE61000000101000000713D0AD7A3D04340AF47E17A14AED7BF,'<kml></kml>','infra9.jpg','2025-10-14 08:53:14'),(10,10,'Punt de càrrega','Infraestructura Punt de càrrega 10',0xE610000001010000003433333333D34340676666666666D6BF,'<kml></kml>','infra10.jpg','2025-10-14 08:53:14'),(11,11,'Cobert d\'eines','Infraestructura Cobert d’eines 11',0xE61000000101000000F6285C8FC2D543402085EB51B81ED5BF,'<kml></kml>','infra11.jpg','2025-10-14 08:53:14'),(12,12,'Estació meteorològica','Infraestructura Estació meteorològica 12',0xE61000000101000000B91E85EB51D84340D8A3703D0AD7D3BF,'<kml></kml>','infra12.jpg','2025-10-14 08:53:14');
 /*!40000 ALTER TABLE `infraestructura` ENABLE KEYS */;
+
+--
+-- Table structure for table `jornada`
+--
+
+DROP TABLE IF EXISTS `jornada`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jornada` (
+  `id_jornada` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `data_hora_inici` datetime NOT NULL,
+  `data_hora_fi` datetime NOT NULL,
+  `minuts_pausa` int(11) DEFAULT 0,
+  `incidencies` text DEFAULT NULL,
+  `id_tasca` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_jornada`),
+  KEY `fk_jornada_treballador` (`id_treballador`),
+  KEY `fk_jornada_tasca` (`id_tasca`),
+  CONSTRAINT `fk_jornada_tasca` FOREIGN KEY (`id_tasca`) REFERENCES `tasca` (`id_tasca`),
+  CONSTRAINT `fk_jornada_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `jornada`
+--
+
+/*!40000 ALTER TABLE `jornada` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jornada` ENABLE KEYS */;
 
 --
 -- Table structure for table `lot_produccio`
@@ -591,7 +988,10 @@ CREATE TABLE `operari` (
   `id_operari` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(200) NOT NULL,
   `carnet_aplicador` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_operari`)
+  `id_treballador` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_operari`),
+  KEY `fk_operari_treballador` (`id_treballador`),
+  CONSTRAINT `fk_operari_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -600,7 +1000,7 @@ CREATE TABLE `operari` (
 --
 
 /*!40000 ALTER TABLE `operari` DISABLE KEYS */;
-INSERT INTO `operari` VALUES (1,'Juan Pérez','APL-001'),(2,'María Gómez','APL-002'),(3,'Carlos Ruiz','APL-003'),(4,'Lucía Torres','APL-004'),(5,'Miguel Sánchez','APL-005'),(6,'Ana López','APL-006'),(7,'David Morales','APL-007'),(8,'Sara Fernández','APL-008'),(9,'Jorge Navarro','APL-009'),(10,'Elena Ramos','APL-010'),(11,'Pedro Castillo','APL-011'),(12,'Laura Medina','APL-012'),(13,'Hugo Martínez','APL-013'),(14,'Patricia Vega','APL-014'),(15,'Alberto Ortiz','APL-015'),(16,'Cristina Núñez','APL-016'),(17,'Sergio Romero','APL-017'),(18,'Natalia Ibáñez','APL-018'),(19,'Óscar Díaz','APL-019'),(20,'Verónica Gil','APL-020');
+INSERT INTO `operari` VALUES (1,'Juan Pérez','APL-001',NULL),(2,'María Gómez','APL-002',NULL),(3,'Carlos Ruiz','APL-003',NULL),(4,'Lucía Torres','APL-004',NULL),(5,'Miguel Sánchez','APL-005',NULL),(6,'Ana López','APL-006',NULL),(7,'David Morales','APL-007',NULL),(8,'Sara Fernández','APL-008',NULL),(9,'Jorge Navarro','APL-009',NULL),(10,'Elena Ramos','APL-010',NULL),(11,'Pedro Castillo','APL-011',NULL),(12,'Laura Medina','APL-012',NULL),(13,'Hugo Martínez','APL-013',NULL),(14,'Patricia Vega','APL-014',NULL),(15,'Alberto Ortiz','APL-015',NULL),(16,'Cristina Núñez','APL-016',NULL),(17,'Sergio Romero','APL-017',NULL),(18,'Natalia Ibáñez','APL-018',NULL),(19,'Óscar Díaz','APL-019',NULL),(20,'Verónica Gil','APL-020',NULL);
 /*!40000 ALTER TABLE `operari` ENABLE KEYS */;
 
 --
@@ -794,6 +1194,32 @@ INSERT INTO `plantacio` VALUES (1,1,1,'2025-02-01','2025-02-01',NULL,3.00,2.00,5
 /*!40000 ALTER TABLE `plantacio` ENABLE KEYS */;
 
 --
+-- Table structure for table `posicio`
+--
+
+DROP TABLE IF EXISTS `posicio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `posicio` (
+  `id_posicio` int(11) NOT NULL AUTO_INCREMENT,
+  `id_departament` int(11) DEFAULT NULL,
+  `nom` varchar(150) NOT NULL,
+  `descripcio` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_posicio`),
+  KEY `fk_posicio_departament` (`id_departament`),
+  CONSTRAINT `fk_posicio_departament` FOREIGN KEY (`id_departament`) REFERENCES `departament` (`id_departament`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `posicio`
+--
+
+/*!40000 ALTER TABLE `posicio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `posicio` ENABLE KEYS */;
+
+--
 -- Table structure for table `previsio_collita`
 --
 
@@ -926,6 +1352,39 @@ CREATE TABLE `registre` (
 /*!40000 ALTER TABLE `registre` DISABLE KEYS */;
 INSERT INTO `registre` VALUES (1,1,1,'2025-02-01',NULL,2000.00,'Mildiu en primavera',1),(2,2,2,'2024-03-01',NULL,1500.00,'Plaga de pulgón',2),(3,3,3,'2024-09-01',NULL,1610.00,'Sin problemas significativos',3),(4,4,4,'2024-10-01',NULL,1680.00,'Sin problemas significativos',4),(5,5,5,'2024-11-01',NULL,1750.00,'Sin problemas significativos',5),(6,6,6,'2024-12-01',NULL,1820.00,'Sin problemas significativos',6),(7,7,7,'2024-01-01',NULL,1890.00,'Sin problemas significativos',7),(8,8,8,'2024-02-01',NULL,1960.00,'Sin problemas significativos',8),(9,9,9,'2024-03-01',NULL,2030.00,'Sin problemas significativos',9),(10,10,10,'2024-04-01',NULL,2100.00,'Sin problemas significativos',10),(11,11,11,'2024-05-01',NULL,2170.00,'Sin problemas significativos',11),(12,12,12,'2024-06-01',NULL,2240.00,'Sin problemas significativos',12);
 /*!40000 ALTER TABLE `registre` ENABLE KEYS */;
+
+--
+-- Table structure for table `registre_document`
+--
+
+DROP TABLE IF EXISTS `registre_document`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `registre_document` (
+  `id_registre` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `id_document_tipus` int(11) NOT NULL,
+  `nom_document` varchar(255) DEFAULT NULL,
+  `ruta_url` varchar(255) DEFAULT NULL,
+  `data_emissio` date DEFAULT NULL,
+  `data_caducitat` date DEFAULT NULL,
+  `observacions` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_registre`),
+  KEY `fk_regdoc_treballador` (`id_treballador`),
+  KEY `fk_regdoc_tipus` (`id_document_tipus`),
+  KEY `idx_regdoc_caducitat` (`data_caducitat`),
+  CONSTRAINT `fk_regdoc_tipus` FOREIGN KEY (`id_document_tipus`) REFERENCES `document_tipus` (`id_document_tipus`),
+  CONSTRAINT `fk_regdoc_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `registre_document`
+--
+
+/*!40000 ALTER TABLE `registre_document` DISABLE KEYS */;
+/*!40000 ALTER TABLE `registre_document` ENABLE KEYS */;
 
 --
 -- Table structure for table `sector`
@@ -1093,6 +1552,46 @@ INSERT INTO `sol` VALUES (1,'Arenós',6.50,2.50,'Bon drenatge'),(2,'Argilós',7.
 /*!40000 ALTER TABLE `sol` ENABLE KEYS */;
 
 --
+-- Table structure for table `tasca`
+--
+
+DROP TABLE IF EXISTS `tasca`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tasca` (
+  `id_tasca` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_tasca` varchar(150) NOT NULL,
+  `tipus_tasca` varchar(100) DEFAULT NULL,
+  `id_sector` int(11) DEFAULT NULL,
+  `data_inici` date DEFAULT NULL,
+  `data_final` date DEFAULT NULL,
+  `durada_estimada` varchar(50) DEFAULT NULL,
+  `personal_requerit` int(11) DEFAULT NULL,
+  `equipament_necessari` text DEFAULT NULL,
+  `instruccions` text DEFAULT NULL,
+  `dependencies` text DEFAULT NULL,
+  `estat` enum('Planificada','En curs','Feta','Cancel·lada') DEFAULT 'Planificada',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id_aplicacio` int(11) DEFAULT NULL,
+  `collita_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_tasca`),
+  KEY `fk_tasca_sector` (`id_sector`),
+  KEY `fk_tasca_aplicacio` (`id_aplicacio`),
+  KEY `fk_tasca_collita` (`collita_id`),
+  CONSTRAINT `fk_tasca_aplicacio` FOREIGN KEY (`id_aplicacio`) REFERENCES `aplicacio` (`id_aplicacio`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_tasca_collita` FOREIGN KEY (`collita_id`) REFERENCES `collita` (`collita_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_tasca_sector` FOREIGN KEY (`id_sector`) REFERENCES `sector` (`id_sector`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tasca`
+--
+
+/*!40000 ALTER TABLE `tasca` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tasca` ENABLE KEYS */;
+
+--
 -- Table structure for table `tractament`
 --
 
@@ -1119,6 +1618,140 @@ CREATE TABLE `tractament` (
 /*!40000 ALTER TABLE `tractament` DISABLE KEYS */;
 INSERT INTO `tractament` VALUES (1,1,'2025-04-01','Fitosanitari','Fungicida X','200 ml'),(2,2,'2025-05-15','Fertilitzant','NPK 20-20-20','500 ml'),(3,3,'2025-07-15','Fitosanitari','Fungicida D','200 ml'),(4,4,'2025-08-15','Fertilitzant','NPK 20-20-20','500 ml'),(5,5,'2025-09-15','Altre','Rentat de fulles','—'),(6,6,'2025-10-15','Fitosanitari','Fungicida D','200 ml'),(7,7,'2025-11-15','Fertilitzant','NPK 20-20-20','500 ml'),(8,8,'2025-12-15','Altre','Rentat de fulles','—'),(9,9,'2025-01-15','Fitosanitari','Fungicida D','200 ml'),(10,10,'2025-02-15','Fertilitzant','NPK 20-20-20','500 ml'),(11,11,'2025-03-15','Altre','Rentat de fulles','—'),(12,12,'2025-04-15','Fitosanitari','Fungicida D','200 ml');
 /*!40000 ALTER TABLE `tractament` ENABLE KEYS */;
+
+--
+-- Table structure for table `treballador`
+--
+
+DROP TABLE IF EXISTS `treballador`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treballador` (
+  `id_treballador` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_complet` varchar(150) NOT NULL,
+  `fotografia` varchar(255) DEFAULT NULL,
+  `document_identitat` varchar(50) NOT NULL,
+  `data_naixement` date DEFAULT NULL,
+  `lloc_naixement` varchar(100) DEFAULT NULL,
+  `nacionalitat` varchar(100) DEFAULT NULL,
+  `residencia` varchar(150) DEFAULT NULL,
+  `telefon` varchar(30) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `adreca` varchar(255) DEFAULT NULL,
+  `contacte_emergencia` varchar(150) DEFAULT NULL,
+  `telefon_emergencia` varchar(30) DEFAULT NULL,
+  `compte_bancari` varchar(100) DEFAULT NULL,
+  `consentiment_rgpd` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id_posicio` int(11) DEFAULT NULL,
+  `id_calendari_model` int(11) DEFAULT NULL,
+  `id_horari_model` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_treballador`),
+  UNIQUE KEY `uk_treballador_document` (`document_identitat`),
+  KEY `idx_treballador_email` (`email`),
+  KEY `idx_treballador_telefon` (`telefon`),
+  KEY `fk_treballador_posicio` (`id_posicio`),
+  KEY `fk_treballador_calendari_model` (`id_calendari_model`),
+  KEY `fk_treballador_horari_model` (`id_horari_model`),
+  CONSTRAINT `fk_treballador_calendari_model` FOREIGN KEY (`id_calendari_model`) REFERENCES `calendari_model` (`id_calendari_model`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_treballador_horari_model` FOREIGN KEY (`id_horari_model`) REFERENCES `horari_model` (`id_horari_model`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_treballador_posicio` FOREIGN KEY (`id_posicio`) REFERENCES `posicio` (`id_posicio`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `treballador`
+--
+
+/*!40000 ALTER TABLE `treballador` DISABLE KEYS */;
+/*!40000 ALTER TABLE `treballador` ENABLE KEYS */;
+
+--
+-- Table structure for table `treballador_formacio_cert`
+--
+
+DROP TABLE IF EXISTS `treballador_formacio_cert`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treballador_formacio_cert` (
+  `id_tfc` int(11) NOT NULL AUTO_INCREMENT,
+  `id_treballador` int(11) NOT NULL,
+  `id_formacio_cert` int(11) NOT NULL,
+  `data_inici` date DEFAULT NULL,
+  `data_fi` date DEFAULT NULL,
+  `data_caducitat` date DEFAULT NULL,
+  `hores` decimal(5,2) DEFAULT NULL,
+  `habilitats_extra` text DEFAULT NULL,
+  `idiomes_extra` text DEFAULT NULL,
+  `altres_detalls` text DEFAULT NULL,
+  `document_url` varchar(255) DEFAULT NULL,
+  `observacions` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_tfc`),
+  KEY `fk_tfc_treballador` (`id_treballador`),
+  KEY `fk_tfc_formacio` (`id_formacio_cert`),
+  KEY `idx_tfc_caducitat` (`data_caducitat`),
+  CONSTRAINT `fk_tfc_formacio` FOREIGN KEY (`id_formacio_cert`) REFERENCES `formacio_certificacio` (`id_formacio_cert`),
+  CONSTRAINT `fk_tfc_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `treballador_formacio_cert`
+--
+
+/*!40000 ALTER TABLE `treballador_formacio_cert` DISABLE KEYS */;
+/*!40000 ALTER TABLE `treballador_formacio_cert` ENABLE KEYS */;
+
+--
+-- Table structure for table `treballador_habilitat`
+--
+
+DROP TABLE IF EXISTS `treballador_habilitat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treballador_habilitat` (
+  `id_treballador` int(11) NOT NULL,
+  `id_habilitat` int(11) NOT NULL,
+  `nivell` enum('Baix','Mitja','Alt','Expert') DEFAULT 'Baix',
+  PRIMARY KEY (`id_treballador`,`id_habilitat`),
+  KEY `fk_th_habilitat` (`id_habilitat`),
+  CONSTRAINT `fk_th_habilitat` FOREIGN KEY (`id_habilitat`) REFERENCES `habilitat` (`id_habilitat`),
+  CONSTRAINT `fk_th_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `treballador_habilitat`
+--
+
+/*!40000 ALTER TABLE `treballador_habilitat` DISABLE KEYS */;
+/*!40000 ALTER TABLE `treballador_habilitat` ENABLE KEYS */;
+
+--
+-- Table structure for table `treballador_idioma`
+--
+
+DROP TABLE IF EXISTS `treballador_idioma`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treballador_idioma` (
+  `id_treballador` int(11) NOT NULL,
+  `id_idioma` int(11) NOT NULL,
+  `nivell` enum('B1','B2','C1','C2','Native','Bàsic','Intermedi','Avançat') DEFAULT 'Bàsic',
+  PRIMARY KEY (`id_treballador`,`id_idioma`),
+  KEY `fk_ti_idioma` (`id_idioma`),
+  CONSTRAINT `fk_ti_idioma` FOREIGN KEY (`id_idioma`) REFERENCES `idioma` (`id_idioma`),
+  CONSTRAINT `fk_ti_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `treballador_idioma`
+--
+
+/*!40000 ALTER TABLE `treballador_idioma` DISABLE KEYS */;
+/*!40000 ALTER TABLE `treballador_idioma` ENABLE KEYS */;
 
 --
 -- Temporary view structure for view `v_collita_plantacio`
@@ -1195,4 +1828,4 @@ INSERT INTO `varietat` VALUES (1,1,'Prunus persica var. platycarpa','Paraguayo',
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-10 11:06:53
+-- Dump completed on 2025-11-17 11:20:46
