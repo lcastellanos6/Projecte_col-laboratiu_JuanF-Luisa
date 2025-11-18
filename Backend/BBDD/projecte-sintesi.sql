@@ -3,7 +3,7 @@
 -- Host: 127.0.0.1    Database: projecte_sintesis
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.32-MariaDB
--- Versió: 2025-11-17_112100
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -64,7 +64,7 @@ CREATE TABLE `alerta` (
   KEY `fk_alerta_treballador` (`id_treballador`),
   KEY `idx_alerta_data` (`data_avis`),
   CONSTRAINT `fk_alerta_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,6 +72,7 @@ CREATE TABLE `alerta` (
 --
 
 /*!40000 ALTER TABLE `alerta` DISABLE KEYS */;
+INSERT INTO `alerta` VALUES (1,1,'Reconeixement_medic','2026-01-15','Pendent','El certificat mèdic anual caduca el 2026-02-01','2025-11-18 11:23:08'),(2,1,'Contracte','2025-12-15','Pendent','Revisió anual del contracte laboral','2025-11-18 11:23:08'),(3,1,'Altres','2026-02-01','Pendent','Renovar mascaretes FFP2 per caducitat','2025-11-18 11:23:08'),(4,1,'Certificacio','2027-02-15','Pendent','Certificat fitosanitari nivell bàsic caduca el 2027-03-15','2025-11-18 11:23:08'),(5,2,'Permis','2029-04-01','Pendent','Renovació del DNI previst per l\'abril del 2029','2025-11-18 11:23:25'),(6,2,'Formacio','2028-05-20','Pendent','Recomanació de renovar Formació de Manipulador d\'Aliments','2025-11-18 11:23:25'),(7,2,'Altres','2026-03-05','Pendent','Revisió anual de l\'estat de l\'armilla reflectant entregada','2025-11-18 11:23:25');
 /*!40000 ALTER TABLE `alerta` ENABLE KEYS */;
 
 --
@@ -182,8 +183,10 @@ CREATE TABLE `calendari_model` (
   `nom` varchar(120) NOT NULL,
   `descripcio` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `dies_laborables` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`dies_laborables`)),
+  `dies_festius` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`dies_festius`)),
   PRIMARY KEY (`id_calendari_model`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,6 +194,7 @@ CREATE TABLE `calendari_model` (
 --
 
 /*!40000 ALTER TABLE `calendari_model` DISABLE KEYS */;
+INSERT INTO `calendari_model` VALUES (1,'Calendari estàndard','Dilluns a divendres laborables','2025-11-17 12:07:41','[\"Dilluns\",\"Dimarts\",\"Dimecres\",\"Dijous\",\"Divendres\"]','[\"2025-01-01\",\"2025-08-15\",\"2025-12-25\"]'),(2,'Campanya verema','Dilluns a dissabte durant setembre i octubre','2025-11-17 12:07:41','[\"Dilluns\",\"Dimarts\",\"Dimecres\",\"Dijous\",\"Divendres\",\"Dissabte\"]','[\"2025-09-11\",\"2025-10-12\"]');
 /*!40000 ALTER TABLE `calendari_model` ENABLE KEYS */;
 
 --
@@ -437,7 +441,7 @@ CREATE TABLE `departament` (
   `descripcio` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_departament`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -445,6 +449,7 @@ CREATE TABLE `departament` (
 --
 
 /*!40000 ALTER TABLE `departament` DISABLE KEYS */;
+INSERT INTO `departament` VALUES (1,'Camp i collita','Planificació i execució de les feines al camp, poda i verema.','2025-11-17 11:34:20'),(2,'Celler i producció','Procés d\'elaboració del vi, control de qualitat i emmagatzematge.','2025-11-17 11:34:20'),(3,'Manteniment','Manteniment preventiu i correctiu de maquinària i instal·lacions.','2025-11-17 11:34:20'),(4,'Administració','Gestió documental, nòmines i comptabilitat.','2025-11-17 12:25:40'),(5,'Camp i Producció','Treballs de camp: poda, verema, tractaments i manteniment.','2025-11-17 12:25:40'),(6,'Logística i Magatzem','Gestió d’estoc, EPI i distribució.','2025-11-17 12:25:40'),(7,'Administració','Gestió documental, nòmines i comptabilitat.','2025-11-17 12:31:59'),(8,'Camp i Producció','Treballs de camp: poda, verema, tractaments i manteniment.','2025-11-17 12:31:59'),(9,'Logística i Magatzem','Gestió d’estoc, EPI i distribució.','2025-11-17 12:31:59');
 /*!40000 ALTER TABLE `departament` ENABLE KEYS */;
 
 --
@@ -477,28 +482,6 @@ INSERT INTO `desti_client` VALUES (1,'Cooperativa La Ribera',NULL,'B12345678','9
 /*!40000 ALTER TABLE `desti_client` ENABLE KEYS */;
 
 --
--- Table structure for table `document_tipus`
---
-
-DROP TABLE IF EXISTS `document_tipus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `document_tipus` (
-  `id_document_tipus` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(120) NOT NULL,
-  `descripcio` text DEFAULT NULL,
-  PRIMARY KEY (`id_document_tipus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `document_tipus`
---
-
-/*!40000 ALTER TABLE `document_tipus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `document_tipus` ENABLE KEYS */;
-
---
 -- Table structure for table `epi_lliurament`
 --
 
@@ -523,7 +506,7 @@ CREATE TABLE `epi_lliurament` (
   KEY `idx_epill_caducitat` (`data_caducitat`),
   CONSTRAINT `fk_epill_tipus` FOREIGN KEY (`id_epi_tipus`) REFERENCES `epi_tipus` (`id_epi_tipus`),
   CONSTRAINT `fk_epill_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -531,6 +514,7 @@ CREATE TABLE `epi_lliurament` (
 --
 
 /*!40000 ALTER TABLE `epi_lliurament` DISABLE KEYS */;
+INSERT INTO `epi_lliurament` VALUES (1,1,1,NULL,10,'2025-02-15',NULL,'2026-02-15','docs/epi/jordi_lliurament_guants.pdf','Guants per a poda i manipulació general de materials.','2025-11-18 10:06:10'),(2,1,2,NULL,5,'2025-03-01',NULL,'2026-03-01','docs/epi/jordi_lliurament_mascareta.pdf','Mascaretes per a tractaments fitosanitaris de primavera.','2025-11-18 10:06:10'),(3,1,5,'42',1,'2025-02-10',NULL,NULL,'docs/epi/jordi_lliurament_botes.pdf','Botes de seguretat per a treball habitual al camp.','2025-11-18 10:06:10'),(4,2,4,'M',1,'2025-03-05',NULL,NULL,'docs/epi/laia_lliurament_armilla.pdf','Armilla reflectant per a visites a camp i zones de càrrega.','2025-11-18 10:06:10'),(5,2,3,NULL,1,'2025-03-05',NULL,NULL,'docs/epi/laia_lliurament_ulleres.pdf','Ulleres de seguretat per a visites a magatzem.','2025-11-18 10:06:10'),(6,2,2,NULL,2,'2025-04-01',NULL,'2026-04-01','docs/epi/laia_lliurament_mascareta.pdf','Mascaretes per a visites a camp durant aplicacions programades.','2025-11-18 10:06:10');
 /*!40000 ALTER TABLE `epi_lliurament` ENABLE KEYS */;
 
 --
@@ -548,7 +532,7 @@ CREATE TABLE `epi_tipus` (
   `stock_actual` int(11) NOT NULL DEFAULT 0,
   `stock_minim` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id_epi_tipus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -556,6 +540,7 @@ CREATE TABLE `epi_tipus` (
 --
 
 /*!40000 ALTER TABLE `epi_tipus` DISABLE KEYS */;
+INSERT INTO `epi_tipus` VALUES (1,'Guants de protecció','Guants resistents per a maneig de maquinària, poda i manipulació de productes.',200,150,50),(2,'Mascareta FFP2','Protecció respiratòria per aplicació de productes fitosanitaris o treballs amb pols.',150,120,30),(3,'Ulleres de seguretat','Protecció ocular contra esquitxades, pols i impactes lleugers.',100,80,20),(4,'Armilla reflectant','Alta visibilitat per treballs en zones de circulació o poca llum.',80,65,15),(5,'Calçat de seguretat','Botes amb puntera reforçada i sola antilliscant adaptades a terreny agrícola.',60,50,10),(6,'Casc de protecció','Protecció contra impactes en treballs en alçària o zones forestals.',40,32,8),(7,'Guants de protecció','Guants resistents per a maneig de maquinària, poda i manipulació de productes.',200,150,50),(8,'Mascareta FFP2','Protecció respiratòria per aplicació de productes fitosanitaris o treballs amb pols.',150,120,30),(9,'Ulleres de seguretat','Protecció ocular contra esquitxades, pols i impactes lleugers.',100,80,20),(10,'Armilla reflectant','Alta visibilitat per treballs en zones de circulació o poca llum.',80,65,15),(11,'Calçat de seguretat','Botes amb puntera reforçada i sola antilliscant adaptades a terreny agrícola.',60,50,10),(12,'Casc de protecció','Protecció contra impactes en treballs en alçària o zones forestals.',40,32,8);
 /*!40000 ALTER TABLE `epi_tipus` ENABLE KEYS */;
 
 --
@@ -721,7 +706,7 @@ CREATE TABLE `formacio_certificacio` (
   `ambit_aplicacio` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_formacio_cert`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -729,6 +714,7 @@ CREATE TABLE `formacio_certificacio` (
 --
 
 /*!40000 ALTER TABLE `formacio_certificacio` DISABLE KEYS */;
+INSERT INTO `formacio_certificacio` VALUES (1,'Formacio','Prevencio de riscos laborals bàsica','Institut Català de Seguretat i Salut Laboral','Formacio general en seguretat i salut al treball per a personal de camp i magatzem.','2025-11-18 09:48:49'),(2,'Certificacio','Aplicador de productes fitosanitaris - nivell bàsic','Departament d\'Agricultura, Ramaderia, Pesca i Alimentació','Obligatòria per a treballadors que manipulen i apliquen productes fitosanitaris a les parcel·les.','2025-11-18 09:48:49'),(3,'Formacio','Manipulador d\'aliments','Entitat homologada de seguretat alimentària','Formacio per a personal que manipula producte destinat al consum o a la transformacio.','2025-11-18 09:48:49'),(4,'Certificacio','Conduccio segura de tractor i maquinària agrícola','Centre de formacio agrària','Certificacio per a l\'ús segur de tractors, remolcs i maquinària autopropulsada al camp.','2025-11-18 09:48:49'),(5,'Altres','Formacio interna en procediments de verema','Empresa','Formacio especifica de l\'explotacio sobre organitzacio de la verema, qualitat del raïm i traçabilitat.','2025-11-18 09:48:49');
 /*!40000 ALTER TABLE `formacio_certificacio` ENABLE KEYS */;
 
 --
@@ -769,7 +755,7 @@ CREATE TABLE `horari_model` (
   `pausa_minuts` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_horari_model`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -777,6 +763,7 @@ CREATE TABLE `horari_model` (
 --
 
 /*!40000 ALTER TABLE `horari_model` DISABLE KEYS */;
+INSERT INTO `horari_model` VALUES (1,'Horari de matí',NULL,'08:00:00','15:00:00',20,'2025-11-17 12:24:06'),(2,'Horari partit',NULL,'09:00:00','18:00:00',60,'2025-11-17 12:24:06'),(3,'Campanya verema',NULL,'06:00:00','14:00:00',15,'2025-11-17 12:24:06'),(4,'Horari de matí',NULL,'08:00:00','15:00:00',20,'2025-11-17 12:32:02'),(5,'Horari partit',NULL,'09:00:00','18:00:00',60,'2025-11-17 12:32:02'),(6,'Campanya verema',NULL,'06:00:00','14:00:00',15,'2025-11-17 12:32:02');
 /*!40000 ALTER TABLE `horari_model` ENABLE KEYS */;
 
 --
@@ -1209,7 +1196,7 @@ CREATE TABLE `posicio` (
   PRIMARY KEY (`id_posicio`),
   KEY `fk_posicio_departament` (`id_departament`),
   CONSTRAINT `fk_posicio_departament` FOREIGN KEY (`id_departament`) REFERENCES `departament` (`id_departament`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1217,6 +1204,7 @@ CREATE TABLE `posicio` (
 --
 
 /*!40000 ALTER TABLE `posicio` DISABLE KEYS */;
+INSERT INTO `posicio` VALUES (1,1,'Administratiu/va','Tasques de gestió administrativa.','2025-11-17 12:27:22'),(2,2,'Operari/ària de camp','Treballs manuals en camp i maneig d’equipament agrícola.','2025-11-17 12:27:22'),(3,2,'Cap d’equip','Responsable de coordinar un equip de camp.','2025-11-17 12:27:22'),(4,3,'Tècnic/ca de magatzem','Gestió d’entrada i sortida de materials i EPI.','2025-11-17 12:27:22'),(5,1,'Administratiu/va','Tasques de gestió administrativa.','2025-11-17 12:31:57'),(6,2,'Operari/ària de camp','Treballs manuals en camp i maneig d’equipament agrícola.','2025-11-17 12:31:57'),(7,2,'Cap d’equip','Responsable de coordinar un equip de camp.','2025-11-17 12:31:57'),(8,3,'Tècnic/ca de magatzem','Gestió d’entrada i sortida de materials i EPI.','2025-11-17 12:31:57');
 /*!40000 ALTER TABLE `posicio` ENABLE KEYS */;
 
 --
@@ -1363,7 +1351,6 @@ DROP TABLE IF EXISTS `registre_document`;
 CREATE TABLE `registre_document` (
   `id_registre` int(11) NOT NULL AUTO_INCREMENT,
   `id_treballador` int(11) NOT NULL,
-  `id_document_tipus` int(11) NOT NULL,
   `nom_document` varchar(255) DEFAULT NULL,
   `ruta_url` varchar(255) DEFAULT NULL,
   `data_emissio` date DEFAULT NULL,
@@ -1372,11 +1359,9 @@ CREATE TABLE `registre_document` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_registre`),
   KEY `fk_regdoc_treballador` (`id_treballador`),
-  KEY `fk_regdoc_tipus` (`id_document_tipus`),
   KEY `idx_regdoc_caducitat` (`data_caducitat`),
-  CONSTRAINT `fk_regdoc_tipus` FOREIGN KEY (`id_document_tipus`) REFERENCES `document_tipus` (`id_document_tipus`),
   CONSTRAINT `fk_regdoc_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1384,6 +1369,7 @@ CREATE TABLE `registre_document` (
 --
 
 /*!40000 ALTER TABLE `registre_document` DISABLE KEYS */;
+INSERT INTO `registre_document` VALUES (1,1,'DNI de Jordi Soler','docs/jordi/dni.pdf','2020-05-10','2030-05-10','Document vigent','2025-11-18 11:20:12'),(2,1,'Contracte laboral indefinit','docs/jordi/contracte_2024.pdf','2024-01-15',NULL,'Firma digitalitzada','2025-11-18 11:20:12'),(3,1,'Certificat mèdic anual','docs/jordi/certificat_medic_2025.pdf','2025-02-01','2026-02-01','Revisió mèdica apta','2025-11-18 11:20:12'),(4,1,'Certificat de formació PRL','docs/jordi/formacio_prl_2024.pdf','2024-02-01',NULL,'Curs de 8 hores completat','2025-11-18 11:20:12'),(5,2,'DNI de Laia Ferrer','docs/laia/dni.pdf','2019-04-20','2029-04-20','Document vigent','2025-11-18 11:20:12'),(6,2,'Contracte laboral temporal','docs/laia/contracte_2025.pdf','2025-01-10',NULL,'Contracte signat per la direcció','2025-11-18 11:20:12'),(7,2,'Certificat manipulador d\'aliments','docs/laia/manipulador_2024.pdf','2024-05-20',NULL,'Formació requerida per visites a magatzem','2025-11-18 11:20:12'),(8,2,'Justificant de lliurament d\'EPI','docs/laia/epi.pdf','2025-03-05',NULL,'Armilla i ulleres de protecció entregades','2025-11-18 11:20:12');
 /*!40000 ALTER TABLE `registre_document` ENABLE KEYS */;
 
 --
@@ -1581,7 +1567,7 @@ CREATE TABLE `tasca` (
   CONSTRAINT `fk_tasca_aplicacio` FOREIGN KEY (`id_aplicacio`) REFERENCES `aplicacio` (`id_aplicacio`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_tasca_collita` FOREIGN KEY (`collita_id`) REFERENCES `collita` (`collita_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_tasca_sector` FOREIGN KEY (`id_sector`) REFERENCES `sector` (`id_sector`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1589,6 +1575,7 @@ CREATE TABLE `tasca` (
 --
 
 /*!40000 ALTER TABLE `tasca` DISABLE KEYS */;
+INSERT INTO `tasca` VALUES (1,'Tractament foliar de primavera - Sector 1','Tractament foliar',1,'2025-03-02','2025-03-02','1 dia',2,'Polvoritzador de tractor, EPI complet (guants, mascareta, ulleres)','Respectar la dosi indicada a l\'etiqueta. No aplicar amb vent fort.',NULL,'Feta','2025-11-17 12:54:50',1,NULL),(2,'Control de plaga a vores - Sector 2','Tractament foliar',2,'2025-05-12','2025-05-12','1 matí',3,'Motxilles polvoritzadores, EPI complet, banderoles de senyalització','Focalitzar l\'aplicació a les vores on la plaga és visible.',NULL,'Feta','2025-11-17 12:54:50',2,NULL),(3,'Fertirrigació a capçalera - Sector 3','Fertirrigació',3,'2025-02-02','2025-02-02','1 matí',1,'Sistema de reg programable, tanc de fertilitzant','Comprovar conductivitat i pH abans de l\'aplicació.',NULL,'Feta','2025-11-17 12:54:50',3,NULL),(4,'Verema parcel·la 1 - Collita 1','Collita manual',4,'2025-06-05','2025-06-05','1 jornada',6,'Tisores de verema, caixes de collita, armilles reflectants, barrets i aigua','Mantenir les caixes a l\'ombra i evitar cops al gra.',NULL,'Feta','2025-11-17 12:54:50',NULL,1),(5,'Verema parcel·la 5 - Collita 4','Collita manual',5,'2025-09-03','2025-09-03','1 jornada',7,'Tisores, caixes, carretons, EPI bàsic','Atenció a les zones baixes amb més humitat al sòl.',NULL,'Feta','2025-11-17 12:54:50',NULL,4),(6,'Preparació de sòl abans de tractaments de tardor - Sector 6','Preparació de sòl',6,'2025-10-02','2025-10-02','1 matí',2,'Motoaixadora, tractor lleuger, EPI bàsic','Fer la passada de preparació de sòl abans de l\'aplicació planificada.','Tractament associat a l\'aplicació 4','Planificada','2025-11-17 12:54:50',4,NULL),(7,'Tractament foliar de primavera - Sector 1','Tractament foliar',1,'2025-03-02','2025-03-02','1 dia',2,'Polvoritzador de tractor, EPI complet (guants, mascareta, ulleres)','Respectar la dosi indicada a l\'etiqueta. No aplicar amb vent fort.',NULL,'Feta','2025-11-18 08:32:16',1,NULL),(8,'Control de plaga a vores - Sector 2','Tractament foliar',2,'2025-05-12','2025-05-12','1 matí',3,'Motxilles polvoritzadores, EPI complet, banderoles de senyalització','Focalitzar l\'aplicació a les vores on la plaga és visible.',NULL,'Feta','2025-11-18 08:32:16',2,NULL),(9,'Fertirrigació a capçalera - Sector 3','Fertirrigació',3,'2025-02-02','2025-02-02','1 matí',1,'Sistema de reg programable, tanc de fertilitzant','Comprovar conductivitat i pH abans de l\'aplicació.',NULL,'Feta','2025-11-18 08:32:16',3,NULL),(10,'Verema parcel·la 1 - Collita 1','Collita manual',4,'2025-06-05','2025-06-05','1 jornada',6,'Tisores de verema, caixes de collita, armilles reflectants, barrets i aigua','Mantenir les caixes a l\'ombra i evitar cops al gra.',NULL,'Feta','2025-11-18 08:32:16',NULL,1),(11,'Verema parcel·la 5 - Collita 4','Collita manual',5,'2025-09-03','2025-09-03','1 jornada',7,'Tisores, caixes, carretons, EPI bàsic','Atenció a les zones baixes amb més humitat al sòl.',NULL,'Feta','2025-11-18 08:32:16',NULL,4),(12,'Preparació de sòl abans de tractaments de tardor - Sector 6','Preparació de sòl',6,'2025-10-02','2025-10-02','1 matí',2,'Motoaixadora, tractor lleuger, EPI bàsic','Fer la passada de preparació de sòl abans de l\'aplicació planificada.','Tractament associat a l\'aplicació 4','Planificada','2025-11-18 08:32:16',4,NULL);
 /*!40000 ALTER TABLE `tasca` ENABLE KEYS */;
 
 --
@@ -1631,6 +1618,7 @@ CREATE TABLE `treballador` (
   `nom_complet` varchar(150) NOT NULL,
   `fotografia` varchar(255) DEFAULT NULL,
   `document_identitat` varchar(50) NOT NULL,
+  `num_seguretat_social` varchar(50) DEFAULT NULL,
   `data_naixement` date DEFAULT NULL,
   `lloc_naixement` varchar(100) DEFAULT NULL,
   `nacionalitat` varchar(100) DEFAULT NULL,
@@ -1656,7 +1644,7 @@ CREATE TABLE `treballador` (
   CONSTRAINT `fk_treballador_calendari_model` FOREIGN KEY (`id_calendari_model`) REFERENCES `calendari_model` (`id_calendari_model`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_treballador_horari_model` FOREIGN KEY (`id_horari_model`) REFERENCES `horari_model` (`id_horari_model`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_treballador_posicio` FOREIGN KEY (`id_posicio`) REFERENCES `posicio` (`id_posicio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1664,6 +1652,7 @@ CREATE TABLE `treballador` (
 --
 
 /*!40000 ALTER TABLE `treballador` DISABLE KEYS */;
+INSERT INTO `treballador` VALUES (1,'Jordi Soler Puig','jordi.jpg','12345678A',NULL,'1985-03-12','Lleida','Espanyola','Lleida','600123456','jordi.soler@example.com','C/ Major 12, Lleida','Maria Soler','699112233','ES123456789012345678',1,'2025-11-17 12:32:06',2,2,1),(2,'Laia Ferrer Serra','laia.jpg','98765432B',NULL,'1990-07-25','Tàrrega','Espanyola','Tàrrega','622998877','laia.ferrer@example.com','Av. Catalunya 44, Tàrrega','Joan Ferrer','633445566','ES987654321098765432',1,'2025-11-17 12:32:06',1,1,2);
 /*!40000 ALTER TABLE `treballador` ENABLE KEYS */;
 
 --
@@ -1693,7 +1682,7 @@ CREATE TABLE `treballador_formacio_cert` (
   KEY `idx_tfc_caducitat` (`data_caducitat`),
   CONSTRAINT `fk_tfc_formacio` FOREIGN KEY (`id_formacio_cert`) REFERENCES `formacio_certificacio` (`id_formacio_cert`),
   CONSTRAINT `fk_tfc_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1701,6 +1690,7 @@ CREATE TABLE `treballador_formacio_cert` (
 --
 
 /*!40000 ALTER TABLE `treballador_formacio_cert` DISABLE KEYS */;
+INSERT INTO `treballador_formacio_cert` VALUES (1,1,1,'2024-02-01','2024-02-01',NULL,8.00,'Coneixements bàsics de PRL',NULL,NULL,'docs/formacions/jordi_prl.pdf','Formació obligatòria realitzada correctament','2025-11-18 09:53:50'),(2,1,2,'2024-03-10','2024-03-15','2027-03-15',10.00,'Ús segur de productes fitosanitaris',NULL,'Inclou pràctiques de camp','docs/formacions/jordi_fito.pdf','Certificació vàlida durant 3 anys','2025-11-18 09:53:50'),(3,1,4,'2024-04-01','2024-04-03',NULL,12.00,'Conducció segura de tractor',NULL,'Realitzat en circuit controlat','docs/formacions/jordi_tractor.pdf','Avaluació pràctica aprovada','2025-11-18 09:53:50'),(4,2,3,'2024-05-20','2024-05-20',NULL,4.00,'Manipulació segura d’aliments',NULL,NULL,'docs/formacions/laia_mani.pdf','Formació administrativa obligatòria','2025-11-18 09:53:50'),(5,2,5,'2024-07-10','2024-07-10',NULL,3.00,NULL,'Català, Castellà','Coneixement dels protocols interns de verema','docs/formacions/laia_verema.pdf','Formació interna anual','2025-11-18 09:53:50');
 /*!40000 ALTER TABLE `treballador_formacio_cert` ENABLE KEYS */;
 
 --
@@ -1752,6 +1742,35 @@ CREATE TABLE `treballador_idioma` (
 
 /*!40000 ALTER TABLE `treballador_idioma` DISABLE KEYS */;
 /*!40000 ALTER TABLE `treballador_idioma` ENABLE KEYS */;
+
+--
+-- Table structure for table `treballador_tasca`
+--
+
+DROP TABLE IF EXISTS `treballador_tasca`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treballador_tasca` (
+  `id_treballador` int(11) NOT NULL,
+  `id_tasca` int(11) NOT NULL,
+  `data_assignacio` date NOT NULL,
+  `estat` enum('Planificada','En curs','Feta','Cancel·lada') DEFAULT 'Planificada',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_treballador`,`id_tasca`),
+  KEY `fk_tt_treballador` (`id_treballador`),
+  KEY `fk_tt_tasca` (`id_tasca`),
+  CONSTRAINT `fk_tt_tasca` FOREIGN KEY (`id_tasca`) REFERENCES `tasca` (`id_tasca`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_tt_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `treballador_tasca`
+--
+
+/*!40000 ALTER TABLE `treballador_tasca` DISABLE KEYS */;
+INSERT INTO `treballador_tasca` VALUES (1,1,'2025-01-10','En curs','2025-11-18 09:06:03'),(1,2,'2025-04-05','Planificada','2025-11-18 09:06:03'),(1,3,'2025-02-01','Feta','2025-11-18 09:11:47'),(1,4,'2025-06-04','Feta','2025-11-18 09:11:47'),(1,5,'2025-09-02','Feta','2025-11-18 09:11:47'),(1,6,'2025-10-01','Planificada','2025-11-18 09:11:47'),(1,7,'2025-03-01','Feta','2025-11-18 09:11:47'),(1,8,'2025-05-11','Feta','2025-11-18 09:11:47'),(1,9,'2025-02-01','Feta','2025-11-18 09:11:47'),(1,10,'2025-06-04','Feta','2025-11-18 09:11:47'),(1,11,'2025-09-02','Feta','2025-11-18 09:11:47'),(1,12,'2025-10-01','Planificada','2025-11-18 09:11:47'),(2,1,'2025-01-10','En curs','2025-11-18 09:06:03'),(2,2,'2025-05-12','Feta','2025-11-18 09:12:27'),(2,6,'2025-10-01','Planificada','2025-11-18 09:12:27'),(2,12,'2025-10-01','Planificada','2025-11-18 09:12:27');
+/*!40000 ALTER TABLE `treballador_tasca` ENABLE KEYS */;
 
 --
 -- Temporary view structure for view `v_collita_plantacio`
@@ -1828,4 +1847,4 @@ INSERT INTO `varietat` VALUES (1,1,'Prunus persica var. platycarpa','Paraguayo',
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-17 11:20:46
+-- Dump completed on 2025-11-18 13:18:52
