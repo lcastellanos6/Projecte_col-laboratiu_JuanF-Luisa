@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registre de Sector</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select, textarea, button {
+            width: 100%; padding: 8px; margin-top: 5px;
+            border-radius: 5px; border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50; color: white;
+            border: none; margin-top: 15px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Registrar nou sector</h1>
+
+    <form action="guardar_sector.php" method="post">
+
+        <label>Nom del sector:</label>
+        <input type="text" name="nom" required>
+
+        <label>Superfície (ha):</label>
+        <input type="number" name="superficie" step="0.01">
+
+        <label>Geometria KML:</label>
+        <textarea name="geometria_kml" rows="3" required></textarea>
+
+        <label>URL de la foto:</label>
+        <input type="text" name="foto_url" placeholder="https://...">
+
+        <label>Estat productiu:</label>
+        <select name="estat_productiu">
+            <option value="Plantat" selected>Plantat</option>
+            <option value="Repos">Repos</option>
+            <option value="Productiu">Productiu</option>
+            <option value="Reconvertit">Reconvertit</option>
+        </select>
+
+        <button type="submit">Guardar Sector</button>
+    </form>
+</body>
+</html>

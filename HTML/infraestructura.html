@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Infraestructura</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; border-radius:5px; border:1px solid #ccc; }
+        button { background-color: #4CAF50; color: white; border:none; margin-top:15px; cursor:pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+     <h1>Registrar nova infraestructura</h1>
+   <form action="guardar_infraestructura.php" method="post">
+    <label>ID de Parcela:</label>
+    <input type="number" name="id_parcela" required>
+
+    <label>Tipus d'infraestructura:</label>
+    <input type="text" name="tipus" required>
+
+    <label>Descripció:</label>
+    <textarea name="descripcio"></textarea>
+
+    <label>Geometria KML (opcional):</label>
+    <textarea name="geometria_kml" placeholder="Copiar KML aquí"></textarea>
+
+    <label>Foto URL (opcional):</label>
+    <input type="text" name="foto_url" placeholder="https://...">
+
+    <button type="submit">Guardar Infraestructura</button>
+</form>
+
+</body>

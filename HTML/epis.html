@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Tipus d'EPI</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+
+<h2>Registrar Tipus d'EPI</h2>
+
+<form action="tipus_epi.php" method="POST">
+
+    <label for="nom">Nom del tipus d'EPI</label>
+    <input type="text" name="nom" required>
+
+    <label for="descripcio">Descripció (opcional)</label>
+    <textarea name="descripcio"></textarea>
+
+    <label for="stock_inicial">Stock inicial</label>
+    <input type="number" name="stock_inicial" value="0" min="0">
+
+    <label for="stock_actual">Stock actual</label>
+    <input type="number" name="stock_actual" value="0" min="0">
+
+    <label for="stock_minim">Stock mínim</label>
+    <input type="number" name="stock_minim" value="0" min="0">
+
+    <button type="submit">Guardar Tipus d'EPI</button>
+
+</form>
+
+</body>
+</html>
