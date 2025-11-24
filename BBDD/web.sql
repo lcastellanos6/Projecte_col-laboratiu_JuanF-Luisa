@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.4.6, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: projecte_sintesis
+-- Host: 127.0.0.1    Database: web
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.32-MariaDB
 
@@ -1261,7 +1261,7 @@ CREATE TABLE `producte` (
   `restriccions_usu` text DEFAULT NULL,
   `compatible_integrada` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id_producte`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1269,7 +1269,7 @@ CREATE TABLE `producte` (
 --
 
 /*!40000 ALTER TABLE `producte` DISABLE KEYS */;
-INSERT INTO `producte` VALUES (1,'Fitosanitari','Fungicida X','Cobre','20%','Control de míldiu','Presseguer, Olivera','200 ml/hl','300 ml/hl',14,'Nociu','Evitar altes temperatures',1),(2,'Fitosanitari','Insecticida A','Imidacloprid','10%','Control de pugons','Olivera','100 ml/hl','150 ml/hl',21,'Tòxic','Prohibit en floració',0),(3,'Fertilitzant','NPK 20-20-20','N-P-K','20%','Creixement general','Tots','500 g/100L','1 kg/100L',0,'No tòxic','',1),(4,'Fitosanitari','Herbicida Z','Glifosato','36%','Control de males herbes','Oliverar','2 L/ha','4 L/ha',30,'Perillós','Evitar el contacte amb sòl humit',0),(5,'Fertilitzant','Calcio Plus','CaCO3','15%','Enfortiment del fruit','Presseguer','2 kg/ha','5 kg/ha',0,'No tòxic','',1),(6,'Fitosanitari','Acaricida B','Abamectina','1.8%','Control d’àcars','Presseguer','0.5 L/ha','1 L/ha',10,'Tòxic','Evitar la sobreaplicació',1),(7,'Fertilitzant','Humic 25','Ácidos húmicos','25%','Millora del sòl','Tots','1 L/ha','2 L/ha',0,'No tòxic','',1),(8,'Fitosanitari','Fungicida C','Mancozeb','80%','Control de fongs','Presseguer','150 g/hl','300 g/hl',14,'Irritante','',1),(9,'Fertilitzant','AminoGrow','Aminoácidos','10%','Millor vigor','Tots','2 L/ha','4 L/ha',0,'No tòxic','',1),(10,'Fitosanitari','Insecticida D','Lambda-cihalotrina','2.5%','Control de orugas','Oliverar','0.3 L/ha','0.5 L/ha',7,'Tòxic','Evitar el contacte amb abelles',1),(11,'Fitosanitari','Fungicida D','Cimoxanilo','5%','Antimíldiu','Vinya','100 g/hl','200 g/hl',10,'Irritante','Respetar plazos',1),(12,'Fertilitzant','Potasa K40','K2O','40%','Aportació de potassi','Tots','20 kg/ha','40 kg/ha',0,'No tòxic','',1),(13,'Fitosanitari','Insecticida E','Spinosad','0.5%','Trips i mosca','Cítrics','0.3 L/ha','0.6 L/ha',7,'Tòxic','Evitar abejas',1),(14,'Fertilitzant','Fosfito P30','Fosfito potásico','30%','Inductor de defenses','Tots','2 L/ha','4 L/ha',0,'No tòxic','',1),(15,'Fitosanitari','Herbicida Selectivo','Fluazifop-P','12.5%','Gramínies','Ametller, Olivera','1 L/ha','2 L/ha',30,'Perillós','Evitar deriva',0),(16,'Fertilitzant','Quelato Fe6','Ferro (EDDHA)','6%','Clorosi fèrrica','Fruvers','4 kg/ha','8 kg/ha',0,'No tòxic','',1),(17,'Fitosanitari','Acaricida C','Fenpiroximato','5%','Ácaros','Fruvers','0.5 L/ha','1 L/ha',10,'Tòxic','No barrejar amb olis',1),(18,'Fertilitzant','BoroPlus','Boro','11%','Quallat de flor','Ametller','1 L/ha','2 L/ha',0,'No tòxic','',1),(19,'Fitosanitari','Fungicida Sistémico','Tebuconazol','25%','Oïdi','Pomer','0.3 L/ha','0.5 L/ha',14,'Irritante','Evitar altes Tª',1),(20,'Fertilitzant','CalMag','Ca+Mg','10%','Equilibri Ca/Mg','Tots','2 L/ha','4 L/ha',0,'No tòxic','',1);
+INSERT INTO `producte` VALUES (1,'Fitosanitari','Fungicida X','Cobre','20%','Control de míldiu','Presseguer, Olivera','200 ml/hl','300 ml/hl',14,'Nociu','Evitar altes temperatures',1),(2,'Fitosanitari','Insecticida A','Imidacloprid','10%','Control de pugons','Olivera','100 ml/hl','150 ml/hl',21,'Tòxic','Prohibit en floració',0),(3,'Fertilitzant','NPK 20-20-20','N-P-K','20%','Creixement general','Tots','500 g/100L','1 kg/100L',0,'No tòxic','',1),(4,'Fitosanitari','Herbicida Z','Glifosato','36%','Control de males herbes','Oliverar','2 L/ha','4 L/ha',30,'Perillós','Evitar el contacte amb sòl humit',0),(5,'Fertilitzant','Calcio Plus','CaCO3','15%','Enfortiment del fruit','Presseguer','2 kg/ha','5 kg/ha',0,'No tòxic','',1),(6,'Fitosanitari','Acaricida B','Abamectina','1.8%','Control d’àcars','Presseguer','0.5 L/ha','1 L/ha',10,'Tòxic','Evitar la sobreaplicació',1),(7,'Fertilitzant','Humic 25','Ácidos húmicos','25%','Millora del sòl','Tots','1 L/ha','2 L/ha',0,'No tòxic','',1),(8,'Fitosanitari','Fungicida C','Mancozeb','80%','Control de fongs','Presseguer','150 g/hl','300 g/hl',14,'Irritante','',1),(9,'Fertilitzant','AminoGrow','Aminoácidos','10%','Millor vigor','Tots','2 L/ha','4 L/ha',0,'No tòxic','',1),(10,'Fitosanitari','Insecticida D','Lambda-cihalotrina','2.5%','Control de orugas','Oliverar','0.3 L/ha','0.5 L/ha',7,'Tòxic','Evitar el contacte amb abelles',1),(11,'Fitosanitari','Fungicida D','Cimoxanilo','5%','Antimíldiu','Vinya','100 g/hl','200 g/hl',10,'Irritante','Respetar plazos',1),(12,'Fertilitzant','Potasa K40','K2O','40%','Aportació de potassi','Tots','20 kg/ha','40 kg/ha',0,'No tòxic','',1),(13,'Fitosanitari','Insecticida E','Spinosad','0.5%','Trips i mosca','Cítrics','0.3 L/ha','0.6 L/ha',7,'Tòxic','Evitar abejas',1),(14,'Fertilitzant','Fosfito P30','Fosfito potásico','30%','Inductor de defenses','Tots','2 L/ha','4 L/ha',0,'No tòxic','',1),(15,'Fitosanitari','Herbicida Selectivo','Fluazifop-P','12.5%','Gramínies','Ametller, Olivera','1 L/ha','2 L/ha',30,'Perillós','Evitar deriva',0),(16,'Fertilitzant','Quelato Fe6','Ferro (EDDHA)','6%','Clorosi fèrrica','Fruvers','4 kg/ha','8 kg/ha',0,'No tòxic','',1),(17,'Fitosanitari','Acaricida C','Fenpiroximato','5%','Ácaros','Fruvers','0.5 L/ha','1 L/ha',10,'Tòxic','No barrejar amb olis',1),(18,'Fertilitzant','BoroPlus','Boro','11%','Quallat de flor','Ametller','1 L/ha','2 L/ha',0,'No tòxic','',1),(19,'Fitosanitari','Fungicida Sistémico','Tebuconazol','25%','Oïdi','Pomer','0.3 L/ha','0.5 L/ha',14,'Irritante','Evitar altes Tª',1),(20,'Fertilitzant','CalMag','Ca+Mg','10%','Equilibri Ca/Mg','Tots','2 L/ha','4 L/ha',0,'No tòxic','',1),(21,'Fitosanitari','Prueba Nom comercial','Prueba Materia activa','50','fds','fds','0.5','1',5,'fd','fdsa',1),(22,'Fitosanitari','Prueba Nom comercial','fda','5','fd','fda','0.5','1',5,'dsa','dfa',1);
 /*!40000 ALTER TABLE `producte` ENABLE KEYS */;
 
 --
@@ -1817,7 +1817,7 @@ INSERT INTO `varietat` VALUES (1,1,'Prunus persica var. platycarpa','Paraguayo',
 /*!40000 ALTER TABLE `varietat` ENABLE KEYS */;
 
 --
--- Dumping routines for database 'projecte_sintesis'
+-- Dumping routines for database 'web'
 --
 
 --
@@ -1847,4 +1847,4 @@ INSERT INTO `varietat` VALUES (1,1,'Prunus persica var. platycarpa','Paraguayo',
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-18 13:18:52
+-- Dump completed on 2025-11-24 11:19:14
