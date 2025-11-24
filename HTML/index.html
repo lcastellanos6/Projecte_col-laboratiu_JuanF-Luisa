@@ -1,50 +1,93 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registre de Parcel·les</title>
+<meta charset="UTF-8">
+<title>Gestió de l'Explotació Fruiteres</title>
+<style>
+body { font-family: 'Times New Roman', Times, serif; margin: 0; background: #f0f4f0; color: #2f4f2f; }
+header { display: flex; align-items: center; justify-content: space-between; background: #2f7d2f; color: white; padding: 15px 20px; }
+header img { height: 150px; }
+header h1 { margin: 0; }
+.user-info p { margin: 0; }
+.container { display: flex; height: calc(100vh - 180px); }
+.menu { width: 260px; background: #cfe6cf; padding: 15px; overflow-y: auto; box-shadow: 3px 0 6px rgba(0,0,0,0.1); }
+.menu h3 { margin-top: 20px; color: #2f7d2f; border-bottom: 2px solid #2f7d2f; padding-bottom: 5px; }
+.menu button { width: 100%; margin: 5px 0; padding: 10px; background: #e8f5e8; border: 1px solid #8fbf8f; border-radius: 5px; cursor: pointer; text-align: left; }
+.menu button:hover { background: #ffffff; }
+.content iframe { width: 100%; height: 100%; border: none; }
+.content { flex: 1; background: white; border-left: 2px solid #aacbaa; }
+</style>
+<script>
+function openPage(url) {
+    document.getElementById("contentFrame").src = url;
+}
+</script>
 </head>
 <body>
-    <h1>Registre de Parcel·les</h1>
-   <form action="guardar_parcela.php" method="post">
-    <label>Nom descriptiu:</label>
-    <input type="text" name="Nom_descriptiu" required><br><br>
 
-    <label>Referència cadastral:</label>
-    <input type="text" name="ref_cadastral" required><br><br>
+<header>
+    <div style="display:flex; align-items:center;">
+        <img src="logo.png" alt="Logo Explotació">
+        <h1>Gestió de l'Explotació Fruiteres</h1>
+    </div>
+    <div class="user-info">
+        <?php if(isset($_SESSION['usuari'])): ?>
+            <p>Usuari: <?php echo htmlspecialchars($_SESSION['usuari']); ?></p>
+            <p>Data: <?php echo date('d/m/Y'); ?></p>
+            <p><a href="logout.php" style="color:white;">Tancar sessió</a></p>
+        <?php else: ?>
+            <form action="login.php" method="post" style="text-align:right;">
+                <input type="text" name="usuari" placeholder="Usuari" required><br>
+                <input type="password" name="contrasenya" placeholder="Contrasenya" required><br>
+                <button type="submit" style="background:#45a049; color:white;">Login</button>
+            </form>
+        <?php endif; ?>
+    </div>
+</header>
 
-    <label>Superfície total (ha):</label>
-    <input type="number" step="0.01" name="superficie_total"><br><br>
+<div class="container">
 
-    <label>Pendent (%):</label>
-    <input type="number" step="0.01" name="pendent"><br><br>
+    <div class="menu">
+        <h3>📌 Gestió de cultius</h3>
+        <button onclick="openPage('parcela.html')">Parcel·les</button>
+        <button onclick="openPage('sector.html')">Sectors</button>
+        <button onclick="openPage('especie.html')">Espècies</button>
+        <button onclick="openPage('varietat.html')">Varietats</button>
+        <button onclick="openPage('infraestructura.html')">Infraestructura</button>
+        <button onclick="openPage('plantacio.html')">Plantació</button>
+        <button onclick="openPage('fila.html')">Files</button>
 
-    <label>Orientació:</label>
-    <select name="orientacio" required>
-    <option value="nord">Nord</option>
-    <option value="sud">Sud</option>
-    <option value="est">Est</option>
-    <option value="oest">Oest</option>
-    </select><br><br>
- 
-    <label>Kilometratge (longitud del perímetre o dades GPS):</label>
-    <textarea name="Kilometratge"></textarea><br><br>
+        <h3>🌱 Operacions</h3>
+        <button onclick="openPage('tractament.html')">Tractaments</button>
+        <button onclick="openPage('producte.html')">Productes</button>
+        <button onclick="openPage('seguiment.html')">Seguiment</button>
 
+        <h3>👨‍🌾 Gestió de treballadors</h3>
+        <button onclick="openPage('treballador.html')">Treballadors</button>
+        <button onclick="openPage('contracte.html')">Contracte</button>
+        <button onclick="openPage('absencia.html')">Absència</button>
+        <button onclick="openPage('documentacio.html')">Documentació</button>
+        <button onclick="openPage('departament.html')">Departaments</button>
+        <button onclick="openPage('equip.html')">Equip de treball</button>
+        <button onclick="openPage('membres_equip.html')">Membres del Equip</button>
+        <button onclick="openPage('epis.html')">Epis</button>
+        <button onclick="openPage('lliurament_epis.html')">Lliurament Epis</button>
+        <button onclick="openPage('horari.html')">Horaris Model</button>
+        <button onclick="openPage('calendari.html')">Calendaris Model</button>
 
-    <label>Localització geoespacial (GeoJSON o KML):</label>
-    <textarea name="localitzacio_geo"></textarea><br><br>
+        <h3>⚙️ Configuració</h3>
+        <button onclick="openPage('usuari.html')">Usuaris</button>
+    </div>
 
-     <label>Documentació:</label>
-    <textarea name="documentacio"></textarea><br><br>
+    <div class="content">
+        <iframe id="contentFrame" src="parcela.html"></iframe>
+    </div>
 
-    <label>Característiques edafològiques:</label>
-    <textarea name="caracteristiques_edafo"></textarea><br><br>
-
-    <button type="submit">Guardar Parcel·la</button>
-</form>
+</div>
 
 </body>
 </html>
-
 

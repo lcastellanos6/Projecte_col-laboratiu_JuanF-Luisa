@@ -10,7 +10,6 @@ if ($conn->connect_error) die("❌ Error de connexió: " . $conn->connect_error)
 
 // Recoger datos del formulario
 $id_sector = $_POST['id_sector'] ?? '';
-$id_plantacio = $_POST['id_plantacio'] ?? null;
 $data_registre = $_POST['data_registre'] ?? '';
 $estat_fenologic = $_POST['estat_fenologic'] ?? '';
 $creixement_vegetatiu = $_POST['creixement_vegetatiu'] ?? '';
