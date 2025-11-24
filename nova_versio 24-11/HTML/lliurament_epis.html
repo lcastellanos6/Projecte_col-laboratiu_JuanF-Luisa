@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Lliurament EPI</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:550px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, select, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+
+<h2>Registrar Lliurament EPI</h2>
+
+<form action="guardar_epis.php" method="POST" enctype="multipart/form-data">
+
+    <label for="id_treballador">Treballador (ID)</label>
+    <input type="number" name="id_treballador" required>
+
+    <label for="id_epi_tipus">Tipus EPI (ID)</label>
+    <input type="number" name="id_epi_tipus" required>
+
+    <label for="talla">Talla</label>
+    <input type="text" name="talla">
+
+    <label for="quantitat">Quantitat</label>
+    <input type="number" name="quantitat" value="1">
+
+    <label for="data_lliurament">Data de lliurament</label>
+    <input type="date" name="data_lliurament" required>
+
+    <label for="data_devolucio">Data de devolució</label>
+    <input type="date" name="data_devolucio">
+
+    <label for="data_caducitat">Data de caducitat</label>
+    <input type="date" name="data_caducitat">
+
+    <label for="document_signat_url">Document signat (URL)</label>
+    <input type="text" name="document_signat_url" placeholder="https://...">
+
+    <label for="observacions">Observacions</label>
+    <textarea name="observacions"></textarea>
+
+    <button type="submit">Guardar Lliurament</button>
+
+</form>
+
+</body>
+</html>

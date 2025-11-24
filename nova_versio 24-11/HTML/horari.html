@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Horari Model</title>
+<style>
+body { font-family: Arial; margin:20px; background:#f0f4f0; color:#2f4f2f; }
+h1 { text-align:center; margin-bottom:20px; }
+label { font-weight:bold; display:block; margin-top:10px; }
+input, textarea, button { width:100%; padding:6px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+button { background-color:#4CAF50; color:white; border:none; margin-top:15px; cursor:pointer; }
+button:hover { background-color:#45a049; }
+</style>
+</head>
+<body>
+
+<h1>Registrar Nou Horari Model</h1>
+
+<form action="guardar_horari.php" method="post">
+    <label>Nom de l'horari:</label>
+    <input type="text" name="nom" required>
+
+    <label>Descripció:</label>
+    <textarea name="descripcio"></textarea>
+
+    <label>Hora d'inici:</label>
+    <input type="time" name="hora_inici">
+
+    <label>Hora de fi:</label>
+    <input type="time" name="hora_fi">
+
+    <label>Pausa en minuts:</label>
+    <input type="number" name="pausa_minuts" min="0" value="0">
+
+    <button type="submit">Guardar Horari</button>
+</form>
+
+</body>
+</html>

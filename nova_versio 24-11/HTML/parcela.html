@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <title>Registrar nova parcel·la</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css"/>
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 16px; max-width: 1000px; }
+    #map { height: 450px; border: 1px solid #aaa; margin-bottom: 15px; }
+    label { font-weight: bold; margin-top: 10px; display: block; }
+    input, textarea, select { width: 100%; padding: 8px; }
+    button { background: green; color: #fff; padding: 10px; border: none; margin-top: 15px; cursor: pointer; }
+    small { color: #666; }
+  </style>
+</head>
+
+<body>
+  <h1>Registrar nova parcel·la</h1>
+
+  <div id="map"></div>
+
+  <form id="form" action="guardar_parcela.php" method="post" enctype="multipart/form-data">
+
+    <label>Referència cadastral:</label>
+    <input type="text" name="ref_cadastral" required>
+
+    <label>Nom:</label>
+    <input type="text" name="nom">
+
+    <label>Descripció:</label>
+    <textarea name="descripcio"></textarea>
+
+    <label>Municipi:</label>
+    <input type="text" name="municipi">
+
+    <label>Superfície (ha):</label>
+    <input type="number" step="0.01" name="superficie" id="superficie">
+
+    <input type="hidden" name="geometria" id="geometria">
+    <input type="hidden" name="geometria_kml" id="geometria_kml">
+
+    <label>Tipus de sòl:</label>
+    <input type="text" name="tipus_sol">
+
+    <label>Pendent (%):</label>
+    <input type="number" step="0.01" name="pendent">
+
+    <label>Orientació:</label>
+    <select name="orientacio">
+      <option value="">--Selecciona--</option>
+      <option value="N">Nord</option>
+      <option value="S">Sud</option>
+      <option value="E">Est</option>
+      <option value="O">Oest</option>
+      <option value="NE">Nord-est</option>
+      <option value="NO">Nord-oest</option>
+      <option value="SE">Sud-est</option>
+      <option value="SO">Sud-oest</option>
+    </select>
+
+    <label>Edafologia:</label>
+    <textarea name="edafo"></textarea>
+
+    <label>Documentació:</label>
+    <textarea name="documentacio"></textarea>
+
+    <label>Foto de la parcel·la:</label>
+    <input type="file" name="foto" accept="image/*">
+
+    <button type="submit">Guardar Parcel·la</button>
+
+  </form>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+  <script>
+    var map = L.map('map').setView([41.65, 1.0], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 22
+    }).addTo(map);
+
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    var drawControl = new L.Control.Draw({
+      draw: {
+        polygon: true,
+        rectangle: true,
+        circle: false,
+        marker: false,
+        polyline: false
+      },
+      edit: {
+        featureGroup: drawnItems
+      }
+    });
+    map.addControl(drawControl);
+
+    function updateGeometry(layer) {
+      var geojson = layer.toGeoJSON();
+      var geoJSONstring = JSON.stringify(geojson);
+
+      document.getElementById('geometria').value = geoJSONstring;
+      document.getElementById('geometria_kml').value = geoJSONstring;
+
+      var area_m2 = turf.area(geojson);
+      var ha = area_m2 / 10000;
+      document.getElementById("superficie").value = ha.toFixed(2);
+    }
+
+    map.on(L.Draw.Event.CREATED, function (e) {
+      drawnItems.clearLayers();
+      drawnItems.addLayer(e.layer);
+      updateGeometry(e.layer);
+    });
+
+    map.on(L.Draw.Event.EDITED, function (e) {
+      e.layers.eachLayer(function(layer){
+        updateGeometry(layer);
+      });
+    });
+
+  </script>
+
+</body>
+</html>
