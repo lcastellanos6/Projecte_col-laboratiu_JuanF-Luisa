@@ -19,7 +19,7 @@ $stmt->bind_param("ssiii", $nom, $descripcio, $stock_inicial, $stock_actual, $st
 
 if ($stmt->execute()) {
     echo "<p>Tipus d'EPI registrat correctament.</p>";
-    echo "<a href='epi_tipus.html'>Tornar</a>";
+    echo "<a href='epis.html'>Tornar</a>";
 } else {
     echo "Error: " . $stmt->error;
 }
