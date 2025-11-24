@@ -18,13 +18,37 @@ button:hover { background:#3d9b3d; }
 
 <h2>Registrar Tipus de Documentació</h2>
 
-<form action="../PHP/guardar_documentacio.php" method="POST">
+<form action="../PHP/guardar_documentacio.php" method="POST" enctype="multipart/form-data">
 
-    <label for="nom">Nom del tipus de document</label>
-    <input type="text" name="nom" required>
+    <label for="nom_document">Nom del document</label>
+    <input type="text" name="nom_document" id="nom_document" required>
 
-    <label for="descripcio">Descripció (opcional)</label>
-    <textarea name="descripcio"></textarea>
+    <label for="tipus_document">Tipus de document</label>
+    <select name="tipus_document" id="tipus_document" required>
+        <option value="DNI">DNI</option>
+        <option value="Contracte laboral">Contracte laboral</option>
+        <option value="Permís de treball">Permís de treball</option>
+        <option value="Certificacio">Certificacio</option>
+        <option value="Reconeixement medic">Reconeixement medic</option>
+        <option value="Formacio">Formacio</option>
+        <option value="Document EPI">Document EPI</option>
+        <option value="Altres" selected>Altres</option>
+    </select>
+
+    <label for="ruta_url">Adjuntar document (PDF o imatge)</label>
+    <input type="file" name="ruta_url" id="ruta_url" accept=".pdf,image/*">
+
+    <label for="data_emissio">Data d'emissió</label>
+    <input type="date" name="data_emissio" id="data_emissio">
+
+    <label for="data_caducitat">Data de caducitat</label>
+    <input type="date" name="data_caducitat" id="data_caducitat">
+
+    <label for="observacions">Descripció (opcional)</label>
+    <textarea name="observacions" id="observacions"></textarea>
+
+    <label for="dni">DNI</label>
+    <input type="text" name="dni" id="dni" required>
 
     <button type="submit">Guardar Tipus de Document</button>
 
