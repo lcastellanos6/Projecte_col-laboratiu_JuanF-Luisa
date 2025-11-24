@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Afegir Pla de Tractament</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+
+<body>
+
+<h2>Afegir Pla de Tractament</h2>
+
+<form action="guardar_pla.php" method="post">
+    <label>Nom *</label>
+    <input type="text" name="nom" required>
+
+    <label>Tipus *</label>
+    <select name="tipus" required>
+        <option value="Preventiu">Preventiu</option>
+        <option value="Curatiu">Curatiu</option>
+    </select>
+
+    <label>ID Estat Inici</label>
+    <input type="number" name="id_estat_inici">
+
+    <label>ID Estat Fi</label>
+    <input type="number" name="id_estat_fi">
+
+    <label>ID Espècie</label>
+    <input type="number" name="id_especie">
+
+    <label>Finestra Data Inici</label>
+    <input type="date" name="finestra_data_inici">
+
+    <label>Finestra Data Fi</label>
+    <input type="date" name="finestra_data_fi">
+
+    <label>Plaga / Malaltia Objectiu</label>
+    <input type="text" name="plaga_malaltia_objectiu">
+
+    <label>Observacions</label>
+    <textarea name="observacions"></textarea>
+
+    <button type="submit">Guardar Pla de Tractament</button>
+</form>
+
+</body>
+</html>

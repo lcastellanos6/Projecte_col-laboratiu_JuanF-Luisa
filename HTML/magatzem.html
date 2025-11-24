@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-<meta charset="UTF-8">
-<title>Registrar Equip</title>
+    <meta charset="UTF-8">
+    <title>Gestió de Magatzems</title>
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
 form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
@@ -16,24 +16,19 @@ button:hover { background:#3d9b3d; }
 </head>
 <body>
 
-<h2>Registrar Equip</h2>
+    <h2>Afegir Magatzem</h2>
 
-<form action="guardar_equip.php" method="POST">
+    <form action="guardar_magatzem.php" method="post">
 
-    <label for="nom">Nom de l'equip</label>
-    <input type="text" name="nom" required>
+        <label>Nom del Magatzem *</label>
+        <input type="text" name="nom" required>
 
-    <label for="id_departament">ID Departament *</label>
-    <input type="number" name="id_departament" required>
+        <label>Ubicació</label>
+        <input type="text" name="ubicacio">
 
-    <label for="descripcio">Descripció</label>
-    <textarea name="descripcio"></textarea>
+        <button type="submit">Guardar</button>
 
-    <button type="submit">Guardar Equip</button>
-
-</form>
+    </form>
 
 </body>
 </html>
-
-

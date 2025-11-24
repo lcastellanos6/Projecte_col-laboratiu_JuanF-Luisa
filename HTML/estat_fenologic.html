@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<title>Registrar Equip</title>
+<title>Afegir Estat Fenològic</title>
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
 form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
@@ -14,26 +14,20 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
 button:hover { background:#3d9b3d; }
 </style>
 </head>
+
 <body>
 
-<h2>Registrar Equip</h2>
+<h2>Afegir Estat Fenològic</h2>
 
-<form action="guardar_equip.php" method="POST">
+<form action="guardar_estat.php" method="post">
+    <label>Codi *</label>
+    <input type="text" name="codi" required>
 
-    <label for="nom">Nom de l'equip</label>
+    <label>Nom *</label>
     <input type="text" name="nom" required>
 
-    <label for="id_departament">ID Departament *</label>
-    <input type="number" name="id_departament" required>
-
-    <label for="descripcio">Descripció</label>
-    <textarea name="descripcio"></textarea>
-
-    <button type="submit">Guardar Equip</button>
-
+    <button type="submit">Guardar estat</button>
 </form>
 
 </body>
 </html>
-
-

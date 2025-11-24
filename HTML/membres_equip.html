@@ -8,7 +8,7 @@ body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
 form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
        box-shadow:0 2px 6px rgba(0,0,0,0.1); }
 label { font-weight:bold; margin-top:10px; display:block; }
-input, select, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+input, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
 button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
          border-radius:5px; cursor:pointer; width:100%; }
 button:hover { background:#3d9b3d; }
@@ -18,38 +18,16 @@ button:hover { background:#3d9b3d; }
 
 <h2>Assignar Treballador a Equip</h2>
 
-<form action="../PHP/guardar_membres.php" method="POST">
+<form action="guardar_membres.php" method="POST">
 
-    <label for="id_equip">Equip</label>
-    <select name="id_equip" required>
-        <option value="">--Selecciona un equip--</option>
-        <?php
-        $conn = new mysqli("localhost","root","","web");
-        if($conn->connect_error) die("Error de connexió: ".$conn->connect_error);
-        $result = $conn->query("SELECT id_equip, nom FROM equip ORDER BY nom");
-        while($row = $result->fetch_assoc()){
-            echo "<option value='".htmlspecialchars($row['id_equip'])."'>".htmlspecialchars($row['nom'])."</option>";
-        }
-        $conn->close();
-        ?>
-    </select>
+    <label for="id_equip">ID Equip</label>
+    <input type="number" name="id_equip" required placeholder="Escriu l'ID de l'equip">
 
-    <label for="id_treballador">Treballador</label>
-    <select name="id_treballador" required>
-        <option value="">--Selecciona un treballador--</option>
-        <?php
-        $conn = new mysqli("localhost","root","","web");
-        if($conn->connect_error) die("Error de connexió: ".$conn->connect_error);
-        $result = $conn->query("SELECT id_treballador, nom_complet FROM treballador ORDER BY nom_complet");
-        while($row = $result->fetch_assoc()){
-            echo "<option value='".htmlspecialchars($row['id_treballador'])."'>".htmlspecialchars($row['nom_complet'])."</option>";
-        }
-        $conn->close();
-        ?>
-    </select>
+    <label for="id_treballador">ID Treballador</label>
+    <input type="number" name="id_treballador" required placeholder="Escriu l'ID del treballador">
 
     <label for="rol_equip">Rol a l'equip</label>
-    <input type="text" name="rol_equip">
+    <input type="text" name="rol_equip" placeholder="Ex: Cap de plantació">
 
     <label for="data_alta">Data d'alta</label>
     <input type="date" name="data_alta">
