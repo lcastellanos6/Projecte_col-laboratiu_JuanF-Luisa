@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Departament</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            background: #2e7d32;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Registrar Departament</h2>
+
+<form action="../PHP/guardar_departaments.php" method="POST">
+    <label>Nom del departament *</label>
+    <input type="text" name="nom" required>
+
+    <label>Descripció</label>
+    <textarea name="descripcio" rows="4"></textarea>
+
+    <button type="submit">Guardar</button>
+</form>
+
+</body>
+</html>

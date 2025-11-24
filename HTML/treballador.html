@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Treballador</title>
+<style>
+body { font-family: 'Times New Roman', Times, serif; margin: 20px; }
+label { display:block; margin-top: 10px; font-weight: bold; }
+input, button { width: 100%; padding: 8px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+button { background-color:#2f7d2f; color:white; border:none; cursor:pointer; margin-top:15px; }
+button:hover { background-color:#1e5d1e; }
+</style>
+</head>
+<body>
+
+<h1>Registrar Nou Treballador</h1>
+
+<form action="../PHP/guardar_treballador.php" method="post" enctype="multipart/form-data">
+
+    <label>Nom complet:</label>
+    <input type="text" name="nom_complet" required>
+
+    <label>Fotografia (opcional):</label>
+    <input type="file" name="fotografia" accept="image/*">
+
+    <label>Document d'identitat:</label>
+    <input type="text" name="document_identitat" required>
+
+    <label>Data de naixement:</label>
+    <input type="date" name="data_naixement">
+
+    <label>Lloc de naixement:</label>
+    <input type="text" name="lloc_naixement">
+
+    <label>Nacionalitat:</label>
+    <input type="text" name="nacionalitat">
+
+    <label>Residència:</label>
+    <input type="text" name="residencia">
+
+    <label>Telèfon:</label>
+    <input type="text" name="telefon">
+
+    <label>Email:</label>
+    <input type="email" name="email">
+
+    <label>Adreça:</label>
+    <input type="text" name="adreca">
+
+    <label>Contacte d'emergència:</label>
+    <input type="text" name="contacte_emergencia">
+
+    <label>Telèfon d'emergència:</label>
+    <input type="text" name="telefon_emergencia">
+
+    <label>Compte bancari:</label>
+    <input type="text" name="compte_bancari">
+
+    <label>Consentiment RGPD:</label>
+    <select name="consentiment_rgpd">
+        <option value="1">Sí</option>
+        <option value="0" selected>No</option>
+    </select>
+
+    <label>ID Posició:</label>
+    <input type="number" name="id_posicio">
+
+    <label>ID Calendari Model:</label>
+    <input type="number" name="id_calendari_model">
+
+    <label>ID Horari Model:</label>
+    <input type="number" name="id_horari_model">
+
+    <button type="submit">Guardar Treballador</button>
+</form>
+
+</body>
+</html>

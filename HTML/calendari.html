@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Calendari Model</title>
+<style>
+body { font-family: Arial; margin:20px; background:#f0f4f0; color:#2f4f2f; }
+h1 { text-align:center; margin-bottom:20px; }
+label { font-weight:bold; display:block; margin-top:10px; }
+input, textarea, button { width:100%; padding:6px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+button { background-color:#4CAF50; color:white; border:none; margin-top:15px; cursor:pointer; }
+button:hover { background-color:#45a049; }
+</style>
+</head>
+<body>
+
+<h1>Registrar Nou Calendari Model</h1>
+
+<form action="../PHP/guardar_calendari.php" method="post">
+    <label>Nom del calendari:</label>
+    <input type="text" name="nom" required>
+
+    <label>Descripció:</label>
+    <textarea name="descripcio"></textarea>
+
+    <button type="submit">Guardar Calendari</button>
+</form>
+
+</body>
+</html>

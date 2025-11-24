@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registre de Parcel·la</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css"/>
+    <style>
+        #map { height: 400px; margin: 20px 0; }
+        body { font-family: Arial; margin: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select, textarea, button { width: 100%; padding: 6px; margin-top: 5px; }
+        button { background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Registrar nova parcel·la</h1>
+
+    <form action="guardar_parcela.php" method="post" enctype="multipart/form-data">
+
+        <label>Referència cadastral:</label>
+        <input type="text" name="ref_cadastral" required>
+
+        <label>Nom:</label>
+        <input type="text" name="nom">
+
+        <label>Descripció:</label>
+        <textarea name="descripcio"></textarea>
+
+        <label>Municipi:</label>
+        <input type="text" name="municipi">
+        
+        <label>Geometria</label>
+        <input type="text" name="geometria_kml" id="geometria">
+
+        <label>Superfície (ha):</label>
+        <input type="number" step="0.01" name="superficie">
+
+        <label>Tipus de sòl:</label>
+        <input type="text" name="tipus_sol">
+
+        <label>Pendent (%):</label>
+        <input type="number" step="0.01" name="pendent">
+
+        <label>Orientació:</label>
+        <select name="orientacio">
+            <option value="">--Selecciona--</option>
+            <option value="N">Nord</option>
+            <option value="S">Sud</option>
+            <option value="E">Est</option>
+            <option value="O">Oest</option>
+            <option value="NE">Nord-est</option>
+            <option value="NO">Nord-oest</option>
+            <option value="SE">Sud-est</option>
+            <option value="SO">Sud-oest</option>
+        </select>
+
+        <label>Edafologia (característiques del sòl):</label>
+        <textarea name="edafo"></textarea>
+
+        <label>Documentació (notes, permisos...):</label>
+        <textarea name="documentacio"></textarea>
+
+        <label>Foto (URL o fitxer):</label>
+        <input type="text" name="foto_url" placeholder="https://... (opcional)">
+
+
+        <button type="submit">Guardar Parcel·la</button>
+    </form>
+
+    </script>
+</body>
+</html>

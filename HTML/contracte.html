@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Contracte</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:550px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, select, textarea { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+
+<h2>Registrar Contracte</h2>
+
+<form action="../PHP/guardar_contractre.php" method="POST">
+
+    <label for="id_treballador">Treballador (ID)</label>
+    <input type="number" name="id_treballador" required>
+
+    <label for="tipus_contracte">Tipus de contracte</label>
+    <select name="tipus_contracte">
+        <option value="Fix">Fix</option>
+        <option value="Temporal">Temporal</option>
+        <option value="Autonom">Autonom</option>
+        <option value="Altres">Altres</option>
+    </select>
+
+    <label for="durada_contracte">Durada del contracte</label>
+    <input type="text" name="durada_contracte" placeholder="Exemple: 6 mesos">
+
+    <label for="categoria_professional">Categoria professional</label>
+    <input type="text" name="categoria_professional">
+
+    <label for="lloc_treball">Lloc de treball</label>
+    <input type="text" name="lloc_treball">
+
+    <label for="data_incorporacio">Data d'incorporació</label>
+    <input type="date" name="data_incorporacio">
+
+    <label for="data_finalitzacio">Data de finalització</label>
+    <input type="date" name="data_finalitzacio">
+
+    <label for="historial_laboral">Historial laboral</label>
+    <textarea name="historial_laboral"></textarea>
+
+    <button type="submit">Guardar Contracte</button>
+
+</form>
+</body>
+</html>

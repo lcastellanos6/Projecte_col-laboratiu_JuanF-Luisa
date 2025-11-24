@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Gestió de l'Explotació</title>
+<style>
+body { 
+    font-family: 'Times New Roman', Times, serif; 
+    margin: 20px; 
+    background: #f0f4f0;
+    color: #2f4f2f;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2f4f2f; /* Verde oscuro */
+}
+
+/* Tabs container */
+.tabs {
+    display: flex;
+    cursor: pointer;
+    margin-bottom: 0;
+    background: #cfe6cf;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+/* Individual tab */
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    background: #cfe6cf;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #2f4f2f;
+}
+
+.tab:hover {
+    background: #e1f0e1;
+}
+
+.tab.active {
+    background: #ffffff;
+    font-weight: bold;
+    color: #2f7d2f; /* Verde más brillante */
+    border-bottom: 3px solid #2f7d2f;
+}
+
+/* Tab content */
+.tab-content {
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    display: none;
+    background: white;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Iframe styling */
+.tab-content iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+}
+</style>
+</head>
+<body>
+
+<h1>Gestió de l'Explotació</h1>
+
+<div class="tabs">
+  <div class="tab active" data-tab="parceles">Parcel·les</div>
+  <div class="tab" data-tab="sector">Sector</div>
+  <div class="tab" data-tab="especie">Especie</div>
+  <div class="tab" data-tab="varietat">Varietat</div>
+  <div class="tab" data-tab="infraestructura">Infraestructura</div>
+  <div class="tab" data-tab="plantacio">Plantacio</div>
+  <div class="tab" data-tab="fila">Fila</div>
+  <div class="tab" data-tab="seguiment">Seguiment</div>
+  <div class="tab" data-tab="equip">Equip</div>
+  <div class="tab" data-tab="tractament">Tractament</div>
+   <div class="tab" data-tab="producte">Producte</div>
+</div>
+
+<div id="parceles" class="tab-content active">
+    <iframe src="parcela.html"></iframe>
+</div>
+
+<div id="sector" class="tab-content">
+    <iframe src="sector.html"></iframe>
+</div>
+
+<div id="especie" class="tab-content">
+    <iframe src="especie.html"></iframe>
+</div>
+
+<div id="varietat" class="tab-content">
+  <iframe src="varietat.html"></iframe>
+</div>
+
+<div id="infraestructura" class="tab-content">
+  <iframe src="infraestructura.html"></iframe>
+</div>
+
+<div id="plantacio" class="tab-content">
+  <iframe src="plantacio.html"></iframe>
+</div>
+
+<div id="fila" class="tab-content">
+  <iframe src="fila.html"></iframe>
+</div>
+
+<div id="seguiment" class="tab-content">
+  <iframe src="seguiment.html"></iframe>
+</div>
+
+
+<div id="equip" class="tab-content">
+  <iframe src="equip.html"></iframe>
+</div>
+
+<div id="tractament" class="tab-content">
+  <iframe src="tractament.html"></iframe>
+</div>
+
+<div id="producte" class="tab-content">
+  <iframe src="producte.html"></iframe>
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+</script>
+
+</body>
+</html>

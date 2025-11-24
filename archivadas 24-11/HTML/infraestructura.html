@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Fila</title>
+<style>
+body { font-family: 'Times New Roman', Times, serif; margin: 20px; }
+label { display:block; margin-top: 10px; font-weight: bold; }
+input, button { width: 100%; padding: 8px; margin-top:5px; border-radius:5px; border:1px solid #ccc; }
+button { background-color:#2f7d2f; color:white; border:none; cursor:pointer; margin-top:15px; }
+button:hover { background-color:#1e5d1e; }
+</style>
+</head>
+<body>
+<h1>Registrar nova Fila</h1>
+
+<form action="guardar_fila.php" method="post">
+
+    <label>Plantació (ID):</label>
+    <input type="number" name="id_increment" required placeholder="ID de la plantació">
+
+    <label>Número de fila:</label>
+    <input type="number" name="numero_fila" required placeholder="Número de la fila">
+
+    <button type="submit">Guardar Fila</button>
+</form>
+</body>
+</html>

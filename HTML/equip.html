@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Equip</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, select, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+
+<h2>Registrar Equip</h2>
+
+<form action="../PHP/guardar_equip.txt" method="POST">
+
+    <label for="nom">Nom de l'equip</label>
+    <input type="text" name="nom" required>
+
+    <label for="id_departament">Departament</label>
+    <select name="id_departament">
+        <option value="">--Selecciona un departament--</option>
+        <?php
+        // Omplir el desplegable amb departaments
+        $conn = new mysqli("localhost", "root", "", "web");
+        if ($conn->connect_error) die("Error de connexió: " . $conn->connect_error);
+        $result = $conn->query("SELECT id_departament, nom FROM departament ORDER BY nom");
+        while($row = $result->fetch_assoc()){
+            echo "<option value='".htmlspecialchars($row['id_departament'])."'>".htmlspecialchars($row['nom'])."</option>";
+        }
+        $conn->close();
+        ?>
+    </select>
+
+    <label for="descripcio">Descripció</label>
+    <textarea name="descripcio"></textarea>
+
+    <button type="submit">Guardar Equip</button>
+
+</form>
+
+</body>
+</html>
+
