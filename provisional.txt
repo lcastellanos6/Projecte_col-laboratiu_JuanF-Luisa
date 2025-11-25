@@ -1,0 +1,60 @@
+CREATE TABLE `parcela` (
+    `id_parcela` int(11) NOT NULL AUTO_INCREMENT,
+    `ref_cadastral` varchar(50) NOT NULL,
+    `nom` varchar(100) DEFAULT NULL,
+    `superficie` decimal(10, 2) DEFAULT NULL,
+    `descripcio` text DEFAULT NULL,
+    `municipi` varchar(100) DEFAULT NULL,
+    `geometria` geometry NOT NULL,
+    `geometria_kml` longtext NOT NULL,
+    `foto_url` varchar(255) DEFAULT NULL,
+    `edafo` text DEFAULT NULL,
+    `documentacio` text DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT current_timestamp(),
+    `pendent` decimal(5, 2) DEFAULT NULL COMMENT 'Percentatge de pendent',
+    `orientacio` enum(
+        'N',
+        'S',
+        'E',
+        'O',
+        'NE',
+        'NO',
+        'SE',
+        'SO'
+    ) DEFAULT NULL COMMENT 'Orientació dominant',
+    `tipus_sol` varchar(100) DEFAULT NULL COMMENT 'Textura o classificació principal del sòl',
+    PRIMARY KEY (`id_parcela`),
+    UNIQUE KEY `ref_cadastral` (`ref_cadastral`),
+    SPATIAL KEY `geometria` (`geometria`)
+) ENGINE = InnoDB AUTO_INCREMENT = 18 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci
+
+CREATE TABLE `sector` (
+    `id_sector` int(11) NOT NULL AUTO_INCREMENT,
+    `nom` varchar(255) DEFAULT NULL,
+    `superficie` decimal(10, 2) DEFAULT NULL,
+    `geometria` geometry NOT NULL,
+    `geometria_kml` longtext NOT NULL,
+    `foto_url` varchar(255) DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT current_timestamp(),
+    `estat_productiu` enum(
+        'Repos',
+        'Plantat',
+        'Productiu',
+        'Reconvertit',
+        'Abandonat'
+    ) DEFAULT 'Plantat',
+    PRIMARY KEY (`id_sector`),
+    SPATIAL KEY `geometria` (`geometria`)
+) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci
+
+CREATE TABLE `sector_parcela` (
+    `id_sector` int(11) NOT NULL,
+    `id_parcela` int(11) NOT NULL,
+    PRIMARY KEY (`id_sector`, `id_parcela`),
+    KEY `idx_sp_parcela` (`id_parcela`),
+    CONSTRAINT `sp_fk_parcela` FOREIGN KEY (`id_parcela`) REFERENCES `parcela` (`id_parcela`),
+    CONSTRAINT `sp_fk_sector` FOREIGN KEY (`id_sector`) REFERENCES `sector` (`id_sector`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci
+
+geometria: POLYGON(0.864809 41.613034,0.873585 41.617077,0.873799 41.61682,0.873649 41.616403,0.872684 41.615537,0.8691 41.613146,0.866976 41.610932,0.864809 41.613034)
+geometria_kml: <Polygon><outerBoundaryIs><LinearRing><coordinates>0.863386530,41.613825999,0 0.863486192,41.613766337,0 0.864835892,41.614369904,0 0.864783571,41.614446118,0 0.865599235,41.614790636,0 0.865528864,41.614879214,0 0.865318138,41.614787760,0 0.864749475,41.614541044,0 0.864737524,41.614535868,0 0.864632971,41.614496458,0 0.864576073,41.614474956,0 0.864147668,41.614313437,0 0.863836025,41.614195963,0 0.863519757,41.614076691,0 0.863252689,41.613975991,0 0.863198635,41.613955621,0 0.863196265,41.613954677,0 0.863386530,41.613825999,0 0.863386530,41.613825999,0</coordinates></LinearRing></outerBoundaryIs></Polygon>                                                                
