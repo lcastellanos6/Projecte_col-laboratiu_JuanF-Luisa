@@ -33,28 +33,36 @@ $id_client    = $_GET['id_client']    ?? '';
 $estat_lot    = $_GET['estat_lot']    ?? '';
 
 // --- CONSULTA PRINCIPAL DE COLLITES ---
-$sql = "
-SELECT 
-    c.collita_id,
-    c.data_inici,
-    c.data_fi,
-    c.quantitat_total,
-    c.unitat,
-    v.nom_comu    AS varietat,
-    s.nom         AS sector,
-    p.nom         AS parcela,
-    lp.codi_lot,
-    lp.estat      AS estat_lot,
-    dc.nom        AS client
-FROM collita c
-JOIN plantacio pl        ON pl.id_plantacio = c.plantacio_id
-JOIN sector s            ON s.id_sector     = pl.id_sector
-JOIN sector_parcela sp   ON sp.id_sector    = s.id_sector
-JOIN parcela p           ON p.id_parcela    = sp.id_parcela
-JOIN varietat v          ON v.id_varietat   = pl.id_varietat
-LEFT JOIN lot_produccio lp ON lp.collita_id = c.collita_id
-LEFT JOIN desti_client dc  ON dc.id_client  = lp.id_client
+// Mode de totals per collita (agregat) o detall per lot
+$mode_totals = $_GET['mode_totals'] ?? '';
+
+// Consulta base com a subselect per poder sumar quantitats per lot
+$baseSql = "
+    SELECT 
+        c.collita_id,
+        c.data_inici,
+        c.data_fi,
+        c.unitat,
+        v.nom_comu    AS varietat,
+        s.nom         AS sector,
+        p.nom         AS parcela,
+        lp.lot_id,
+        lp.codi_lot,
+        lp.quantitat  AS quantitat_lot,
+        lp.estat      AS estat_lot,
+        dc.id_client,
+        dc.nom        AS client
+    FROM collita c
+    JOIN plantacio pl        ON pl.id_plantacio = c.plantacio_id
+    JOIN sector s            ON s.id_sector     = pl.id_sector
+    JOIN sector_parcela sp   ON sp.id_sector    = s.id_sector
+    JOIN parcela p           ON p.id_parcela    = sp.id_parcela
+    JOIN varietat v          ON v.id_varietat   = pl.id_varietat
+    LEFT JOIN lot_produccio lp ON lp.collita_id = c.collita_id
+    LEFT JOIN desti_client dc  ON dc.id_client  = lp.id_client
 ";
+
+$sql = $baseSql;
 
 $condicions = [];
 
@@ -86,7 +94,24 @@ if (!empty($condicions)) {
     $sql .= " WHERE " . implode(" AND ", $condicions);
 }
 
-$sql .= " ORDER BY c.data_inici DESC";
+// Si s'ha demanat mode totals, agreguem per collita i mostrem suma de lots
+if ($mode_totals === '1') {
+    $sql = "SELECT 
+                t.collita_id,
+                t.data_inici,
+                t.data_fi,
+                t.unitat,
+                t.varietat,
+                t.parcela,
+                t.sector,
+                SUM(COALESCE(t.quantitat_lot,0)) AS quantitat_total_lots
+            FROM (" . $sql . ") t
+            GROUP BY t.collita_id, t.data_inici, t.data_fi, t.unitat, t.varietat, t.parcela, t.sector
+            ORDER BY t.data_inici DESC";
+} else {
+    // Mode detall per lot: ordenem per data i lot
+    $sql .= " ORDER BY c.data_inici DESC, lp.lot_id";
+}
 
 $result = $conn->query($sql);
 ?>
@@ -150,6 +175,13 @@ $result = $conn->query($sql);
         ?>
     </select>
 
+    <label>Mode</label>
+    <select name="mode_totals">
+        <?php $selTotals = ($mode_totals === '1') ? 'selected' : ''; $selDetall = ($mode_totals !== '1') ? 'selected' : ''; ?>
+        <option value="0" <?php echo $selDetall; ?>>Detall per lot</option>
+        <option value="1" <?php echo $selTotals; ?>>Totals per collita</option>
+    </select>
+
     <button type="submit">Filtrar</button>
 </form>
 
@@ -162,11 +194,16 @@ $result = $conn->query($sql);
             <th>Varietat</th>
             <th>Parcel·la</th>
             <th>Sector</th>
-            <th>Quantitat</th>
-            <th>Unitat</th>
-            <th>Codi lot</th>
-            <th>Estat lot</th>
-            <th>Client</th>
+            <?php if ($mode_totals === '1'): ?>
+                <th>Quantitat (suma lots)</th>
+                <th>Unitat</th>
+            <?php else: ?>
+                <th>Quantitat lot</th>
+                <th>Unitat</th>
+                <th>Codi lot</th>
+                <th>Estat lot</th>
+                <th>Client</th>
+            <?php endif; ?>
         </tr>
         <?php while($row = $result->fetch_assoc()): ?>
         <tr>
@@ -176,11 +213,16 @@ $result = $conn->query($sql);
             <td><?php echo htmlspecialchars($row['varietat']); ?></td>
             <td><?php echo htmlspecialchars($row['parcela']); ?></td>
             <td><?php echo htmlspecialchars($row['sector']); ?></td>
-            <td><?php echo htmlspecialchars($row['quantitat_total']); ?></td>
-            <td><?php echo htmlspecialchars($row['unitat']); ?></td>
-            <td><?php echo htmlspecialchars($row['codi_lot']); ?></td>
-            <td><?php echo htmlspecialchars($row['estat_lot']); ?></td>
-            <td><?php echo htmlspecialchars($row['client']); ?></td>
+            <?php if ($mode_totals === '1'): ?>
+                <td><?php echo htmlspecialchars($row['quantitat_total_lots']); ?></td>
+                <td><?php echo htmlspecialchars($row['unitat']); ?></td>
+            <?php else: ?>
+                <td><?php echo htmlspecialchars($row['quantitat_lot']); ?></td>
+                <td><?php echo htmlspecialchars($row['unitat']); ?></td>
+                <td><?php echo htmlspecialchars($row['codi_lot']); ?></td>
+                <td><?php echo htmlspecialchars($row['estat_lot']); ?></td>
+                <td><?php echo htmlspecialchars($row['client']); ?></td>
+            <?php endif; ?>
         </tr>
         <?php endwhile; ?>
     </table>
