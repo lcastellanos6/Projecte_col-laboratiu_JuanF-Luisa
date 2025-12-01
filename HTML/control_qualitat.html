@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Afegir Control de Qualitat</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, select, textarea, button {
+    width:100%; padding:8px; margin-top:5px;
+    border-radius:4px; border:1px solid #ccc;
+}
+button {
+    margin-top:15px; background:#2f7d2f; color:white;
+    padding:10px; border:none; border-radius:5px; cursor:pointer;
+}
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+
+<h2>Registrar Control de Qualitat</h2>
+
+<form action="../PHP/guardar_control_qualitat.php" method="post">
+
+    <label>ID Lot *</label>
+    <input type="number" name="lot_id" required>
+
+    <label>Data del Control *</label>
+    <input type="date" name="data_control" required>
+
+    <label>Calibre</label>
+    <input type="text" name="calibre">
+
+    <label>Color</label>
+    <input type="text" name="color">
+
+    <label>Fermesa</label>
+    <input type="text" name="fermesa">
+
+    <label>Defectes</label>
+    <textarea name="defectes"></textarea>
+
+    <label>Sabor</label>
+    <input type="text" name="sabor">
+
+    <label>Aroma</label>
+    <input type="text" name="aroma">
+
+    <label>Observacions</label>
+    <textarea name="observacions"></textarea>
+
+    <label>Qualificació Final</label>
+    <input type="text" name="qualificacio_final">
+
+    <button type="submit">Guardar Control</button>
+
+</form>
+
+</body>
+</html>
