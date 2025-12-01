@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-<meta charset="UTF-8">
-<title>Registrar Equip</title>
+    <meta charset="UTF-8">
+    <title>Afegir Maquinària</title>
+</head>
+<body>
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
 form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
@@ -13,27 +15,17 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
          border-radius:5px; cursor:pointer; width:100%; }
 button:hover { background:#3d9b3d; }
 </style>
-</head>
-<body>
+    <h2>Registrar Maquinària</h2>
 
-<h2>Registrar Equip</h2>
+    <form action="../PHP/guardar_maquinaria.php" method="post">
+        
+        <label>Tipus de maquinària *</label>
+        <input type="text" name="tipus" required>
 
-<form action="../PHP/guardar_equip.php" method="POST">
+        <label>Descripció</label>
+        <textarea name="descripcio"></textarea>
 
-    <label for="nom">Nom de l'equip</label>
-    <input type="text" name="nom" required>
-
-    <label for="id_departament">ID Departament *</label>
-    <input type="number" name="id_departament" required>
-
-    <label for="descripcio">Descripció</label>
-    <textarea name="descripcio"></textarea>
-
-    <button type="submit">Guardar Equip</button>
-
-</form>
-
+        <button type="submit">Guardar</button>
+    </form>
 </body>
 </html>
-
-

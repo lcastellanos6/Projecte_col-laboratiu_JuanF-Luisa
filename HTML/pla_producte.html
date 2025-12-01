@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<title>Registrar Equip</title>
+<title>Assignar Producte a Pla</title>
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
 form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
@@ -16,24 +16,23 @@ button:hover { background:#3d9b3d; }
 </head>
 <body>
 
-<h2>Registrar Equip</h2>
+<h2>Assignar Producte a Pla de Tractament</h2>
 
-<form action="../PHP/guardar_equip.php" method="POST">
+<form action="../PHP/guardar_pla_producte.php" method="post">
+    <label>ID Pla de Tractament *</label>
+    <input type="number" name="id_pla" required>
 
-    <label for="nom">Nom de l'equip</label>
-    <input type="text" name="nom" required>
+    <label>ID Producte *</label>
+    <input type="number" name="id_producte" required>
 
-    <label for="id_departament">ID Departament *</label>
-    <input type="number" name="id_departament" required>
+    <label>Dosi *</label>
+    <input type="text" name="dosi" required>
 
-    <label for="descripcio">Descripció</label>
-    <textarea name="descripcio"></textarea>
+    <label>Volum de Caldo</label>
+    <input type="text" name="volum_caldo">
 
-    <button type="submit">Guardar Equip</button>
-
+    <button type="submit">Afegir Producte</button>
 </form>
 
 </body>
 </html>
-
-

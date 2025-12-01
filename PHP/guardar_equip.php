@@ -11,7 +11,7 @@ $nom = $_POST['nom'];
 $id_departament = !empty($_POST['id_departament']) ? intval($_POST['id_departament']) : null;
 $descripcio = $_POST['descripcio'] ?? null;
 
-$sql = "INSERT INTO equip (nom, id_departament, descripcio) VALUES (?, ?, ?)";
+$sql = "INSERT INTO equip_treball (nom, id_departament, descripcio) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("sis", $nom, $id_departament, $descripcio);
 

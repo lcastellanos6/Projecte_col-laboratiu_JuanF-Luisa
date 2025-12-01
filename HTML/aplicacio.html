@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Aplicació</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+    <h2>Registre d'Aplicació de Tractament</h2>
+
+    <form action="../PHP/guardar_aplicacio.php" method="post">
+
+        <label>ID Pla de Tractament</label>
+        <input type="number" name="id_pla">
+
+        <label>Data *</label>
+        <input type="date" name="data" required>
+
+        <label>Hora inici</label>
+        <input type="time" name="hora_inici">
+
+        <label>Hora fi</label>
+        <input type="time" name="hora_fi">
+
+        <label>Mètode</label>
+        <select name="metode">
+            <option value="">-- Selecciona --</option>
+            <option value="Fertirrigacio">Fertirrigació</option>
+            <option value="Foliar">Foliar</option>
+            <option value="Sòl">Sòl</option>
+            <option value="Altres">Altres</option>
+        </select>
+
+        <label>Condicions Ambientals</label>
+        <textarea name="condicions_ambientals"></textarea>
+
+        <label>ID Operari</label>
+        <input type="number" name="id_operari">
+
+        <label>ID Equip</label>
+        <input type="number" name="id_equip">
+
+        <label>Observacions</label>
+        <textarea name="observacions"></textarea>
+
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
