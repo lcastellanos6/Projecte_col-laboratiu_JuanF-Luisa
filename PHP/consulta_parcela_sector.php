@@ -83,28 +83,26 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <title>Consulta de parcel·les i sectors</title>
+    <link rel="stylesheet" href="../HTML/styles.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 16px; }
-        form { margin-bottom: 20px; }
-        label { display: block; margin-top: 8px; font-weight: bold; }
-        input, select { width: 100%; padding: 6px; }
-        button { margin-top: 10px; padding: 8px 12px; }
-        #layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        #map { height: 520px; border: 1px solid #ccc; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-        th { background: #eee; }
+        #layout { display: grid; grid-template-columns: 1.1fr 1.4fr; gap: 1.25rem; }
+        #map { height: 520px; border-radius: 0.75rem; border: 1px solid #d1d5db; }
         tr.clickable { cursor: pointer; }
-        tr.highlight { background: #fff7c2; }
+        tr.highlight { background: #fef3c7; }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     </head>
 <body>
 
-<h2>Consulta de parcel·les i sectors</h2>
+<div class="page">
+<div class="page-header">
+  <h1>Consulta de parcel·les i sectors</h1>
+  <p class="page-subtitle">Filtra per municipi, orientació, estat productiu i superfície.</p>
+</div>
 
-<form method="get">
+<div class="panel">
+<form method="get" class="form-grid-2">
     <label>Municipi</label>
     <input type="text" name="municipi" value="<?php echo htmlspecialchars($municipi); ?>">
 
@@ -138,15 +136,17 @@ $result = $conn->query($sql);
     <label>Superfície màxima (ha)</label>
     <input type="number" step="0.01" name="superficie_max" value="<?php echo htmlspecialchars($superficie_max); ?>">
 
-    <button type="submit">Filtrar</button>
+    <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
 </form>
+</div>
 
+<div class="layout-two-columns mt-2">
 <div id="layout">
   <div id="map"></div>
   <div>
 <?php
 if ($result && $result->num_rows > 0): ?>
-    <table id="resultTable">
+    <table id="resultTable" class="table">
         <tr>
             <th>Parcel·la</th>
             <th>Ref. cadastral</th>
@@ -190,6 +190,9 @@ if ($result && $result->num_rows > 0): ?>
     <p>No hi ha resultats amb aquests filtres.</p>
 <?php endif; ?>
   </div>
+</div>
+
+</div>
 </div>
 
 <?php 

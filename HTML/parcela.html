@@ -4,28 +4,31 @@
   <meta charset="utf-8" />
   <title>Registrar nova parcel·la</title>
 
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css"/>
 
   <style>
-#map { height: 450px; border: 1px solid #aaa; margin-bottom: 15px; }
- body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
-form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
-       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-label { font-weight:bold; margin-top:10px; display:block; }
-input, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-button:hover { background:#3d9b3d; }
+    #map { height: 450px; border-radius: 0.75rem; border: 1px solid #d1d5db; margin-bottom: 1rem; }
   </style>
 </head>
 
 <body>
-  <h1>Registrar nova parcel·la</h1>
+  <div class="page">
+    <div class="page-header">
+      <h1>Registrar nova parcel·la</h1>
+      <p class="page-subtitle">Dibuixa la parcel·la al mapa i completa les dades bàsiques.</p>
+    </div>
 
-  <div id="map"></div>
+    <div class="layout-two-columns">
+      <div class="panel">
+        <h2 class="panel-title">Mapa de la parcel·la</h2>
+        <div id="map"></div>
+      </div>
 
-  <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
+      <div class="panel">
+        <h2 class="panel-title">Dades de la parcel·la</h2>
+        <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
 
     <label>Referència cadastral:</label>
     <input type="text" name="ref_cadastral" required>
@@ -73,9 +76,12 @@ button:hover { background:#3d9b3d; }
     <label>Foto de la parcel·la:</label>
     <input type="file" name="foto" accept="image/*">
 
-    <button type="submit">Guardar Parcel·la</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Parcel·la</button>
 
   </form>
+      </div>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>

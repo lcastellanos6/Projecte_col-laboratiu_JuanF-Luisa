@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Registre Climàtic</title>
-<style>
-body { font-family: Arial; margin: 20px; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; border-radius:5px; border:1px solid #ccc; }
-        button { background-color: #4CAF50; color: white; border:none; margin-top:15px; cursor:pointer; }
-        button:hover { background-color: #45a049; }
-</style>
+<link rel="stylesheet" href="../HTML/styles.css">
 </head>
 
 <body>
 
-<h2>Afegir Registre Climàtic</h2>
+<div class="page">
+<div class="page-header">
+  <h1>Afegir registre climàtic</h1>
+  <p class="page-subtitle">Desa dades anuals de temperatura, precipitació i altres factors.</p>
+</div>
 
+<div class="panel">
 <form action="guardar_clima.php" method="post">
 
     <label>ID Plantació *</label>
@@ -33,8 +32,10 @@ body { font-family: Arial; margin: 20px; }
     <label>Altres factors climàtics</label>
     <textarea name="altres_factors"></textarea>
 
-    <button type="submit">Guardar registre</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar registre</button>
 </form>
+</div>
+</div>
 
 </body>
 </html>
