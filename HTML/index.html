@@ -27,22 +27,16 @@ function openPage(url) {
                     <span>Panell de control general</span>
                 </div>
             </div>
-        </div>
-        <div class="hero-actions">
-            <?php if(isset($_SESSION['usuari'])): ?>
-                <div class="session-pill">
-                    <div>
+            <div class="hero-inline-actions">
+                <?php if(isset($_SESSION['usuari'])): ?>
+                    <div class="hero-session-info">
                         <p><?php echo htmlspecialchars($_SESSION['usuari']); ?></p>
                         <small><?php echo date('d/m/Y'); ?></small>
                     </div>
-                    <a class="btn btn-ghost" href="logout.php">Tancar sessió</a>
-                </div>
-            <?php else: ?>
-                <a class="login-cta" href="login.html">
-                    <span class="login-cta-icon" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
-                    <span>Inicia sessió</span>
-                </a>
-            <?php endif; ?>
+                <?php else: ?>
+                    <a class="login-cta" href="login.html">Inicia sessió</a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </header>

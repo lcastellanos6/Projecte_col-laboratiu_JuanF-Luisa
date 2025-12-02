@@ -14,13 +14,14 @@ body {
 /* Tipografia base i colors globals */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f5f7;
-  color: #111827;
+  background: #f0f4f0;
+  color: #2f4f2f;
 }
 
 body:not(.app-layout-body) {
   padding: 1.5rem;
   min-height: 100vh;
+  background: #f5fff5;
 }
 
 body:not(.app-layout-body) > h1,
@@ -28,7 +29,7 @@ body:not(.app-layout-body) > h2 {
   max-width: 720px;
   margin: 0 auto 1rem;
   font-size: 1.65rem;
-  color: #0f172a;
+  color: #2f4f2f;
 }
 
 body:not(.app-layout-body) > form {
@@ -37,7 +38,8 @@ body:not(.app-layout-body) > form {
   background: #ffffff;
   padding: 1.5rem;
   border-radius: 0.9rem;
-  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+  border: 1px solid #aacbaa;
+  box-shadow: 0 12px 30px rgba(47, 125, 47, 0.08);
 }
 
 /* Contenidor general i marges */
@@ -45,6 +47,7 @@ body:not(.app-layout-body) > form {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
+  color: #2f4f2f;
 }
 
 /* Capçalera que agrupa títol i subtítol */
@@ -56,11 +59,12 @@ body:not(.app-layout-body) > form {
 .page-header h2 {
   margin: 0;
   font-size: 1.8rem;
+  color: #2f4f2f;
 }
 
 .page-subtitle {
   margin: 0.25rem 0 1rem;
-  color: #6b7280;
+  color: #4c6b4c;
   font-size: 0.95rem;
 }
 
@@ -82,12 +86,14 @@ body:not(.app-layout-body) > form {
   background: #ffffff;
   border-radius: 0.75rem;
   padding: 1.25rem 1.5rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #aacbaa;
+  box-shadow: 0 8px 20px rgba(47, 125, 47, 0.08);
 }
 
 .panel-title {
   margin: 0 0 0.75rem;
   font-size: 1.1rem;
+  color: #2f4f2f;
 }
 
 .panel-header {
@@ -95,6 +101,7 @@ body:not(.app-layout-body) > form {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75rem;
+  color: #2f4f2f;
 }
 
 #map {
@@ -133,7 +140,7 @@ form .form-grid-3 {
 label {
   font-weight: 600;
   font-size: 0.9rem;
-  color: #374151;
+  color: #2f4f2f;
   display: block;
   margin-top: 0.5rem;
   margin-bottom: 0.15rem;
@@ -146,10 +153,10 @@ select {
   width: 100%;
   padding: 0.5rem 0.6rem;
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #aacbaa;
   font: inherit;
   color: inherit;
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 
 /* Estat de focus dels inputs */
@@ -157,8 +164,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+  border-color: #2f7d2f;
+  box-shadow: 0 0 0 1px rgba(47, 125, 47, 0.2);
   background-color: #ffffff;
 }
 
@@ -184,25 +191,25 @@ textarea {
 
 /* Variant principal en blau */
 .btn-primary {
-  background: #2563eb;
+  background: #2f7d2f;
   color: #ffffff;
 }
 
 /* Estat hover del botó principal */
 .btn-primary:hover {
-  background: #1d4ed8;
+  background: #3d9b3d;
 }
 
 /* Botó transparent amb contorn */
 .btn-ghost {
-  background: transparent;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid #e0f2e0;
+  color: #ffffff;
 }
 
 /* Hover del botó fantasma */
 .btn-ghost:hover {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 /* Botó que ocupa el 100% */
@@ -215,23 +222,41 @@ button {
   font: inherit;
 }
 
+/* Botons dels formularis generals */
+form button {
+  background: #2f7d2f;
+  color: #ffffff;
+  border: 1px solid #2f7d2f;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+form button:hover {
+  background: #3d9b3d;
+  border-color: #3d9b3d;
+}
+
 /* Taules de dades */
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
+  color: #2f4f2f;
 }
 
 /* Capçaleres de la taula */
 .table thead {
-  background: #f3f4f6;
+  background: #e8f5e8;
 }
 
 /* Cel·les de la taula */
 .table th,
 .table td {
   padding: 0.55rem 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #c3d9c3;
   text-align: left;
 }
 
@@ -245,7 +270,7 @@ button {
 
 /* Resaltat al passar per damunt la fila */
 .table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: #f0fbf0;
 }
 
 /* Badges d'acció */
@@ -259,19 +284,19 @@ button {
 
 /* Badge per enllaços d'acció */
 .badge-link {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: #d9f3d9;
+  color: #216b21;
 }
 
 /* Badge per accions destructives */
 .badge-danger {
   background: #fee2e2;
-  color: #b91c1c;
+  color: #a12323;
 }
 
 /* Disposició específica per al tauler principal */
 .app-layout-body {
-  background: #0f172a;
+  background: #f0f4f0;
 }
 
 /* Estructura vertical per a tota l'app */
@@ -279,14 +304,15 @@ button {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: #f0f4f0;
 }
 
 /* Hero principal de la capçalera */
 .hero {
-  background: linear-gradient(135deg, #16a34a, #15803d);
+  background: #2f7d2f;
   color: #ffffff;
-  padding: 3rem 1.5rem 3.5rem;
-  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.4);
+  padding: 0.85rem 1.5rem;
+  box-shadow: 0 18px 45px rgba(15, 61, 15, 0.3);
 }
 
 /* Contenidor central per centrar contingut */
@@ -296,37 +322,66 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2.5rem;
+  gap: 1rem;
 }
 
 /* Columna d'identitat visual i textos */
 .hero-text {
   flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .hero-brand {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex: 1;
 }
 
 .hero-brand img {
-  width: 140px;
-  height: auto;
-  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.35));
+  height: 110px;
+  width: auto;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.25));
 }
 
 .hero-copy h1 {
   margin: 0;
-  font-size: 2.7rem;
+  font-size: 2.1rem;
   line-height: 1.1;
 }
 
 .hero-copy span {
   display: block;
-  margin-top: 0.35rem;
-  font-size: 1.05rem;
-  opacity: 0.9;
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+/* Accions en línia dins la capçalera */
+.hero-inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-session-info {
+  text-align: right;
+  color: #ffffff;
+  font-size: 0.85rem;
+  line-height: 1.25;
+}
+
+.hero-session-info p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.hero-session-info small {
+  display: block;
+  opacity: 0.85;
 }
 
 /* Columna amb la targeta de login */
@@ -337,88 +392,39 @@ button {
   width: 100%;
 }
 
-/* Bloc per als enllaços o botons d'acció */
-.hero-actions {
-  flex: 0 0 320px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.session-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.12);
-  padding: 0.65rem 0.95rem;
-  border-radius: 999px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-  color: #f8fafc;
-}
-
-.session-pill p {
-  margin: 0;
-  font-weight: 600;
-}
-
-.session-pill small {
-  display: block;
-  opacity: 0.85;
-  color: #e0f2fe;
-}
-
 /* Botó de crida a l'acció per iniciar sessió */
 .login-cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.8rem 1.4rem;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(15, 23, 42, 0.35);
-  color: #e0f2fe;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
   text-decoration: none;
   font-weight: 600;
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.35), 0 12px 25px rgba(2, 6, 23, 0.45);
+  font-size: 0.85rem;
+  box-shadow: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .login-cta:hover {
   transform: translateY(-1px);
-  background: rgba(15, 23, 42, 0.55);
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.55), 0 16px 30px rgba(2, 6, 23, 0.55);
-}
-
-.login-cta-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(224, 242, 254, 0.8);
-  padding: 0.4rem;
-}
-
-.login-cta-icon svg,
-.login-cta-icon i {
-  width: 100%;
-  height: 100%;
-  fill: none;
-  color: currentColor;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: none;
 }
 
 /* Targeta destacada per al formulari */
 .login-card {
   width: 100%;
   max-width: 360px;
-  background: rgba(255, 255, 255, 0.96);
-  color: #0f172a;
+  background: rgba(255, 255, 255, 0.95);
+  color: #2f4f2f;
   border-radius: 1.25rem;
   padding: 1.75rem;
-  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35);
+  border: 1px solid #aacbaa;
+  box-shadow: 0 20px 40px rgba(15, 61, 15, 0.2);
 }
 
 /* Estat de sessió dins la targeta */
@@ -438,17 +444,17 @@ button {
 
 .app-session-meta p {
   margin: 0;
-  color: #0f172a;
+  color: #2f4f2f;
 }
 
 .login-card .btn-ghost {
-  border-color: rgba(15, 23, 42, 0.15);
-  color: #0f172a;
-  background: rgba(15, 23, 42, 0.05);
+  border-color: #2f7d2f;
+  color: #2f7d2f;
+  background: rgba(47, 125, 47, 0.08);
 }
 
 .login-card .btn-ghost:hover {
-  background: rgba(15, 23, 42, 0.12);
+  background: rgba(47, 125, 47, 0.15);
 }
 
 /* Formulari de login dins la targeta */
@@ -459,12 +465,12 @@ button {
 }
 
 .app-login label {
-  color: #0f172a;
+  color: #2f4f2f;
 }
 
 .app-login input {
   background: #ffffff;
-  border: 1px solid #d1d5db;
+  border: 1px solid #aacbaa;
   border-radius: 0.65rem;
   padding: 0.6rem 0.75rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -475,8 +481,8 @@ button {
 }
 
 .app-login input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+  border-color: #2f7d2f;
+  box-shadow: 0 0 0 2px rgba(47, 125, 47, 0.25);
 }
 
 /* Responsivitat de la hero */
@@ -486,18 +492,22 @@ button {
     text-align: center;
   }
 
+  .hero-text {
+    flex-direction: column;
+  }
+
   .hero-brand {
     flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-inline-actions {
+    justify-content: center;
   }
 
   .hero-login {
     flex: unset;
     width: 100%;
-    justify-content: center;
-  }
-
-  .hero-actions {
-    flex: unset;
     justify-content: center;
   }
 
@@ -512,7 +522,7 @@ button {
 
 /* Pàgina dedicada per al formulari de login */
 body.login-page {
-  background: #0f172a;
+  background: #f0f4f0;
   min-height: 100vh;
 }
 
@@ -524,7 +534,7 @@ body.login-page {
 }
 
 .login-back-link a {
-  color: #e0f2fe;
+  color: #2f7d2f;
   text-decoration: none;
   font-weight: 600;
   display: inline-flex;
@@ -533,58 +543,72 @@ body.login-page {
 }
 
 .login-back-link a:hover {
-  text-decoration: underline;
+  color: #3d9b3d;
 }
 
 /* Zona principal amb menú i contingut */
 .app-container {
   display: flex;
-  min-height: calc(100vh - 96px);
+  min-height: calc(100vh - 180px);
+  background: #f0f4f0;
+  height: calc(100vh - 180px);
 }
 
 /* Menú lateral amb categories */
 .app-menu {
   width: 260px;
-  background: #020617;
-  color: #e5e7eb;
+  background: #cfe6cf;
+  color: #2f4f2f;
   padding: 1rem;
   overflow-y: auto;
-  border-right: 1px solid rgba(148, 163, 184, 0.25);
+  border-right: 2px solid #aacbaa;
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Títols de secció del menú */
 .app-menu h3 {
-  margin: 1.25rem 0 0.25rem;
-  font-size: 0.9rem;
-  color: #9ca3af;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: #2f7d2f;
+  border-bottom: 2px solid #2f7d2f;
+  padding-bottom: 0.35rem;
 }
 
 /* Botons d'accés del menú */
 .app-menu button {
   width: 100%;
-  margin: 0.15rem 0;
-  padding: 0.55rem 0.75rem;
-  background: transparent;
-  border-radius: 0.55rem;
-  border: none;
+  margin: 0.25rem 0;
+  padding: 0.65rem 0.8rem;
+  background: #e8f5e8;
+  border-radius: 0.5rem;
+  border: 1px solid #8fbf8f;
   cursor: pointer;
   text-align: left;
-  color: #e5e7eb;
-  font-size: 0.9rem;
+  color: #2f4f2f;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
 }
 
-/* Estat hover dels botons de menú */
-.app-menu button:hover {
-  background: rgba(148, 163, 184, 0.16);
+@media (hover: hover) {
+  .app-menu button:hover {
+    background: #ffffff;
+    border-color: #2f7d2f;
+    transform: translateX(2px);
+  }
+}
+
+/* Estat focus dels botons de menú */
+.app-menu button:focus-visible {
+  outline: 2px solid #2f7d2f;
+  outline-offset: 2px;
 }
 
 /* Zona on es carrega el contingut */
 .app-content {
   flex: 1;
-  background: #020617;
-  border-left: 1px solid rgba(148, 163, 184, 0.16);
+  background: #ffffff;
+  border-left: 2px solid #aacbaa;
 }
 
 /* L'iframe ocupa tot l'espai disponible */
