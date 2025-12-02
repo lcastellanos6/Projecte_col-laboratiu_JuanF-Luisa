@@ -16,66 +16,62 @@
       <p class="page-subtitle">Dibuixa la parcel·la al mapa i completa les dades bàsiques.</p>
     </div>
 
-    <div class="layout-two-columns">
-      <div class="panel">
-        <h2 class="panel-title">Mapa de la parcel·la</h2>
-        <div id="map"></div>
-      </div>
+    <div class="panel">
+      <h2 class="panel-title">Mapa de la parcel·la</h2>
+      <div id="map"></div>
+    </div>
 
-      <div class="panel">
-        <h2 class="panel-title">Dades de la parcel·la</h2>
-        <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
+    <div class="panel">
+      <h2 class="panel-title">Dades de la parcel·la</h2>
+      <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
+        <label>Referència cadastral:</label>
+        <input type="text" name="ref_cadastral" required>
 
-    <label>Referència cadastral:</label>
-    <input type="text" name="ref_cadastral" required>
+        <label>Nom:</label>
+        <input type="text" name="nom">
 
-    <label>Nom:</label>
-    <input type="text" name="nom">
+        <label>Descripció:</label>
+        <textarea name="descripcio"></textarea>
 
-    <label>Descripció:</label>
-    <textarea name="descripcio"></textarea>
+        <label>Municipi:</label>
+        <input type="text" name="municipi">
 
-    <label>Municipi:</label>
-    <input type="text" name="municipi">
+        <label>Superfície (ha):</label>
+        <input type="number" step="0.01" name="superficie" id="superficie">
 
-    <label>Superfície (ha):</label>
-    <input type="number" step="0.01" name="superficie" id="superficie">
+        <input type="hidden" name="geometria" id="geometria">
+        <input type="hidden" name="geometria_kml" id="geometria_kml">
 
-    <input type="hidden" name="geometria" id="geometria">
-    <input type="hidden" name="geometria_kml" id="geometria_kml">
+        <label>Tipus de sòl:</label>
+        <input type="text" name="tipus_sol">
 
-    <label>Tipus de sòl:</label>
-    <input type="text" name="tipus_sol">
+        <label>Pendent (%):</label>
+        <input type="number" step="0.01" name="pendent">
 
-    <label>Pendent (%):</label>
-    <input type="number" step="0.01" name="pendent">
+        <label>Orientació:</label>
+        <select name="orientacio">
+          <option value="">--Selecciona--</option>
+          <option value="N">Nord</option>
+          <option value="S">Sud</option>
+          <option value="E">Est</option>
+          <option value="O">Oest</option>
+          <option value="NE">Nord-est</option>
+          <option value="NO">Nord-oest</option>
+          <option value="SE">Sud-est</option>
+          <option value="SO">Sud-oest</option>
+        </select>
 
-    <label>Orientació:</label>
-    <select name="orientacio">
-      <option value="">--Selecciona--</option>
-      <option value="N">Nord</option>
-      <option value="S">Sud</option>
-      <option value="E">Est</option>
-      <option value="O">Oest</option>
-      <option value="NE">Nord-est</option>
-      <option value="NO">Nord-oest</option>
-      <option value="SE">Sud-est</option>
-      <option value="SO">Sud-oest</option>
-    </select>
+        <label>Edafologia:</label>
+        <textarea name="edafo"></textarea>
 
-    <label>Edafologia:</label>
-    <textarea name="edafo"></textarea>
+        <label>Documentació:</label>
+        <textarea name="documentacio"></textarea>
 
-    <label>Documentació:</label>
-    <textarea name="documentacio"></textarea>
+        <label>Foto de la parcel·la:</label>
+        <input type="file" name="foto" accept="image/*">
 
-    <label>Foto de la parcel·la:</label>
-    <input type="file" name="foto" accept="image/*">
-
-    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Parcel·la</button>
-
-  </form>
-      </div>
+        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Parcel·la</button>
+      </form>
     </div>
   </div>
 
