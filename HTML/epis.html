@@ -4,18 +4,15 @@
 <meta charset="UTF-8">
 <title>Registrar Tipus d'EPI</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Registrar Tipus d'EPI</h2>
+<div class="page-header">
+  <h2>Registrar Tipus d'EPI</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/tipus_epi.php" method="POST">
 
     <label for="nom">Nom del tipus d'EPI</label>
@@ -33,9 +30,11 @@
     <label for="stock_minim">Stock mínim</label>
     <input type="number" name="stock_minim" value="0" min="0">
 
-    <button type="submit">Guardar Tipus d'EPI</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Tipus d'EPI</button>
 
 </form>
+</div>
 
+</div>
 </body>
 </html>

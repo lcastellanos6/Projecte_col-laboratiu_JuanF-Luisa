@@ -4,21 +4,15 @@
     <meta charset="UTF-8">
     <title>Afegir Control de Qualitat</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-input, select, textarea, 
-button {
-    margin-top:15px; background:#2f7d2f; color:white;
-    padding:10px; border:none; border-radius:5px; cursor:pointer;
-}
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Registrar Control de Qualitat</h2>
+<div class="page-header">
+  <h2>Registrar Control de Qualitat</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_control_qualitat.php" method="post">
 
     <label>ID Lot *</label>
@@ -51,9 +45,11 @@ button {
     <label>Qualificació Final</label>
     <input type="text" name="qualificacio_final">
 
-    <button type="submit">Guardar Control</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Control</button>
 
 </form>
+</div>
 
+</div>
 </body>
 </html>

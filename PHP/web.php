@@ -4,13 +4,6 @@
 <meta charset="UTF-8">
 <title>Gestió de l'Explotació</title>
 <link rel="stylesheet" href="../HTML/styles.css">
-<style>
-.tabs { display: flex; cursor: pointer; margin-bottom: 10px; }
-.tab { padding: 0.6rem 1.1rem; border-radius: 999px; margin-right: 0.4rem; background: #e5e7eb; font-size: 0.9rem; }
-.tab.active { background: #2563eb; color: #ffffff; }
-.tab-content { display: none; margin-top: 0.75rem; }
-.tab-content.active { display: block; }
-</style>
 </head>
 <body>
 

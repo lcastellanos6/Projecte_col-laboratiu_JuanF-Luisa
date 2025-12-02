@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Registre de Varietat</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-    </style>
 </head>
 <body>
-    <h1>Registrar nova especie</h1>
+<div class="page">
+    <div class="page-header">
+  <h1>Registrar nova especie</h1>
+</div>
 
-    <form action="../PHP/guardar_especie.php" method="post">
+    <div class="panel">
+<form action="../PHP/guardar_especie.php" method="post">
 
         <label>Nom cientific:</label>
         <input type="text" name="nom_cientific" required>
@@ -23,7 +20,9 @@
         <label>Nom comu:</label>
         <input type="text" name="nom_comu" required>
 
-        <button type="submit">Guardar especie</button>
+        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar especie</button>
     </form>
+</div>
+</div>
 </body>
 </html>

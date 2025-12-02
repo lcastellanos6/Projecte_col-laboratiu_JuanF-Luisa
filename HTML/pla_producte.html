@@ -4,18 +4,15 @@
 <meta charset="UTF-8">
 <title>Assignar Producte a Pla</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Assignar Producte a Pla de Tractament</h2>
+<div class="page-header">
+  <h2>Assignar Producte a Pla de Tractament</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_pla_producte.php" method="post">
     <label>ID Pla de Tractament *</label>
     <input type="number" name="id_pla" required>
@@ -29,8 +26,10 @@
     <label>Volum de Caldo</label>
     <input type="text" name="volum_caldo">
 
-    <button type="submit">Afegir Producte</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Afegir Producte</button>
 </form>
+</div>
 
+</div>
 </body>
 </html>

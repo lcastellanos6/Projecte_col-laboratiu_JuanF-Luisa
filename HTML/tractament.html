@@ -4,20 +4,16 @@
 <meta charset="UTF-8">
 <title>Registrar Tractament</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-input, select, 
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-
-</style>
 </style>
 </head>
 <body>
+<div class="page">
 
-<h1>Registrar nou Tractament</h1>
+<div class="page-header">
+  <h1>Registrar nou Tractament</h1>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_tractament.php" method="post">
     <label for="id_fila">ID Fila:</label>
     <input type="number" name="id_fila" required placeholder="Introdueix l'ID de la fila">
@@ -38,9 +34,11 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
     <label for="dosi_ml">Dosi (ml):</label>
     <input type="text" name="dosi_ml" placeholder="Quantitat aplicada en ml">
 
-    <button type="submit">Guardar Tractament</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Tractament</button>
 </form>
+</div>
 
+</div>
 </body>
 </html>
 

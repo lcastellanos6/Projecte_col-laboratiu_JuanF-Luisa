@@ -4,18 +4,15 @@
 <meta charset="UTF-8">
 <title>Registrar Tipus de Documentació</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Registrar Tipus de Documentació</h2>
+<div class="page-header">
+  <h2>Registrar Tipus de Documentació</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_documentacio.php" method="POST" enctype="multipart/form-data">
 
     <label for="nom_document">Nom del document</label>
@@ -48,9 +45,11 @@
     <label for="dni">DNI</label>
     <input type="text" name="dni" id="dni" required>
 
-    <button type="submit">Guardar Tipus de Document</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Tipus de Document</button>
 
 </form>
+</div>
 
+</div>
 </body>
 </html>

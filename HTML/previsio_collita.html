@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Afegir Previsió de Producció</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-input, select, 
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer; }
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Registrar Previsió de Producció</h2>
+<div class="page-header">
+  <h2>Registrar Previsió de Producció</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_previsio_collita.php" method="post">
 
     <label>ID Parcela *</label>
@@ -42,9 +39,11 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
     <label>Model Predictiu</label>
     <input type="text" name="model_predictiu">
 
-    <button type="submit">Guardar Previsió</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Previsió</button>
 
 </form>
+</div>
 
+</div>
 </body>
 </html>

@@ -4,19 +4,15 @@
 <meta charset="UTF-8">
 <title>Assignar Treballador a Equip</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-input, 
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Assignar Treballador a Equip</h2>
+<div class="page-header">
+  <h2>Assignar Treballador a Equip</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_membres.php" method="POST">
 
     <label for="id_equip">ID Equip</label>
@@ -34,9 +30,11 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
     <label for="data_baixa">Data de baixa</label>
     <input type="date" name="data_baixa">
 
-    <button type="submit">Assignar Treballador</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Assignar Treballador</button>
 
 </form>
+</div>
 
+</div>
 </body>
 </html>

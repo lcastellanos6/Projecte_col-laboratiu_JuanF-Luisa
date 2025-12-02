@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <title>Registrar Infraestructura</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-    </style>
 </head>
 <body>
-     <h1>Registrar nova infraestructura</h1>
-   <form action="../PHP/guardar_infraestructura.php" method="post">
+<div class="page">
+     <div class="page-header">
+  <h1>Registrar nova infraestructura</h1>
+</div>
+   <div class="panel">
+<form action="../PHP/guardar_infraestructura.php" method="post">
     <label>ID de Parcela:</label>
     <input type="number" name="id_parcela" required>
 
@@ -30,7 +27,9 @@
     <label>Foto URL (opcional):</label>
     <input type="text" name="foto_url" placeholder="https://...">
 
-    <button type="submit">Guardar Infraestructura</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Infraestructura</button>
 </form>
+</div>
 
+</div>
 </body>

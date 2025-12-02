@@ -4,17 +4,14 @@
 <meta charset="UTF-8">
 <title>Registrar Fila</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-
-
-
-</style>
 </head>
 <body>
-<h1>Registrar nova Fila</h1>
+<div class="page">
+<div class="page-header">
+  <h1>Registrar nova Fila</h1>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_fila.php" method="post">
 
     <label>Plantació (ID):</label>
@@ -23,8 +20,10 @@
     <label>Número de fila:</label>
     <input type="number" name="numero_fila" required placeholder="Número de la fila">
 
-    <button type="submit">Guardar Fila</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Fila</button>
 </form>
+</div>
+</div>
 </body>
 </html>
 

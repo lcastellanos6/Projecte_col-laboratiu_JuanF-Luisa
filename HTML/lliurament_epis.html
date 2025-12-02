@@ -4,19 +4,15 @@
 <meta charset="UTF-8">
 <title>Registrar Lliurament EPI</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-input, select, textarea, 
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h2>Registrar Lliurament EPI</h2>
+<div class="page-header">
+  <h2>Registrar Lliurament EPI</h2>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_epis.php" method="POST" enctype="multipart/form-data">
 
     <label for="id_treballador">Treballador (ID)</label>
@@ -46,9 +42,11 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
     <label for="observacions">Observacions</label>
     <textarea name="observacions"></textarea>
 
-    <button type="submit">Guardar Lliurament</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Lliurament</button>
 
 </form>
+</div>
 
+</div>
 </body>
 </html>

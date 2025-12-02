@@ -4,19 +4,15 @@
 <meta charset="UTF-8">
 <title>Registrar Producte</title>
 <link rel="stylesheet" href="styles.css">
-
-
-
-input, select, 
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-
-</style>
 </head>
 <body>
+<div class="page">
 
-<h1>Registrar nou producte</h1>
+<div class="page-header">
+  <h1>Registrar nou producte</h1>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_producte.php" method="post">
 
     <label for="tipus">Tipus de producte:</label>
@@ -61,8 +57,10 @@ button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:
         <option value="0">No</option>
     </select>
 
-    <button type="submit">Guardar Producte</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Producte</button>
 </form>
+</div>
 
+</div>
 </body>
 </html>
