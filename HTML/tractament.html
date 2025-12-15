@@ -3,22 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Registrar Tractament</title>
-<style>
-body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
-form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
-       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-label { font-weight:bold; margin-top:10px; display:block; }
-input, select, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-button:hover { background:#3d9b3d; }
-</style>
+<link rel="stylesheet" href="styles.css">
 </style>
 </head>
 <body>
+<div class="page">
 
-<h1>Registrar nou Tractament</h1>
+<div class="page-header">
+  <h1>Registrar nou Tractament</h1>
+</div>
 
+<div class="panel">
 <form action="../PHP/guardar_tractament.php" method="post">
     <label for="id_fila">ID Fila:</label>
     <input type="number" name="id_fila" required placeholder="Introdueix l'ID de la fila">
@@ -39,9 +34,11 @@ button:hover { background:#3d9b3d; }
     <label for="dosi_ml">Dosi (ml):</label>
     <input type="text" name="dosi_ml" placeholder="Quantitat aplicada en ml">
 
-    <button type="submit">Guardar Tractament</button>
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Tractament</button>
 </form>
+</div>
 
+</div>
 </body>
 </html>
 

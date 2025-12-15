@@ -6,115 +6,153 @@ session_start();
 <head>
 <meta charset="UTF-8">
 <title>Gestió de l'Explotació Fruiteres</title>
-<style>
-body { font-family: 'Times New Roman', Times, serif; margin: 0; background: #f0f4f0; color: #2f4f2f; }
-header { display: flex; align-items: center; justify-content: space-between; background: #2f7d2f; color: white; padding: 15px 20px; }
-header img { height: 150px; }
-header h1 { margin: 0; }
-.user-info p { margin: 0; }
-.container { display: flex; height: calc(100vh - 180px); }
-.menu { width: 260px; background: #cfe6cf; padding: 15px; overflow-y: auto; box-shadow: 3px 0 6px rgba(0,0,0,0.1); }
-.menu h3 { margin-top: 20px; color: #2f7d2f; border-bottom: 2px solid #2f7d2f; padding-bottom: 5px; }
-.menu button { width: 100%; margin: 5px 0; padding: 10px; background: #e8f5e8; border: 1px solid #8fbf8f; border-radius: 5px; cursor: pointer; text-align: left; }
-.menu button:hover { background: #ffffff; }
-.content iframe { width: 100%; height: 100%; border: none; }
-.content { flex: 1; background: white; border-left: 2px solid #aacbaa; }
-</style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script>
 function openPage(url) {
     document.getElementById("contentFrame").src = url;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var sectionHeaders = document.querySelectorAll('.menu-section-header');
+    sectionHeaders.forEach(function(header) {
+        header.addEventListener('click', function() {
+            var section = header.closest('.menu-section');
+            if (section) {
+                section.classList.toggle('is-open');
+            }
+        });
+    });
+});
 </script>
 </head>
-<body>
+<body class="app-layout-body">
 
-<header>
-    <div style="display:flex; align-items:center;">
-        <img src="logo.png" alt="Logo Explotació">
-        <h1>Gestió de l'Explotació Fruiteres</h1>
-    </div>
-    <div class="user-info">
-        <?php if(isset($_SESSION['usuari'])): ?>
-            <p>Usuari: <?php echo htmlspecialchars($_SESSION['usuari']); ?></p>
-            <p>Data: <?php echo date('d/m/Y'); ?></p>
-            <p><a href="logout.php" style="color:white;">Tancar sessió</a></p>
-        <?php else: ?>
-            <form action="login.php" method="post" style="text-align:right;">
-                <input type="text" name="usuari" placeholder="Usuari" required><br>
-                <input type="password" name="contrasenya" placeholder="Contrasenya" required><br>
-                <button type="submit" style="background:#45a049; color:white;">Login</button>
-            </form>
-        <?php endif; ?>
+<div class="app-shell">
+<header class="hero">
+    <div class="hero-inner">
+        <div class="hero-text">
+            <div class="hero-brand">
+                <img src="logo.png" alt="Logo Explotació">
+                <div class="hero-copy">
+                    <h1>Gestió de l'Explotació Fruiteres</h1>
+                    <span>Panell de control general</span>
+                </div>
+            </div>
+            <div class="hero-inline-actions">
+                <?php if(isset($_SESSION['usuari'])): ?>
+                    <div class="hero-session-info">
+                        <p><?php echo htmlspecialchars($_SESSION['usuari']); ?></p>
+                        <small><?php echo date('d/m/Y'); ?></small>
+                    </div>
+                <?php else: ?>
+                    <a class="login-cta" href="login.html">Inicia sessió</a>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </header>
 
-<div class="container">
+<div class="app-container">
 
-    <div class="menu">
-        <h3>📌 Gestió de cultius</h3>
-        <button onclick="openPage('parcela.html')">Parcel·les</button>
-        <button onclick="openPage('mapa_exploracio.html')">Visualitzar Parcel·les</button>
-        <button onclick="openPage('sector.html')">Sectors</button>
-        <button onclick="openPage('seguiment.html')">Seguiment</button>
-        <button onclick="openPage('sol.html')">Sol-sector</button>
-        <button onclick="openPage('especie.html')">Espècies</button>
-        <button onclick="openPage('varietat.html')">Varietats</button>
-        <button onclick="openPage('plantacio.html')">Plantació</button>
-        <button onclick="openPage('clima.html')">Clima</button>
-        <button onclick="openPage('registre.html')">Registre</button>
-        <button onclick="openPage('infraestructura.html')">Infraestructura</button>
-        <button onclick="openPage('fila.html')">Files</button>
-        <button onclick="openPage('tractament.html')">Tractaments</button>
-        <button onclick="openPage('previsio_collita.html')">Previsio de collita</button>
+    <div class="app-menu">
+        <div class="menu-section">
+            <button class="menu-section-header" type="button">
+                <span>📌 Gestió de cultius</span>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="menu-section-body">
+                <button onclick="openPage('parcela.html')">Parcel·les</button>
+                <button onclick="openPage('mapa_exploracio.html')">Visualitzar parcel·les</button>
+                <button onclick="openPage('sector.html')">Sectors</button>
+                <button onclick="openPage('sol.html')">Sol-sector</button>
+                <button onclick="openPage('especie.html')">Espècies</button>
+                <button onclick="openPage('varietat.html')">Varietats</button>
+                <button onclick="openPage('infraestructura.html')">Infraestructura</button>
+                <button onclick="openPage('plantacio.html')">Plantació</button>
+                <button onclick="openPage('fila.html')">Files</button>
+                <button onclick="openPage('previsio_collita.html')">Previsió de collita</button>
+            </div>
+        </div>
 
- 
-        <h3>🔎 Consultes</h3>
-        <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
-        <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
+        <div class="menu-section">
+            <button class="menu-section-header" type="button">
+                <span>🔎 Consultes</span>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="menu-section-body">
+                <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
+                <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
+            </div>
+        </div>
 
+        <div class="menu-section">
+            <button class="menu-section-header" type="button">
+                <span>🌱 Operacions</span>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="menu-section-body">
+                <button onclick="openPage('tractament.html')">Tractaments</button>
+                <button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
+                <button onclick="openPage('aplicacio.html')">Aplicació</button>
+                <button onclick="openPage('aplicacio_productes.html')">Aplicació de productes</button>
+                <button onclick="openPage('producte.html')">Productes</button>
+                <button onclick="openPage('pla_producte.html')">Pla de producte</button>
+                <button onclick="openPage('magatzem.html')">Magatzem</button>
+                <button onclick="openPage('producte_lot.html')">Lot de producte</button>
+                <button onclick="openPage('moviment_lot.html')">Moviment de l'estoc</button>
+                <button onclick="openPage('tasques.html')">Tasques</button>
+                <button onclick="openPage('seguiment.html')">Seguiment</button>
+                <button onclick="openPage('registre.html')">Registre</button>
+                <button onclick="openPage('client.html')">Client</button>
+                <button onclick="openPage('collita.html')">Collita</button>
+                <button onclick="openPage('lot_produccio.html')">Lot de producció</button>
+                <button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
+                <button onclick="openPage('clima.html')">Clima</button>
+                <button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
+            </div>
+        </div>
 
-        <h3>🌱 Operacions</h3>
-        <button onclick="openPage('producte.html')">Productes</button>
-        <button onclick="openPage('estat_fenologic.html')">Estat fenologic</button>
-        <button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
-        <button onclick="openPage('pla_producte.html')">Pla de producte</button>
-        <button onclick="openPage('operari.html')">Operari</button>
-        <button onclick="openPage('maquinaria.html')">Maquinària</button>
-        <button onclick="openPage('aplicacio.html')">Aplicacio</button>    
-        <button onclick="openPage('aplicacio_productes.html')">Aplicacio de productes</button>
-        <button onclick="openPage('tasques.html')">Tasques</button>
-        <button onclick="openPage('magatzem.html')">Magatzem</button>
-        <button onclick="openPage('producte_lot.html')">Lot de producte</button>
-        <button onclick="openPage('moviment_lot.html')">Moviment de l'estoc</button>
-        <button onclick="openPage('client.html')">Client</button>
-        <button onclick="openPage('collita.html')">Collita</button>
-        <button onclick="openPage('lot_produccio.html')">Lot de produccio</button>
-        <button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
+        <div class="menu-section">
+            <button class="menu-section-header" type="button">
+                <span>👨‍🌾 Gestió de treballadors</span>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="menu-section-body">
+                <button onclick="openPage('treballador.html')">Treballadors</button>
+                <button onclick="openPage('operari.html')">Operari</button>
+                <button onclick="openPage('maquinaria.html')">Maquinària</button>
+                <button onclick="openPage('contracte.html')">Contracte</button>
+                <button onclick="openPage('absencia.html')">Absència</button>
+                <button onclick="openPage('documentacio.html')">Documentació</button>
+                <button onclick="openPage('departament.html')">Departaments</button>
+                <button onclick="openPage('equip.html')">Equip de treball</button>
+                <button onclick="openPage('membres_equip.html')">Membres del equip</button>
+                <button onclick="openPage('epis.html')">Epis</button>
+                <button onclick="openPage('lliurament_epis.html')">Lliurament Epis</button>
+                <button onclick="openPage('horari.html')">Horaris model</button>
+                <button onclick="openPage('calendari.html')">Calendaris model</button>
+            </div>
+        </div>
 
-
-        <h3>👨‍🌾 Gestió de treballadors</h3>
-        <button onclick="openPage('treballador.html')">Treballadors</button>
-        <button onclick="openPage('contracte.html')">Contracte</button>
-        <button onclick="openPage('absencia.html')">Absència</button>
-        <button onclick="openPage('documentacio.html')">Documentació</button>
-        <button onclick="openPage('departament.html')">Departaments</button>
-        <button onclick="openPage('equip.html')">Equip de treball</button>
-        <button onclick="openPage('membres_equip.html')">Membres del Equip</button>
-        <button onclick="openPage('epis.html')">Epis</button>
-        <button onclick="openPage('lliurament_epis.html')">Lliurament Epis</button>
-        <button onclick="openPage('horari.html')">Horaris Model</button>
-        <button onclick="openPage('calendari.html')">Calendaris Model</button>
-
-        <h3>⚙️ Configuració</h3>
-        <button onclick="openPage('usuari.html')">Usuaris</button>
+        <div class="menu-section">
+            <button class="menu-section-header" type="button">
+                <span>⚙️ Configuració</span>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="menu-section-body">
+                <button onclick="openPage('usuari.html')">Usuaris</button>
+            </div>
+        </div>
     </div>
 
-    <div class="content">
+    <div class="app-content">
         <iframe id="contentFrame" src="parcela.html"></iframe>
     </div>
 
 </div>
 
+</div>
+
 </body>
 </html>
-

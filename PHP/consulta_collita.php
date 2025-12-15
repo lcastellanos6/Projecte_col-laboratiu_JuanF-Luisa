@@ -120,22 +120,18 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <title>Consulta de collites</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 16px; }
-        form { margin-bottom: 20px; }
-        label { display: block; margin-top: 8px; font-weight: bold; }
-        input, select { width: 100%; padding: 6px; }
-        button { margin-top: 10px; padding: 8px 12px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-        th { background: #eee; }
-    </style>
+    <link rel="stylesheet" href="../HTML/styles.css">
 </head>
 <body>
 
-<h2>Consulta de collites</h2>
+<div class="page">
+<div class="page-header">
+  <h1>Consulta de collites</h1>
+  <p class="page-subtitle">Filtra collites per any, varietat, client i estat.</p>
+</div>
 
-<form method="get">
+<div class="panel">
+<form method="get" class="form-grid-2">
     <label>Any de campanya</label>
     <input type="number" name="any" value="<?php echo htmlspecialchars($any); ?>">
 
@@ -182,11 +178,14 @@ $result = $conn->query($sql);
         <option value="1" <?php echo $selTotals; ?>>Totals per collita</option>
     </select>
 
-    <button type="submit">Filtrar</button>
+    <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
 </form>
 
+</div>
+
+<div class="panel mt-2">
 <?php if ($result && $result->num_rows > 0): ?>
-    <table>
+    <table class="table">
         <tr>
             <th>ID collita</th>
             <th>Data inici</th>
@@ -232,6 +231,8 @@ $result = $conn->query($sql);
 
 $conn->close();
 ?>
+</div>
+</div>
 
 </body>
 </html>
