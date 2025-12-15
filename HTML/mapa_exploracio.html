@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8" />
+<title>Mapa de Parcel·les</title>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Turf -->
+<script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+
+<!-- Fullscreen -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.6.0/Control.FullScreen.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.6.0/Control.FullScreen.min.js"></script>
+
+<style>
+html,body { height:100%; margin:0; padding:0; }
+#map { height:100%; }
+body { font-family: Arial, sans-serif; }
+
+/* Panell lateral */
+.container {
+  display:flex;
+  height:100vh;
+}
+
+#controls {
+  width:280px;
+  max-height:100vh;
+  overflow:auto;
+  padding:12px;
+  background:#ffffff;
+  border-right:1px solid #ddd;
+}
+
+#controls h3 { margin:6px 0; }
+
+.select-inline {
+  width:100%;
+  padding:6px;
+  margin-bottom:8px;
+}
+
+.list-parcels { list-style:none; padding:0; margin:0; }
+.list-parcels li {
+  padding:8px;
+  border-bottom:1px solid #eee;
+  cursor:pointer;
+}
+.list-parcels li:hover { background:#eef8ee; }
+
+.button {
+  width:100%;
+  padding:8px;
+  text-align:center;
+  background:#2f7d2f;
+  color:white;
+  border:none;
+  border-radius:4px;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+#mapwrap {
+  flex:1;
+  height:100%;
+}
+
+.popup-img { max-width:220px; margin-top:8px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Panell lateral -->
+  <div id="controls">
+    <h3>Filtres</h3>
+
+    <label>Tipus de sòl</label>
+    <select id="filterTipusSol" class="select-inline"><option value="">(Tots)</option></select>
+
+    <label>Orientació</label>
+    <select id="filterOrientacio" class="select-inline"><option value="">(Tots)</option></select>
+
+    <label>Pendent (min - max %)</label>
+    <div style="display:flex; gap:6px">
+      <input id="filterPMin" type="number" placeholder="min" style="flex:1; padding:6px">
+      <input id="filterPMax" type="number" placeholder="max" style="flex:1; padding:6px">
+    </div>
+
+    <label>Cerca (nom / ref.)</label>
+    <input id="filterText" class="select-inline" type="text" placeholder="cerca text">
+
+    <button id="applyFilters" class="button">Aplicar filtres</button>
+    <button id="resetFilters" class="button" style="background:#666">Netejar</button>
+
+    <hr>
+
+    <h3>Parcel·les</h3>
+    <ul id="parcelList" class="list-parcels"></ul>
+  </div>
+
+  <!-- Mapa -->
+  <div id="mapwrap">
+    <div id="map"></div>
+  </div>
+
+</div>
+
+<script>
+// ===== MAPA =====
+const map = L.map('map', { fullscreenControl: true }).setView([41.6, 2.4], 12);
+
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'OSM'
+}).addTo(map);
+
+const esriSat = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
+  { attribution: 'Esri' }
+);
+
+L.control.layers({ "Mapa": osm, "Satèl·lit": esriSat }).addTo(map);
+
+// Capa parcel·les
+let parcelaLayer = L.geoJSON(null, {
+  style: featureStyle,
+  onEachFeature: onEachParcela
+}).addTo(map);
+
+let loadedGeoJSON = null;
+
+// estil dinàmic
+function featureStyle(f) {
+  let color = "#2f7d2f";
+  const t = f.properties?.tipus_sol?.toLowerCase() || "";
+
+  if (t.includes("argil")) color = "#8B572A";
+  else if (t.includes("sorra") || t.includes("aren")) color = "#DEB887";
+  else if (t.includes("lim")) color = "#F7E7CE";
+
+  return { color, weight:2, fillOpacity:0.25 };
+}
+
+// carregar dades
+async function fetchParcels() {
+  const res = await fetch('../PHP/mapa_exploracio.php');
+  const geojson = await res.json();
+  loadedGeoJSON = geojson;
+  return geojson;
+}
+
+// render mapa + llista
+function renderParcels(geojson) {
+  parcelaLayer.clearLayers();
+  parcelaLayer.addData(geojson);
+
+  const list = document.getElementById('parcelList');
+  list.innerHTML = "";
+
+  geojson.features.forEach(f => {
+    const li = document.createElement('li');
+    const name = f.properties.nom || f.properties.ref_cadastral || "Parcel·la";
+    li.innerHTML = `<strong>${name}</strong>`;
+    li.onclick = () => {
+      const temp = L.geoJSON(f);
+      map.fitBounds(temp.getBounds(), { maxZoom:18 });
+    };
+    list.appendChild(li);
+  });
+
+  populateFilters(geojson.features);
+}
+
+// calc àrea ha
+function computeAreaHa(feature) {
+  try {
+    return turf.area(feature) / 10000;
+  } catch { return 0; }
+}
+
+// popup
+function onEachParcela(feature, layer) {
+  const p = feature.properties;
+  let html = `<strong>${p.nom || p.ref_cadastral}</strong><br>`;
+  html += `<b>Superfície:</b> ${computeAreaHa(feature).toFixed(2)} ha<br>`;
+  if (p.tipus_sol) html += `<b>Sòl:</b> ${p.tipus_sol}<br>`;
+  if (p.pendent) html += `<b>Pendent:</b> ${p.pendent}%<br>`;
+  if (p.orientacio) html += `<b>Orientació:</b> ${p.orientacio}<br>`;
+  if (p.foto_url) html += `<img class="popup-img" src="${p.foto_url}">`;
+
+  layer.bindPopup(html);
+}
+
+// filtratge
+function populateFilters(features) {
+  const sols = new Set();
+  const orients = new Set();
+
+  features.forEach(f => {
+    if (f.properties.tipus_sol) sols.add(f.properties.tipus_sol);
+    if (f.properties.orientacio) orients.add(f.properties.orientacio);
+  });
+
+  const solSel = document.getElementById('filterTipusSol');
+  solSel.innerHTML = '<option value="">(Tots)</option>';
+  sols.forEach(s => solSel.innerHTML += `<option>${s}</option>`);
+
+  const oriSel = document.getElementById('filterOrientacio');
+  oriSel.innerHTML = '<option value="">(Tots)</option>';
+  orients.forEach(o => oriSel.innerHTML += `<option>${o}</option>`);
+}
+
+// aplicar filtres
+document.getElementById("applyFilters").onclick = () => {
+  if (!loadedGeoJSON) return;
+
+  const sol = document.getElementById('filterTipusSol').value;
+  const ori = document.getElementById('filterOrientacio').value;
+  const text = document.getElementById('filterText').value.toLowerCase();
+  const pmin = parseFloat(document.getElementById('filterPMin').value);
+  const pmax = parseFloat(document.getElementById('filterPMax').value);
+
+  const filtered = loadedGeoJSON.features.filter(f => {
+    const p = f.properties;
+
+    if (sol && p.tipus_sol !== sol) return false;
+    if (ori && p.orientacio !== ori) return false;
+    if (!isNaN(pmin) && (!p.pendent || p.pendent < pmin)) return false;
+    if (!isNaN(pmax) && (!p.pendent || p.pendent > pmax)) return false;
+
+    if (text) {
+      const full = (p.nom || "") + " " + (p.ref_cadastral || "");
+      if (!full.toLowerCase().includes(text)) return false;
+    }
+
+    return true;
+  });
+
+  renderParcels({ type:"FeatureCollection", features: filtered });
+};
+
+// reset filtres
+document.getElementById("resetFilters").onclick = async () => {
+  document.getElementById('filterTipusSol').value = "";
+  document.getElementById('filterOrientacio').value = "";
+  document.getElementById('filterText').value = "";
+  document.getElementById('filterPMin').value = "";
+  document.getElementById('filterPMax').value = "";
+
+  const geo = await fetchParcels();
+  renderParcels(geo);
+};
+
+// inicialització
+(async () => {
+  const geojson = await fetchParcels();
+  renderParcels(geojson);
+
+  if (geojson.features.length) {
+    parcelaLayer.addData(geojson);
+    map.fitBounds(parcelaLayer.getBounds());
+  }
+})();
+</script>
+
+</body>
+</html>
