@@ -413,6 +413,7 @@ form button:hover {
   flex-direction: column;
   min-height: 100vh;
   background: #f0f4f0;
+  --sidebar-width: 280px;
 }
 
 /* Hero principal de la capçalera */
@@ -420,6 +421,41 @@ form button:hover {
   background: #2f7d2f;
   color: #ffffff;
   box-shadow: 0 18px 45px rgba(15, 61, 15, 0.3);
+}
+
+.hero-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.hero-menu-toggle:hover {
+  background: rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.hero-menu-toggle:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 /* Contenidor central per centrar contingut */
@@ -655,21 +691,80 @@ body.login-page {
 
 /* Zona principal amb menú i contingut */
 .app-container {
+  flex: 1 1 auto;
   display: flex;
-  min-height: calc(100vh - 180px);
+  align-items: stretch;
+  min-height: 0;
   background: #f0f4f0;
-  height: calc(100vh - 180px);
 }
 
-/* Menú lateral amb categories */
+/* Sidebar sticky amb categories */
+.sidebar {
+  position: sticky;
+  top: 0;
+  width: var(--sidebar-width);
+  min-height: 0;
+  overflow-y: auto;
+  background: #F5FFF5;
+  border-right: 1px solid rgba(47, 125, 47, 0.25);
+}
+
+.app-shell.sidebar-collapsed {
+  --sidebar-width: 0px;
+}
+
+/* Tancar menú (X) dins del sidebar */
+.sidebar .sidebar-close {
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: none;
+  cursor: pointer;
+  color: rgba(47, 79, 47, 0.75);
+}
+
+@media (hover: hover) {
+  .sidebar .sidebar-close:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.sidebar .sidebar-close:focus-visible {
+  outline: 2px solid rgba(47, 125, 47, 0.55);
+  outline-offset: 2px;
+}
+
+.app-shell.sidebar-collapsed .sidebar {
+  border-right: none;
+  overflow: hidden;
+}
+
+.app-shell.sidebar-collapsed .sidebar .sidebar-close {
+  display: none;
+}
+
+.app-shell.sidebar-collapsed .app-content {
+  border-left: none;
+}
+
+/* Contenidor del menú */
 .app-menu {
-  width: 260px;
-  background: #cfe6cf;
+  width: 100%;
+  background: transparent;
   color: #2f4f2f;
   padding: 1rem;
   overflow-y: auto;
-  border-right: 2px solid #aacbaa;
-  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.1);
+  border-right: none;
+  box-shadow: none;
 }
 
 /* Títols de secció del menú */
@@ -686,35 +781,34 @@ body.login-page {
   width: 100%;
   margin: 0.25rem 0;
   padding: 0.65rem 0.8rem;
-  background: #e8f5e8;
+  background: transparent;
+  border: none;
   border-radius: 0.5rem;
-  border: 1px solid #8fbf8f;
   cursor: pointer;
   text-align: left;
   color: #2f4f2f;
   font-size: 0.95rem;
   font-weight: 600;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  box-shadow: none;
+  transition: background-color 0.12s ease;
 }
 
 @media (hover: hover) {
   .app-menu button:hover {
-    background: #ffffff;
-    border-color: #2f7d2f;
-    transform: translateX(2px);
+    background: rgba(0, 0, 0, 0.04);
   }
 }
 
 /* Estat focus dels botons de menú */
 .app-menu button:focus-visible {
-  outline: 2px solid #2f7d2f;
+  outline: 2px solid rgba(47, 125, 47, 0.55);
   outline-offset: 2px;
 }
 
 .menu-section {
-  background: #bcd9bc;
-  border: 1px solid #8fbf8f;
-  border-radius: 0.65rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   margin-bottom: 0.85rem;
   overflow: hidden;
 }
@@ -726,24 +820,36 @@ body.login-page {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.75rem 0.9rem;
-  background: #a7cba7;
+  background: transparent;
   color: #1f3f1f;
   font-weight: 700;
   border: none;
-  border-bottom: 1px solid #8fbf8f;
+  border-bottom: none;
   cursor: pointer;
   text-align: left;
   font-size: 0.95rem;
+  border-radius: 0.5rem;
+  box-shadow: none;
 }
 
 .menu-section-header i {
   transition: transform 0.2s ease;
 }
 
+.menu-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu-icon {
+  flex: 0 0 auto;
+}
+
 .menu-section-body {
   display: none;
   padding: 0.5rem 0.9rem 0.85rem;
-  background: #cfe6cf;
+  background: transparent;
 }
 
 .menu-section.is-open .menu-section-body {
@@ -756,18 +862,39 @@ body.login-page {
 
 @media (hover: hover) {
   .menu-section-header:hover {
-    background: #b5d7b5;
+    background: rgba(0, 0, 0, 0.04);
   }
 }
 
 .menu-section-header:focus-visible {
-  outline: 2px solid #2f7d2f;
+  outline: 2px solid rgba(47, 125, 47, 0.55);
   outline-offset: 2px;
+}
+
+/* Submenús lleugerament indentats (efecte arbre) */
+.sidebar .menu-section-body button {
+  padding-left: 1.65rem;
+}
+
+.app-shell.sidebar-collapsed .menu-label {
+  display: none;
+}
+
+.app-shell.sidebar-collapsed .menu-section-header {
+  justify-content: center;
+  padding: 0.7rem 0.4rem;
+}
+
+.app-shell.sidebar-collapsed .menu-section-body {
+  display: none !important;
 }
 
 /* Zona on es carrega el contingut */
 .app-content {
-  flex: 1;
+  flex: 1 1 auto;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
   background: #ffffff;
   border-left: 2px solid #aacbaa;
 }
@@ -775,7 +902,8 @@ body.login-page {
 /* L'iframe ocupa tot l'espai disponible */
 .app-content iframe {
   width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   border: none;
 }
 

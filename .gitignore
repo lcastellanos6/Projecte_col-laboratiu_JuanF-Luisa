@@ -10,12 +10,13 @@ Thumbs.db
 composer.lock
 
 # Configuración del entorno
+/.history
 .env
 .env.*
 !.env.example
 
 # Archivos temporales o de caché
-.history/
+/.history/
 *.log
 *.cache
 *.tmp
