@@ -413,7 +413,6 @@ form button:hover {
   flex-direction: column;
   min-height: 100vh;
   background: #f0f4f0;
-  --app-header-height: 180px;
   --sidebar-width: 280px;
 }
 
@@ -692,25 +691,69 @@ body.login-page {
 
 /* Zona principal amb menú i contingut */
 .app-container {
-  min-height: calc(100vh - var(--app-header-height));
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  min-height: 0;
   background: #f0f4f0;
-  height: calc(100vh - var(--app-header-height));
 }
 
-/* Sidebar fixed amb categories */
+/* Sidebar sticky amb categories */
 .sidebar {
-  position: fixed;
-  left: 0;
-  top: var(--app-header-height);
+  position: sticky;
+  top: 0;
   width: var(--sidebar-width);
-  height: calc(100vh - var(--app-header-height));
+  min-height: 0;
   overflow-y: auto;
   background: #F5FFF5;
   border-right: 1px solid rgba(47, 125, 47, 0.25);
 }
 
 .app-shell.sidebar-collapsed {
-  --sidebar-width: 64px;
+  --sidebar-width: 0px;
+}
+
+/* Tancar menú (X) dins del sidebar */
+.sidebar .sidebar-close {
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: none;
+  cursor: pointer;
+  color: rgba(47, 79, 47, 0.75);
+}
+
+@media (hover: hover) {
+  .sidebar .sidebar-close:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.sidebar .sidebar-close:focus-visible {
+  outline: 2px solid rgba(47, 125, 47, 0.55);
+  outline-offset: 2px;
+}
+
+.app-shell.sidebar-collapsed .sidebar {
+  border-right: none;
+  overflow: hidden;
+}
+
+.app-shell.sidebar-collapsed .sidebar .sidebar-close {
+  display: none;
+}
+
+.app-shell.sidebar-collapsed .app-content {
+  border-left: none;
 }
 
 /* Contenidor del menú */
@@ -848,17 +891,19 @@ body.login-page {
 
 /* Zona on es carrega el contingut */
 .app-content {
-  flex: 1;
+  flex: 1 1 auto;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
   background: #ffffff;
   border-left: 2px solid #aacbaa;
-  margin-left: var(--sidebar-width);
-  height: 100%;
 }
 
 /* L'iframe ocupa tot l'espai disponible */
 .app-content iframe {
   width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   border: none;
 }
 
