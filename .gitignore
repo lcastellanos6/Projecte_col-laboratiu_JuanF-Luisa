@@ -15,6 +15,7 @@ composer.lock
 !.env.example
 
 # Archivos temporales o de caché
+/.history
 *.log
 *.cache
 *.tmp
