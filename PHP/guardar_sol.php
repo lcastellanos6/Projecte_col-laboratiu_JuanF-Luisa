@@ -25,7 +25,7 @@ $sql->bind_param("sdds", $tipus, $ph, $materia_org, $observacions);
 // EXECUTAR
 if ($sql->execute()) {
     echo "<h3>Sòl registrat correctament!</h3>";
-    echo "<a href='sol.html'>Tornar</a>";
+    echo "<a href='./PROJECTE_/HTML/sol.html'>Tornar</a>";
 } else {
     echo "Error: " . $conn->error;
 }
