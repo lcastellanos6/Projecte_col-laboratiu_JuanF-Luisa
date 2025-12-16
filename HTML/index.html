@@ -8,69 +8,6 @@ session_start();
 <title>Gestió de l'Explotació Fruiteres</title>
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-.app-shell {
-    position: relative;
-}
-.hero-menu-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    background: rgba(0, 0, 0, 0.15);
-    color: #ffffff;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-.hero-menu-toggle:hover {
-    background: rgba(0, 0, 0, 0.25);
-    transform: translateY(-1px);
-}
-.hero-menu-toggle:focus-visible {
-    outline: 2px solid #ffffff;
-    outline-offset: 2px;
-}
-.floating-dropdown {
-    position: absolute;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: flex-start;
-    top: var(--dropdown-top, 0px);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 999;
-}
-.floating-dropdown.is-visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-.floating-dropdown .app-menu {
-    width: min(92vw, 360px);
-    max-height: 72vh;
-    overflow-y: auto;
-    border-radius: 1rem;
-    border: 1px solid rgba(47, 125, 47, 0.35);
-    box-shadow: 0 25px 40px rgba(15, 45, 15, 0.35);
-    background: rgba(207, 230, 207, 0.95);
-}
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-</style>
 <script>
 function openPage(url) {
     document.getElementById("contentFrame").src = url;
@@ -87,76 +24,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    var dropdown = document.getElementById('dashboardDropdown');
     var toggleButton = document.getElementById('menuToggle');
-    var heroElement = document.querySelector('.hero');
+    var appShell = document.querySelector('.app-shell');
 
-    if (dropdown && toggleButton && heroElement) {
-        var menuSections = dropdown.querySelectorAll('.menu-section');
-
-        var reposition = function() {
-            var rect = heroElement.getBoundingClientRect();
-            dropdown.style.setProperty('--dropdown-top', rect.bottom + window.scrollY + 10 + 'px');
+    if (toggleButton && appShell) {
+        var syncToggleState = function() {
+            var isCollapsed = appShell.classList.contains('sidebar-collapsed');
+            toggleButton.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
         };
 
-        var syncPosition = function() {
-            if (dropdown.classList.contains('is-visible')) {
-                reposition();
-            }
-        };
+        syncToggleState();
 
-        var outsideClickHandler = function(event) {
-            if (!dropdown.contains(event.target) && !toggleButton.contains(event.target)) {
-                closeDropdown();
-            }
-        };
-
-        var keyHandler = function(event) {
-            if (event.key === 'Escape') {
-                closeDropdown();
-            }
-        };
-
-        var resetSections = function() {
-            menuSections.forEach(function(section) {
-                section.classList.remove('is-open');
-            });
-        };
-
-        var openDropdown = function() {
-            reposition();
-            resetSections();
-            dropdown.classList.add('is-visible');
-            dropdown.setAttribute('aria-hidden', 'false');
-            toggleButton.setAttribute('aria-expanded', 'true');
-            document.addEventListener('click', outsideClickHandler);
-            document.addEventListener('keydown', keyHandler);
-            window.addEventListener('resize', syncPosition);
-            window.addEventListener('scroll', syncPosition);
-        };
-
-        var closeDropdown = function() {
-            dropdown.classList.remove('is-visible');
-            dropdown.setAttribute('aria-hidden', 'true');
-            toggleButton.setAttribute('aria-expanded', 'false');
-            document.removeEventListener('click', outsideClickHandler);
-            document.removeEventListener('keydown', keyHandler);
-            window.removeEventListener('resize', syncPosition);
-            window.removeEventListener('scroll', syncPosition);
-        };
-
-        toggleButton.addEventListener('click', function(event) {
-            event.stopPropagation();
-            if (dropdown.classList.contains('is-visible')) {
-                closeDropdown();
-            } else {
-                openDropdown();
-            }
+        toggleButton.addEventListener('click', function() {
+            appShell.classList.toggle('sidebar-collapsed');
+            syncToggleState();
         });
 
-        var actionButtons = dropdown.querySelectorAll('.menu-section-body button');
-        actionButtons.forEach(function(button) {
-            button.addEventListener('click', closeDropdown);
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                appShell.classList.add('sidebar-collapsed');
+                syncToggleState();
+            }
         });
     }
 });
@@ -193,100 +81,100 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </header>
 
-<div id="dashboardDropdown" class="floating-dropdown" aria-hidden="true">
-    <div class="app-menu">
-        <div class="menu-section">
-            <button class="menu-section-header" type="button">
-                <span>📌 Gestió de cultius</span>
-                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="menu-section-body">
-                <button onclick="openPage('parcela.html')">Parcel·les</button>
-                <button onclick="openPage('sector.html')">Seccions</button>
-                <button onclick="openPage('cultiu.html')">Cultiu</button>
-                <button onclick="openPage('sol_terra.html')">Terres</button>
-                <button onclick="openPage('calendari_tasca.html')">Calendari de tasques</button>
-                <button onclick="openPage('tasca_programada.html')">Tasca programada</button>
-                <button onclick="openPage('fertilitzacio.html')">Fertilització</button>
-                <button onclick="openPage('reg.html')">Reg</button>
-                <button onclick="openPage('produccio.html')">Producció i rendiment</button>
-                <button onclick="openPage('previsio_collita.html')">Previsió de collita</button>
-            </div>
-        </div>
-
-        <div class="menu-section">
-            <button class="menu-section-header" type="button">
-                <span>🔎 Consultes</span>
-                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="menu-section-body">
-                <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
-                <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
-            </div>
-        </div>
-
-        <div class="menu-section">
-            <button class="menu-section-header" type="button">
-                <span>🌱 Operacions</span>
-                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="menu-section-body">
-                <button onclick="openPage('tractament.html')">Tractaments</button>
-                <button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
-                <button onclick="openPage('aplicacio.html')">Aplicació</button>
-                <button onclick="openPage('aplicacio_productes.html')">Aplicació de productes</button>
-                <button onclick="openPage('producte.html')">Productes</button>
-                <button onclick="openPage('pla_producte.html')">Pla de producte</button>
-                <button onclick="openPage('magatzem.html')">Magatzem</button>
-                <button onclick="openPage('producte_lot.html')">Lot de producte</button>
-                <button onclick="openPage('moviment_lot.html')">Moviment de l'estoc</button>
-                <button onclick="openPage('tasques.html')">Tasques</button>
-                <button onclick="openPage('seguiment.html')">Seguiment</button>
-                <button onclick="openPage('registre.html')">Registre</button>
-                <button onclick="openPage('client.html')">Client</button>
-                <button onclick="openPage('collita.html')">Collita</button>
-                <button onclick="openPage('lot_produccio.html')">Lot de producció</button>
-                <button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
-                <button onclick="openPage('clima.html')">Clima</button>
-                <button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
-            </div>
-        </div>
-
-        <div class="menu-section">
-            <button class="menu-section-header" type="button">
-                <span>👨‍🌾 Gestió de treballadors</span>
-                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="menu-section-body">
-                <button onclick="openPage('treballador.html')">Treballadors</button>
-                <button onclick="openPage('operari.html')">Operari</button>
-                <button onclick="openPage('maquinaria.html')">Maquinària</button>
-                <button onclick="openPage('contracte.html')">Contracte</button>
-                <button onclick="openPage('absencia.html')">Absència</button>
-                <button onclick="openPage('documentacio.html')">Documentació</button>
-                <button onclick="openPage('departament.html')">Departaments</button>
-                <button onclick="openPage('equip.html')">Equip de treball</button>
-                <button onclick="openPage('membres_equip.html')">Membres del equip</button>
-                <button onclick="openPage('epis.html')">Epis</button>
-                <button onclick="openPage('lliurament_epis.html')">Lliurament Epis</button>
-                <button onclick="openPage('horari.html')">Horaris model</button>
-                <button onclick="openPage('calendari.html')">Calendaris model</button>
-            </div>
-        </div>
-
-        <div class="menu-section">
-            <button class="menu-section-header" type="button">
-                <span>⚙️ Configuració</span>
-                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="menu-section-body">
-                <button onclick="openPage('usuari.html')">Usuaris</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="app-container">
+
+    <aside id="dashboardDropdown" class="sidebar">
+        <div class="app-menu">
+            <div class="menu-section">
+                <button class="menu-section-header" type="button">
+                    <span class="menu-title"><span class="menu-icon">📌</span><span class="menu-label">Gestió de cultius</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="menu-section-body">
+                    <button onclick="openPage('parcela.html')">Parcel·les</button>
+                    <button onclick="openPage('sector.html')">Seccions</button>
+                    <button onclick="openPage('cultiu.html')">Cultiu</button>
+                    <button onclick="openPage('sol_terra.html')">Terres</button>
+                    <button onclick="openPage('calendari_tasca.html')">Calendari de tasques</button>
+                    <button onclick="openPage('tasca_programada.html')">Tasca programada</button>
+                    <button onclick="openPage('fertilitzacio.html')">Fertilització</button>
+                    <button onclick="openPage('reg.html')">Reg</button>
+                    <button onclick="openPage('produccio.html')">Producció i rendiment</button>
+                    <button onclick="openPage('previsio_collita.html')">Previsió de collita</button>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <button class="menu-section-header" type="button">
+                    <span class="menu-title"><span class="menu-icon">🔎</span><span class="menu-label">Consultes</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="menu-section-body">
+                    <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
+                    <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <button class="menu-section-header" type="button">
+                    <span class="menu-title"><span class="menu-icon">🌱</span><span class="menu-label">Operacions</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="menu-section-body">
+                    <button onclick="openPage('tractament.html')">Tractaments</button>
+                    <button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
+                    <button onclick="openPage('aplicacio.html')">Aplicació</button>
+                    <button onclick="openPage('aplicacio_productes.html')">Aplicació de productes</button>
+                    <button onclick="openPage('producte.html')">Productes</button>
+                    <button onclick="openPage('pla_producte.html')">Pla de producte</button>
+                    <button onclick="openPage('magatzem.html')">Magatzem</button>
+                    <button onclick="openPage('producte_lot.html')">Lot de producte</button>
+                    <button onclick="openPage('moviment_lot.html')">Moviment de l'estoc</button>
+                    <button onclick="openPage('tasques.html')">Tasques</button>
+                    <button onclick="openPage('seguiment.html')">Seguiment</button>
+                    <button onclick="openPage('registre.html')">Registre</button>
+                    <button onclick="openPage('client.html')">Client</button>
+                    <button onclick="openPage('collita.html')">Collita</button>
+                    <button onclick="openPage('lot_produccio.html')">Lot de producció</button>
+                    <button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
+                    <button onclick="openPage('clima.html')">Clima</button>
+                    <button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <button class="menu-section-header" type="button">
+                    <span class="menu-title"><span class="menu-icon">👨‍🌾</span><span class="menu-label">Gestió de treballadors</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="menu-section-body">
+                    <button onclick="openPage('treballador.html')">Treballadors</button>
+                    <button onclick="openPage('operari.html')">Operari</button>
+                    <button onclick="openPage('maquinaria.html')">Maquinària</button>
+                    <button onclick="openPage('contracte.html')">Contracte</button>
+                    <button onclick="openPage('absencia.html')">Absència</button>
+                    <button onclick="openPage('documentacio.html')">Documentació</button>
+                    <button onclick="openPage('departament.html')">Departaments</button>
+                    <button onclick="openPage('equip.html')">Equip de treball</button>
+                    <button onclick="openPage('membres_equip.html')">Membres del equip</button>
+                    <button onclick="openPage('epis.html')">Epis</button>
+                    <button onclick="openPage('lliurament_epis.html')">Lliurament Epis</button>
+                    <button onclick="openPage('horari.html')">Horaris model</button>
+                    <button onclick="openPage('calendari.html')">Calendaris model</button>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <button class="menu-section-header" type="button">
+                    <span class="menu-title"><span class="menu-icon">⚙️</span><span class="menu-label">Configuració</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="menu-section-body">
+                    <button onclick="openPage('usuari.html')">Usuaris</button>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <div class="app-content">
         <iframe id="contentFrame" src="parcela.html"></iframe>
