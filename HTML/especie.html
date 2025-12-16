@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Registre de Varietat</title>
-    <style>
-body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
-form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
-       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-label { font-weight:bold; margin-top:10px; display:block; }
-input, textarea, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
-button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
-         border-radius:5px; cursor:pointer; width:100%; }
-button:hover { background:#3d9b3d; }
-    </style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Registrar nova especie</h1>
+<div class="page">
+    <div class="page-header">
+  <h1>Registrar nova especie</h1>
+</div>
 
-    <form action="../PHP/guardar_especie.php" method="post">
+    <div class="panel">
+<form action="../PHP/guardar_especie.php" method="post">
 
         <label>Nom cientific:</label>
         <input type="text" name="nom_cientific" required>
@@ -25,7 +20,9 @@ button:hover { background:#3d9b3d; }
         <label>Nom comu:</label>
         <input type="text" name="nom_comu" required>
 
-        <button type="submit">Guardar especie</button>
+        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar especie</button>
     </form>
+</div>
+</div>
 </body>
 </html>
