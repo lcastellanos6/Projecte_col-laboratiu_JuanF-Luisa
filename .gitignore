@@ -21,6 +21,7 @@ composer.lock
 *.tmp
 *.bak
 *.swp
+*.history
 
 # Archivos de IDE o editor
 .vscode/

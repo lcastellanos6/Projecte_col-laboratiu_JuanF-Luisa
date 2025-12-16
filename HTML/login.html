@@ -1,0 +1,48 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicia sessió · Gestió de l'Explotació Fruiteres</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+  <div class="login-layout">
+    <div class="login-hero">
+      <img class="login-logo" src="logo.png" alt="Logo Explotació">
+      <h1>Inicia sessió</h1>
+      <p>Accedeix al panell de Gestió de l'Explotació Fruiteres</p>
+    </div>
+    <div class="login-card">
+      <?php if(isset($_SESSION['usuari'])): ?>
+        <div class="app-session-info">
+          <div class="app-session-meta">
+            <div class="session-meta-row">
+              <span>Usuari:</span>
+              <strong><?php echo htmlspecialchars($_SESSION['usuari']); ?></strong>
+            </div>
+            <div class="session-meta-row">
+              <span>Data:</span>
+              <strong><?php echo date('d/m/Y'); ?></strong>
+            </div>
+          </div>
+          <a class="btn btn-ghost btn-full" href="logout.php">Tancar sessió</a>
+        </div>
+      <?php else: ?>
+        <form action="login.php" method="post" class="app-login">
+          <label for="usuari">Usuari</label>
+          <input id="usuari" type="text" name="usuari" placeholder="Usuari" required>
+          <label for="contrasenya">Contrasenya</label>
+          <input id="contrasenya" type="password" name="contrasenya" placeholder="Contrasenya" required>
+          <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+        </form>
+      <?php endif; ?>
+    </div>
+    <div class="login-back-link">
+      <a href="index.html">&larr; Tornar al panell</a>
+    </div>
+  </div>
+</body>
+</html>

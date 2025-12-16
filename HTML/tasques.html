@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Afegir Tasca</title>
+
+<style>
+body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
+form { background:white; padding:20px; border-radius:8px; max-width:500px; margin:auto;
+       box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+label { font-weight:bold; margin-top:10px; display:block; }
+input, select, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; }
+button { margin-top:15px; background:#2f7d2f; color:white; padding:10px; border:none;
+         border-radius:5px; cursor:pointer; width:100%; }
+button:hover { background:#3d9b3d; }
+</style>
+</head>
+<body>
+
+<h2>Registrar Tasca</h2>
+
+<form action="../php/guardar_tasca.php" method="post">
+
+    <label>Nom de la tasca *</label>
+    <input type="text" name="nom_tasca" required>
+
+    <label>Tipus de tasca</label>
+    <input type="text" name="tipus_tasca">
+
+    <label>ID Sector</label>
+    <input type="number" name="id_sector">
+
+    <label>Data inici</label>
+    <input type="date" name="data_inici">
+
+    <label>Data final</label>
+    <input type="date" name="data_final">
+
+    <label>Durada estimada</label>
+    <input type="text" name="durada_estimada" placeholder="ex: 3 dies">
+
+    <label>Personal requerit</label>
+    <input type="number" name="personal_requerit">
+
+    <label>Equipament necessari</label>
+    <textarea name="equipament_necessari"></textarea>
+
+    <label>Instruccions</label>
+    <textarea name="instruccions"></textarea>
+
+    <label>Dependències</label>
+    <textarea name="dependencies"></textarea>
+
+    <label>Estat</label>
+    <select name="estat">
+        <option value="Planificada">Planificada</option>
+        <option value="En curs">En curs</option>
+        <option value="Feta">Feta</option>
+        <option value="Cancel·lada">Cancel·lada</option>
+    </select>
+
+    <label>ID Aplicació</label>
+    <input type="number" name="id_aplicacio">
+
+    <label>ID Collita</label>
+    <input type="number" name="collita_id">
+
+    <button type="submit">Guardar Tasca</button>
+
+</form>
+
+</body>
+</html>
