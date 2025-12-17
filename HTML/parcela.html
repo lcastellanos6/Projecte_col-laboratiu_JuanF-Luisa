@@ -1,35 +1,32 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ca">
 <head>
   <meta charset="utf-8" />
   <title>Registrar nova parcel·la</title>
-
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css"/>
-<style>
-.btn-map{
-  display:inline-block;
-  padding:10px 15px;
-  background:#2f7d2f;
-  color:white;
-  text-decoration:none;
-  border-radius:6px;
-  font-weight:bold;
-}
-.btn-map:hover{
-  background:#3d9b3d;
-}
-</style>
-
+  <style>
+    .btn-map{
+      display:inline-block;
+      padding:10px 15px;
+      background:#2f7d2f;
+      color:white;
+      text-decoration:none;
+      border-radius:6px;
+      font-weight:bold;
+    }
+    .btn-map:hover{
+      background:#3d9b3d;
+    }
+  </style>
 </head>
 
 <body>
   <div style="padding:15px; background:#f4fff4; border-bottom:1px solid #ddd; text-align:right;">
-  <a href="mapa_exploracio.html" class="btn-map">
-    🌍 Veure parcel·les
-  </a>
-</div>
+    <!-- BOTÓN CORRECTO -->
+    <a href="PHP/mapa_parceles.php" class="btn-map">🌍 Veure parcel·les</a>
+  </div>
 
   <div class="page">
     <div class="page-header">
@@ -39,12 +36,12 @@
 
     <div class="panel">
       <h2 class="panel-title">Mapa de la parcel·la</h2>
-      <div id="map"></div>
+      <div id="map" style="height:400px;"></div>
     </div>
 
     <div class="panel">
       <h2 class="panel-title">Dades de la parcel·la</h2>
-      <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
+      <form id="form" action="PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
         <label>Referència cadastral:</label>
         <input type="text" name="ref_cadastral" required>
 
@@ -127,13 +124,10 @@
     function updateGeometry(layer) {
       var geojson = layer.toGeoJSON();
       var geoJSONstring = JSON.stringify(geojson);
-
       document.getElementById('geometria').value = geoJSONstring;
       document.getElementById('geometria_kml').value = geoJSONstring;
-
       var area_m2 = turf.area(geojson);
-      var ha = area_m2 / 10000;
-      document.getElementById("superficie").value = ha.toFixed(2);
+      document.getElementById("superficie").value = (area_m2/10000).toFixed(2);
     }
 
     map.on(L.Draw.Event.CREATED, function (e) {
@@ -147,8 +141,8 @@
         updateGeometry(layer);
       });
     });
-
   </script>
 
 </body>
 </html>
+
