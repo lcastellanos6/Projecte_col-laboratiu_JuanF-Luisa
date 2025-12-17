@@ -9,46 +9,46 @@ session_start();
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script>
-function openPage(url) {
-    document.getElementById("contentFrame").src = url;
-}
+ function openPage(url) {
+     document.getElementById("contentFrame").src = url;
+ }
+ 
+ document.addEventListener('DOMContentLoaded', function() {
+     var sectionHeaders = document.querySelectorAll('.menu-section-header');
+     sectionHeaders.forEach(function(header) {
+         header.addEventListener('click', function() {
+             var section = header.closest('.menu-section');
+             if (section) {
+                 section.classList.toggle('is-open');
+             }
+         });
+     });
 
-document.addEventListener('DOMContentLoaded', function() {
-    var sectionHeaders = document.querySelectorAll('.menu-section-header');
-    sectionHeaders.forEach(function(header) {
-        header.addEventListener('click', function() {
-            var section = header.closest('.menu-section');
-            if (section) {
-                section.classList.toggle('is-open');
-            }
-        });
-    });
+     var toggleButton = document.getElementById('menuToggle');
+     var appShell = document.querySelector('.app-shell');
 
-    var toggleButton = document.getElementById('menuToggle');
-    var appShell = document.querySelector('.app-shell');
+     if (toggleButton && appShell) {
+         var syncToggleState = function() {
+             var isCollapsed = appShell.classList.contains('sidebar-collapsed');
+             toggleButton.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+         };
 
-    if (toggleButton && appShell) {
-        var syncToggleState = function() {
-            var isCollapsed = appShell.classList.contains('sidebar-collapsed');
-            toggleButton.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
-        };
+         syncToggleState();
 
-        syncToggleState();
+         toggleButton.addEventListener('click', function() {
+             appShell.classList.toggle('sidebar-collapsed');
+             syncToggleState();
+         });
 
-        toggleButton.addEventListener('click', function() {
-            appShell.classList.toggle('sidebar-collapsed');
-            syncToggleState();
-        });
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                appShell.classList.add('sidebar-collapsed');
-                syncToggleState();
-            }
-        });
-    }
-});
-</script>
+         document.addEventListener('keydown', function(event) {
+             if (event.key === 'Escape') {
+                 appShell.classList.add('sidebar-collapsed');
+                 syncToggleState();
+             }
+         });
+     }
+ });
+ </script>
 </head>
 <body class="app-layout-body">
 
