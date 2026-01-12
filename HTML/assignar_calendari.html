@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>Assignar calendari</title>
+<style>
+body{font-family:Arial;background:#f5fff5;padding:20px}
+form{background:#fff;padding:20px;border-radius:8px;max-width:400px;margin:auto}
+label{font-weight:bold}
+input,button{width:100%;padding:8px;margin-top:6px}
+button{background:#2f7d2f;color:white;border:none;margin-top:10px}
+</style>
+</head>
+<body>
+
+<h2>Assignar calendari a treballador</h2>
+
+<form method="post" action="../PHP/guardar_treballador_calendari.php">
+  <label>ID Treballador</label>
+  <input type="number" name="id_treballador" required>
+
+  <label>ID Calendari</label>
+  <input type="number" name="id_calendari" required>
+
+  <label>Data inici</label>
+  <input type="date" name="data_inici" required>
+
+  <label>Data fi</label>
+  <input type="date" name="data_fi">
+
+  <button>Assignar</button>
+</form>
+
+</body>
+</html>

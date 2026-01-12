@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<title>Registrar jornada</title>
+<style>
+body{font-family:Arial;background:#f4fff4;padding:20px}
+form{background:#fff;padding:20px;border-radius:8px;max-width:450px;margin:auto}
+label{font-weight:bold}
+input,textarea,button{width:100%;padding:8px;margin-top:6px}
+button{background:#2f7d2f;color:white;border:none;margin-top:10px}
+</style>
+</head>
+<body>
+
+<h2>Registrar jornada laboral</h2>
+
+<form method="post" action="../PHP/guardar_jornada.php">
+  <label>ID Treballador</label>
+  <input type="number" name="id_treballador" required>
+
+  <label>Data i hora inici</label>
+  <input type="datetime-local" name="inici" required>
+
+  <label>Data i hora fi</label>
+  <input type="datetime-local" name="fi" required>
+
+  <label>Minuts de pausa</label>
+  <input type="number" name="pausa" value="0">
+
+  <label>ID Tasca (opcional)</label>
+  <input type="number" name="id_tasca">
+
+  <label>Incidències</label>
+  <textarea name="incidencies"></textarea>
+
+  <button>Guardar jornada</button>
+</form>
+
+</body>
+</html>
