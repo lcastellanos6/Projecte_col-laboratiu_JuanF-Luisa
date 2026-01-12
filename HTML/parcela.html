@@ -27,7 +27,6 @@
     <!-- BOTÓN CORRECTO -->
     <a href="../PHP/mapa_parceles.php" class="btn-map">🌍 Veure parcel·les</a>
   </div>
-
   <div class="page">
     <div class="page-header">
       <h1>Registrar nova parcel·la</h1>
@@ -96,6 +95,16 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
   <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+  <script>
+    function openPage(url) {
+      if (window.parent && window.parent !== window && typeof window.parent.openPage === 'function') {
+        window.parent.openPage(url);
+        return;
+      }
+      window.location.href = url;
+    }
+  </script>
 
   <script>
     var map = L.map('map').setView([41.65, 1.0], 15);
