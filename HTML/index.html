@@ -94,9 +94,8 @@ session_start();
                     <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                 </button>
                 <div class="menu-section-body">
-                    <button onclick="openPage('parcela.html')">Parcel·les</button>
+                    <button onclick="openPage('../PHP/consulta_parcela_sector.php')">Parcel·la - Sector</button>
                 <button onclick="openPage('mapa_exploracio.html')">Visualitzar parcel·les</button>
-                <button onclick="openPage('sector.html')">Sectors</button>
                 <button onclick="openPage('sol.html')">Terres</button>
                 <button onclick="openPage('especie.html')">Espècies</button>
                 <button onclick="openPage('varietat.html')">Varietats</button>
@@ -107,13 +106,12 @@ session_start();
                 </div>
             </div>
 
-        <div class="menu-section">
+            <div class="menu-section">
             <button class="menu-section-header" type="button">
                 <span>🔎 Consultes</span>
                 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="menu-section-body">
-                <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
                 <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
                 
             </div>
@@ -182,7 +180,7 @@ session_start();
     </aside>
 
     <div class="app-content">
-        <iframe id="contentFrame" src="parcela.html"></iframe>
+        <iframe id="contentFrame" src="../PHP/consulta_parcela_sector.php"></iframe>
     </div>
 
 </div>

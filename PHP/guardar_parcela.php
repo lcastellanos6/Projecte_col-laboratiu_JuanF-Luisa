@@ -81,10 +81,8 @@ $stmt->bind_param(
 );
 
 if ($stmt->execute()) {
-    echo "<h2 style='color:green'>✔ Parcel·la guardada correctament</h2>";
-    echo "<p><b>ID:</b> " . $conn->insert_id . "</p>";
-    echo "<p><a href='../HTML/parcela.html'>➕ Afegir una altra parcel·la</a></p>";
-    echo "<p><a href='../HTML/mapa_exploracio.html'> 👁 Veure les parcel·les</a></p>";
+    header("Location: consulta_parcela_sector.php");
+    exit;
 } else {
     echo "<p style='color:red'>Error: " . $stmt->error . "</p>";
 }

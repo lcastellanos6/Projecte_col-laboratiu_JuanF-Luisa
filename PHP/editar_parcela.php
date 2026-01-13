@@ -1,8 +1,17 @@
 <?php
 $conn = new mysqli("localhost","root","","web");
-$id = intval($_GET['id']);
-$res = $conn->query("SELECT * FROM parcela WHERE id_parcela=$id");
-$p = $res->fetch_assoc();
+$id = intval($_GET['id'] ?? 0);
+$stmt = $conn->prepare("SELECT * FROM parcela WHERE id_parcela=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$res = $stmt->get_result();
+$p = $res ? $res->fetch_assoc() : null;
+$stmt->close();
+
+if (!$p) {
+    echo "<p style='color:red; font-weight:bold;'>Parcel·la no trobada.</p>";
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -10,6 +19,7 @@ $p = $res->fetch_assoc();
 <head>
 <meta charset="utf-8">
 <title>Editar parcel·la</title>
+<link rel="stylesheet" href="../HTML/styles.css">
 </head>
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
@@ -41,7 +51,7 @@ button:hover { background:#3d9b3d; }
 <input type="number" step="0.01" name="pendent" value="<?= $p['pendent'] ?>"><br><br>
 
 <button type="submit">Guardar</button>
-<a href="../PHP/mapa_parceles.php"><button type="button">Cancel·lar</button></a>
+<a href="consulta_parcela_sector.php"><button type="button">Cancel·lar</button></a>
 </form>
 
 </body>

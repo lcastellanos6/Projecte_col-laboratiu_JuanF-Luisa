@@ -24,7 +24,6 @@
 
 <body>
   <div style="padding:15px; background:#f4fff4; border-bottom:1px solid #ddd; text-align:right;">
-    <!-- BOTÓN CORRECTO -->
     <a href="../PHP/mapa_parceles.php" class="btn-map">🌍 Veure parcel·les</a>
   </div>
   <div class="page">
@@ -40,7 +39,7 @@
 
     <div class="panel">
       <h2 class="panel-title">Dades de la parcel·la</h2>
-      <form id="form" action="PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
+      <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
         <label>Referència cadastral:</label>
         <input type="text" name="ref_cadastral" required>
 
@@ -87,7 +86,8 @@
         <label>Foto de la parcel·la:</label>
         <input type="file" name="foto" accept="image/*">
 
-        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Parcel·la</button>
+        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar parcel·la</button>
+        <a class="btn btn-ghost btn-full mt-2" href="../PHP/consulta_parcela_sector.php">Tornar a la consulta</a>
       </form>
     </div>
   </div>

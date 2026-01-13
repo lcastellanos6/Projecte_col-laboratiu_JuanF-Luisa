@@ -84,15 +84,44 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Consulta de parcel·les i sectors</title>
     <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <style>
+      .page-header-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+      .table-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .table-actions a {
+        color: #2f4f2f;
+        text-decoration: none;
+      }
+      .table-actions a:hover {
+        color: #3d9b3d;
+      }
+    </style>
     </head>
 <body>
 
 <div class="page">
 <div class="page-header">
-  <h1>Consulta de parcel·les i sectors</h1>
-  <p class="page-subtitle">Filtra per municipi, orientació, estat productiu i superfície.</p>
+  <div class="panel-header">
+    <div>
+      <h1>Consulta de parcel·les i sectors</h1>
+      <p class="page-subtitle">Filtra per municipi, orientació, estat productiu i superfície.</p>
+    </div>
+    <div class="page-header-actions">
+      <a class="btn btn-primary" href="../HTML/parcela_nou.html">Nova parcel·la</a>
+      <a class="btn btn-primary" href="../HTML/sector_nou.html">Nou sector</a>
+    </div>
+  </div>
 </div>
 
 <div class="panel">
@@ -152,6 +181,7 @@ if ($result && $result->num_rows > 0): ?>
             <th>Sector</th>
             <th>Sup. sector</th>
             <th>Estat productiu</th>
+            <th>Accions</th>
         </tr>
         <?php 
         $featuresParceles = [];
@@ -178,6 +208,25 @@ if ($result && $result->num_rows > 0): ?>
             <td><?php echo htmlspecialchars($row['nom_sector']); ?></td>
             <td><?php echo htmlspecialchars($row['sup_sector']); ?></td>
             <td><?php echo htmlspecialchars($row['estat_productiu']); ?></td>
+            <td>
+              <div class="table-actions">
+                <a href="editar_parcela.php?id=<?php echo intval($pid); ?>" title="Editar parcel·la">
+                  <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                </a>
+                <a href="eliminar_parcela.php?id=<?php echo intval($pid); ?>" onclick="return confirm('Segur que vols eliminar aquesta parcel·la?');" title="Eliminar parcel·la">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </a>
+                <?php if (!empty($sid)): ?>
+                  <span>|</span>
+                  <a href="editar_sector.php?id=<?php echo intval($sid); ?>" title="Editar sector">
+                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                  </a>
+                  <a href="eliminar_sector.php?id=<?php echo intval($sid); ?>" onclick="return confirm('Segur que vols eliminar aquest sector?');" title="Eliminar sector">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                  </a>
+                <?php endif; ?>
+              </div>
+            </td>
         </tr>
         <?php endwhile; ?>
     </table>
