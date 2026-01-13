@@ -210,6 +210,9 @@ if ($result && $result->num_rows > 0): ?>
             <td><?php echo htmlspecialchars($row['estat_productiu']); ?></td>
             <td>
               <div class="table-actions">
+                <a href="visualitzar_parcela.php?id_parcela=<?php echo intval($pid); ?>" title="Visualitzar parcel·la">
+                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                </a>
                 <a href="editar_parcela.php?id=<?php echo intval($pid); ?>" title="Editar parcel·la">
                   <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                 </a>
