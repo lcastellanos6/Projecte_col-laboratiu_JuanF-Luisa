@@ -77,6 +77,50 @@ if (!empty($condicions)) {
 $sql .= " ORDER BY p.municipi, p.nom, s.nom";
 
 $result = $conn->query($sql);
+
+$parceles = [];
+$featuresParceles = [];
+$featuresSectors  = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $pid = $row['id_parcela'];
+        if (!$pid) {
+            continue;
+        }
+        if (!isset($parceles[$pid])) {
+            $parceles[$pid] = [
+                'id_parcela' => $pid,
+                'ref_cadastral' => $row['ref_cadastral'] ?? '',
+                'nom_parcela' => $row['nom_parcela'] ?? '',
+                'municipi' => $row['municipi'] ?? '',
+                'sup_parcela' => $row['sup_parcela'] ?? '',
+                'orientacio' => $row['orientacio'] ?? '',
+                'tipus_sol' => $row['tipus_sol'] ?? '',
+                'sectors' => []
+            ];
+        }
+
+        $pgeo = $row['parcela_geojson'] ?? null;
+        if ($pgeo) {
+            $featuresParceles[$pid] = [ 'id'=>$pid, 'nom'=>$row['nom_parcela'] ?? '', 'geojson'=> json_decode($pgeo, true) ];
+        }
+
+        $sid = $row['id_sector'];
+        if (!empty($sid)) {
+            $parceles[$pid]['sectors'][] = [
+                'id_sector' => $sid,
+                'nom_sector' => $row['nom_sector'] ?? '',
+                'sup_sector' => $row['sup_sector'] ?? '',
+                'estat_productiu' => $row['estat_productiu'] ?? ''
+            ];
+
+            $sgeo = $row['sector_geojson'] ?? null;
+            if ($sgeo) {
+                $featuresSectors[$sid] = [ 'id'=>$sid, 'nom'=>$row['nom_sector'] ?? '', 'geojson'=> json_decode($sgeo, true) ];
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -105,6 +149,28 @@ $result = $conn->query($sql);
       }
       .table-actions a:hover {
         color: #3d9b3d;
+      }
+      .toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.6rem;
+        height: 1.6rem;
+        border-radius: 999px;
+        border: 1px solid #c7d7b6;
+        background: #f7fbf2;
+        color: #2f4f2f;
+        cursor: pointer;
+      }
+      .toggle-btn[aria-expanded="true"] .fa-chevron-right {
+        transform: rotate(90deg);
+      }
+      .sector-row {
+        display: none;
+        background: #fcf9e5;
+      }
+      .sector-row td:first-child {
+        padding-left: 2.2rem;
       }
     </style>
     </head>
@@ -169,7 +235,7 @@ $result = $conn->query($sql);
 
 <div class="panel mt-2">
 <?php
-if ($result && $result->num_rows > 0): ?>
+if (!empty($parceles)): ?>
     <table id="resultTable" class="table">
         <tr>
             <th>Parcel·la</th>
@@ -184,30 +250,27 @@ if ($result && $result->num_rows > 0): ?>
             <th>Accions</th>
         </tr>
         <?php 
-        $featuresParceles = [];
-        $featuresSectors  = [];
-        while($row = $result->fetch_assoc()): 
-            $pid = $row['id_parcela'];
-            $sid = $row['id_sector'];
-            $pgeo = $row['parcela_geojson'] ?? null;
-            $sgeo = $row['sector_geojson'] ?? null;
-            if ($pid && $pgeo) {
-                $featuresParceles[$pid] = [ 'id'=>$pid, 'nom'=>$row['nom_parcela'] ?? '', 'geojson'=> json_decode($pgeo, true) ];
-            }
-            if ($sid && $sgeo) {
-                $featuresSectors[$sid] = [ 'id'=>$sid, 'nom'=>$row['nom_sector'] ?? '', 'geojson'=> json_decode($sgeo, true) ];
-            }
+        foreach ($parceles as $parcela):
+            $pid = $parcela['id_parcela'];
+            $hasSectors = !empty($parcela['sectors']);
         ?>
-        <tr class="clickable" data-parcela-id="<?php echo htmlspecialchars($pid ?? ''); ?>" data-sector-id="<?php echo htmlspecialchars($sid ?? ''); ?>">
-            <td><?php echo htmlspecialchars($row['nom_parcela']); ?></td>
-            <td><?php echo htmlspecialchars($row['ref_cadastral']); ?></td>
-            <td><?php echo htmlspecialchars($row['municipi']); ?></td>
-            <td><?php echo htmlspecialchars($row['sup_parcela']); ?></td>
-            <td><?php echo htmlspecialchars($row['orientacio']); ?></td>
-            <td><?php echo htmlspecialchars($row['tipus_sol']); ?></td>
-            <td><?php echo htmlspecialchars($row['nom_sector']); ?></td>
-            <td><?php echo htmlspecialchars($row['sup_sector']); ?></td>
-            <td><?php echo htmlspecialchars($row['estat_productiu']); ?></td>
+        <tr class="clickable parcela-row" data-parcela-id="<?php echo htmlspecialchars($pid); ?>">
+            <td>
+              <?php if ($hasSectors): ?>
+                <button type="button" class="toggle-btn" aria-expanded="false" aria-label="Mostrar sectors" data-toggle="<?php echo htmlspecialchars($pid); ?>">
+                  <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                </button>
+              <?php endif; ?>
+              <?php echo htmlspecialchars($parcela['nom_parcela'] ?? ''); ?>
+            </td>
+            <td><?php echo htmlspecialchars($parcela['ref_cadastral'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($parcela['municipi'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($parcela['sup_parcela'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($parcela['orientacio'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($parcela['tipus_sol'] ?? ''); ?></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>
               <div class="table-actions">
                 <a href="visualitzar_parcela.php?id_parcela=<?php echo intval($pid); ?>" title="Visualitzar parcel·la">
@@ -219,19 +282,33 @@ if ($result && $result->num_rows > 0): ?>
                 <a href="eliminar_parcela.php?id=<?php echo intval($pid); ?>" onclick="return confirm('Segur que vols eliminar aquesta parcel·la?');" title="Eliminar parcel·la">
                   <i class="fa-solid fa-trash" aria-hidden="true"></i>
                 </a>
-                <?php if (!empty($sid)): ?>
-                  <span>|</span>
-                  <a href="editar_sector.php?id=<?php echo intval($sid); ?>" title="Editar sector">
-                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
-                  </a>
-                  <a href="eliminar_sector.php?id=<?php echo intval($sid); ?>" onclick="return confirm('Segur que vols eliminar aquest sector?');" title="Eliminar sector">
-                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                  </a>
-                <?php endif; ?>
               </div>
             </td>
         </tr>
-        <?php endwhile; ?>
+        <?php foreach ($parcela['sectors'] as $sector): ?>
+        <tr class="clickable sector-row" data-sector-id="<?php echo htmlspecialchars($sector['id_sector']); ?>" data-parent-parcela-id="<?php echo htmlspecialchars($pid); ?>">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><?php echo htmlspecialchars($sector['nom_sector'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($sector['sup_sector'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($sector['estat_productiu'] ?? ''); ?></td>
+            <td>
+              <div class="table-actions">
+                <a href="editar_sector.php?id=<?php echo intval($sector['id_sector']); ?>" title="Editar sector">
+                  <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                </a>
+                <a href="eliminar_sector.php?id=<?php echo intval($sector['id_sector']); ?>" onclick="return confirm('Segur que vols eliminar aquest sector?');" title="Eliminar sector">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </a>
+              </div>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+        <?php endforeach; ?>
     </table>
 <?php else: ?>
     <p>No hi ha resultats amb aquests filtres.</p>
@@ -317,6 +394,13 @@ $conn->close();
   const table = document.getElementById('resultTable');
   if (table) {
     table.addEventListener('click', (ev) => {
+      const toggle = ev.target.closest('.toggle-btn');
+      if (toggle) {
+        ev.preventDefault();
+        const pid = toggle.getAttribute('data-toggle');
+        toggleSectorRows(pid, toggle);
+        return;
+      }
       const tr = ev.target.closest('tr.clickable');
       if (!tr) return;
       const pid = tr.getAttribute('data-parcela-id');
@@ -344,6 +428,11 @@ $conn->close();
   function selectSectorInTable(sid) {
     const tr = document.querySelector(`#resultTable tr[data-sector-id="${sid}"]`);
     if (tr) {
+      const pid = tr.getAttribute('data-parent-parcela-id');
+      if (pid) {
+        const toggle = document.querySelector(`.toggle-btn[data-toggle="${pid}"]`);
+        toggleSectorRows(pid, toggle, true);
+      }
       tr.scrollIntoView({behavior:'smooth', block:'center'});
       setHighlightedRow(tr);
     }
@@ -366,6 +455,14 @@ $conn->close();
     lastHighlighted = layer;
     highlightLayer(layer, true);
     fitIfPossible(layer);
+  }
+
+  function toggleSectorRows(pid, toggleBtn, forceOpen = false) {
+    const rows = document.querySelectorAll(`#resultTable tr.sector-row[data-parent-parcela-id="${pid}"]`);
+    const isOpen = toggleBtn && toggleBtn.getAttribute('aria-expanded') === 'true';
+    const nextOpen = forceOpen ? true : !isOpen;
+    rows.forEach(r => r.style.display = nextOpen ? 'table-row' : 'none');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
   }
 </script>
 
