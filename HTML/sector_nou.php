@@ -13,6 +13,20 @@ function selected($key, $value, $fallback = '') {
     $current = $old[$key] ?? $fallback;
     return ($current === $value) ? 'selected' : '';
 }
+
+$parceles = [];
+$conn = new mysqli("localhost", "root", "", "web");
+if (!$conn->connect_error) {
+    $sql = "SELECT id_parcela, nom, ref_cadastral FROM parcela ORDER BY nom, ref_cadastral";
+    $result = $conn->query($sql);
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $parceles[] = $row;
+        }
+        $result->free();
+    }
+    $conn->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -47,6 +61,27 @@ function selected($key, $value, $fallback = '') {
       <form id="form" action="../PHP/guardar_sector.php" method="post">
         <label>Nom del sector:</label>
         <input type="text" name="nom" required value="<?= old('nom') ?>">
+
+        <label>Parcel·la:</label>
+        <select name="id_parcela" id="id_parcela" required>
+          <option value="">Selecciona una parcel·la…</option>
+          <?php foreach ($parceles as $parcela): ?>
+            <?php
+              $id = (string)($parcela['id_parcela'] ?? '');
+              $nom = $parcela['nom'] ?? '';
+              $ref = $parcela['ref_cadastral'] ?? '';
+              $label = trim((string)$nom) !== '' ? $nom : $ref;
+            ?>
+            <option value="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>"
+                    data-ref="<?= htmlspecialchars($ref, ENT_QUOTES, 'UTF-8') ?>"
+                    <?= selected('id_parcela', $id) ?>>
+              <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+
+        <label>Referència cadastral:</label>
+        <input type="text" id="ref-cadastral" value="—" readonly>
 
         <label>Superfície (ha):</label>
         <input type="number" step="0.01" name="superficie" id="superficie" value="<?= old('superficie') ?>">
@@ -84,6 +119,10 @@ function selected($key, $value, $fallback = '') {
       if (!box || !error) return;
       if (error === 'required') {
         box.textContent = 'Completa el camp obligatori: nom del sector.';
+      } else if (error === 'parcela_required') {
+        box.textContent = 'Selecciona una parcel·la abans de guardar el sector.';
+      } else if (error === 'parcela_invalid') {
+        box.textContent = 'La parcel·la seleccionada no és vàlida.';
       } else if (error === 'geometry') {
         box.textContent = 'Dibuixa el sector al mapa per continuar.';
       } else if (error === 'save') {
@@ -159,6 +198,21 @@ function selected($key, $value, $fallback = '') {
     });
 
     restoreGeometry();
+  </script>
+
+  <script>
+    (function () {
+      var select = document.getElementById('id_parcela');
+      var output = document.getElementById('ref-cadastral');
+      if (!select || !output) return;
+      function updateRef() {
+        var option = select.options[select.selectedIndex];
+        var ref = option ? option.getAttribute('data-ref') : '';
+        output.value = ref ? ref : '—';
+      }
+      select.addEventListener('change', updateRef);
+      updateRef();
+    })();
   </script>
 
 </body>
