@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $servername = "localhost";
 $username = "root";
@@ -49,7 +50,9 @@ if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
 // VALIDAR GEOMETRIA
 // -----------------------------------------
 if (empty($geometria)) {
-    die("❌ Error: No hi ha geometria. Torna enrere i dibuixa la parcel·la.");
+    $_SESSION['form_data'] = $_POST;
+    header("Location: ../HTML/parcela_nou.php?error=geometry");
+    exit;
 }
 
 // -----------------------------------------
@@ -80,17 +83,28 @@ $stmt->bind_param(
     $tipus_sol
 );
 
-if ($stmt->execute()) {
-    header("Location: consulta_parcela_sector.php");
+try {
+    if ($stmt->execute()) {
+        unset($_SESSION['form_data']);
+        header("Location: consulta_parcela_sector.php");
+        exit;
+    }
+} catch (mysqli_sql_exception $e) {
+    $_SESSION['form_data'] = $_POST;
+    if ($e->getCode() === 1062) {
+        header("Location: ../HTML/parcela_nou.php?error=ref_cadastral_dup");
+        exit;
+    }
+    header("Location: ../HTML/parcela_nou.php?error=save");
     exit;
-} else {
-    echo "<p style='color:red'>Error: " . $stmt->error . "</p>";
 }
+
+$_SESSION['form_data'] = $_POST;
+header("Location: ../HTML/parcela_nou.php?error=save");
+exit;
 
 $stmt->close();
 $conn->close();
 
 ?>
-
-
 

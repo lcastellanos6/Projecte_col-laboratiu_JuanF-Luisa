@@ -118,7 +118,7 @@ $result = $conn->query($sql);
       <p class="page-subtitle">Filtra per municipi, orientació, estat productiu i superfície.</p>
     </div>
     <div class="page-header-actions">
-      <a class="btn btn-primary" href="../HTML/parcela_nou.html">Nova parcel·la</a>
+      <a class="btn btn-primary" href="../HTML/parcela_nou.php">Nova parcel·la</a>
       <a class="btn btn-primary" href="../HTML/sector_nou.html">Nou sector</a>
     </div>
   </div>
