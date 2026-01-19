@@ -2,16 +2,18 @@
 $conn = new mysqli("localhost","root","","web");
 if ($conn->connect_error) die("Error BD: " . $conn->connect_error);
 
-// Consulta corregida: usamos nom_complet y COALESCE para pausas nulas
+// Consulta per hores totals, per setmana i per mes
 $res = $conn->query("
 SELECT 
   t.nom_complet AS nom,
-  SUM(
-    (TIMESTAMPDIFF(MINUTE, j.data_hora_inici, j.data_hora_fi) - COALESCE(j.minuts_pausa,0))/60
-  ) AS hores
+  YEAR(j.data_hora_inici) AS any,
+  MONTH(j.data_hora_inici) AS mes,
+  WEEK(j.data_hora_inici, 1) AS setmana,
+  SUM((TIMESTAMPDIFF(MINUTE, j.data_hora_inici, j.data_hora_fi) - COALESCE(j.minuts_pausa,0))/60) AS hores_totals
 FROM jornada j
 JOIN treballador t ON t.id_treballador = j.id_treballador
-GROUP BY t.id_treballador, t.nom_complet
+GROUP BY t.id_treballador, any, mes, setmana
+ORDER BY t.nom_complet, any, mes, setmana
 ");
 
 if (!$res) die("Error consulta: " . $conn->error);
@@ -23,26 +25,11 @@ if (!$res) die("Error consulta: " . $conn->error);
 <title>Resum jornades</title>
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
-form {
-    background:white; padding:20px; border-radius:8px;
-    max-width:500px; margin:auto;
-    box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-label { font-weight:bold; margin-top:10px; display:block; }
-input, select, textarea, button {
-    width:100%; padding:8px; margin-top:5px;
-    border-radius:4px; border:1px solid #ccc;
-}
-textarea { height:80px; resize:vertical; }
-button {
-    margin-top:15px; background:#2f7d2f; color:white;
-    padding:10px; border:none; border-radius:5px;
-    cursor:pointer;
-}
-button:hover { background:#3d9b3d; }
-table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #ccc;padding:8px}
-th{background:#eee}
+h2 { text-align:center; color:#2f7d2f; }
+table { border-collapse:collapse; width:100%; margin-top:20px; }
+th, td { border:1px solid #ccc; padding:8px; text-align:center; }
+th { background:#eee; }
+tr:nth-child(even) { background:#f9f9f9; }
 </style>
 </head>
 <body>
@@ -52,14 +39,22 @@ th{background:#eee}
 <table>
 <tr>
 <th>Treballador</th>
+<th>Any</th>
+<th>Mes</th>
+<th>Setmana</th>
 <th>Hores totals</th>
 </tr>
+
 <?php while($r=$res->fetch_assoc()): ?>
 <tr>
 <td><?= htmlspecialchars($r['nom']) ?></td>
-<td><?= round($r['hores'],2) ?></td>
+<td><?= $r['any'] ?></td>
+<td><?= $r['mes'] ?></td>
+<td><?= $r['setmana'] ?></td>
+<td><?= round($r['hores_totals'],2) ?></td>
 </tr>
 <?php endwhile; ?>
+
 </table>
 
 </body>
