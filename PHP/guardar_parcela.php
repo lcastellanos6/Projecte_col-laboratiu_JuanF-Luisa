@@ -25,6 +25,12 @@ $pendent = $_POST['pendent'] ?? null;
 $orientacio = $_POST['orientacio'] ?? null;
 $tipus_sol = $_POST['tipus_sol'] ?? null;
 
+if (empty(trim((string)$ref_cadastral)) || empty(trim((string)$nom))) {
+    $_SESSION['form_data'] = $_POST;
+    header("Location: ../HTML/parcela_nou.php?error=required");
+    exit;
+}
+
 // -----------------------------------------
 // PUJAR FOTO
 // -----------------------------------------
@@ -107,4 +113,3 @@ $stmt->close();
 $conn->close();
 
 ?>
-

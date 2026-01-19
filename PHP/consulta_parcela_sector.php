@@ -119,7 +119,7 @@ $result = $conn->query($sql);
     </div>
     <div class="page-header-actions">
       <a class="btn btn-primary" href="../HTML/parcela_nou.php">Nova parcel·la</a>
-      <a class="btn btn-primary" href="../HTML/sector_nou.html">Nou sector</a>
+      <a class="btn btn-primary" href="../HTML/sector_nou.php">Nou sector</a>
     </div>
   </div>
 </div>
