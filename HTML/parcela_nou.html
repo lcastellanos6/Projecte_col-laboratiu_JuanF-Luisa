@@ -24,7 +24,6 @@
 
 <body>
   <div style="padding:15px; background:#f4fff4; border-bottom:1px solid #ddd; text-align:right;">
-    <!-- BOTÓN CORRECTO -->
     <a href="../PHP/mapa_parceles.php" class="btn-map">🌍 Veure parcel·les</a>
   </div>
   <div class="page">
@@ -33,6 +32,8 @@
       <p class="page-subtitle">Dibuixa la parcel·la al mapa i completa les dades bàsiques.</p>
     </div>
 
+    <div id="form-error" style="display:none; padding:10px 12px; margin:12px 0; border:1px solid #e3b2b2; background:#fff5f5; color:#8a2a2a; border-radius:6px;"></div>
+
     <div class="panel">
       <h2 class="panel-title">Mapa de la parcel·la</h2>
       <div id="map" style="height:400px;"></div>
@@ -40,7 +41,7 @@
 
     <div class="panel">
       <h2 class="panel-title">Dades de la parcel·la</h2>
-      <form id="form" action="PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
+      <form id="form" action="../PHP/guardar_parcela.php" method="post" enctype="multipart/form-data">
         <label>Referència cadastral:</label>
         <input type="text" name="ref_cadastral" required>
 
@@ -87,7 +88,8 @@
         <label>Foto de la parcel·la:</label>
         <input type="file" name="foto" accept="image/*">
 
-        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Parcel·la</button>
+        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar parcel·la</button>
+        <a class="btn btn-ghost btn-full mt-2" href="../PHP/consulta_parcela_sector.php">Tornar a la consulta</a>
       </form>
     </div>
   </div>
@@ -104,6 +106,23 @@
       }
       window.location.href = url;
     }
+  </script>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var error = params.get('error');
+      var box = document.getElementById('form-error');
+      if (!box || !error) return;
+      if (error === 'ref_cadastral_dup') {
+        box.textContent = 'Ya existe una parcela con esa referencia catastral. Revisa el dato o usa otra referencia.';
+      } else if (error === 'save') {
+        box.textContent = 'No se ha podido guardar la parcela. Intentalo de nuevo.';
+      } else {
+        return;
+      }
+      box.style.display = 'block';
+    })();
   </script>
 
   <script>

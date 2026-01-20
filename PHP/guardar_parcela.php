@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $servername = "localhost";
 $username = "root";
@@ -23,6 +24,12 @@ $documentacio = $_POST['documentacio'] ?? null;
 $pendent = $_POST['pendent'] ?? null;
 $orientacio = $_POST['orientacio'] ?? null;
 $tipus_sol = $_POST['tipus_sol'] ?? null;
+
+if (empty(trim((string)$ref_cadastral)) || empty(trim((string)$nom))) {
+    $_SESSION['form_data'] = $_POST;
+    header("Location: ../HTML/parcela_nou.php?error=required");
+    exit;
+}
 
 // -----------------------------------------
 // PUJAR FOTO
@@ -49,7 +56,9 @@ if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
 // VALIDAR GEOMETRIA
 // -----------------------------------------
 if (empty($geometria)) {
-    die("❌ Error: No hi ha geometria. Torna enrere i dibuixa la parcel·la.");
+    $_SESSION['form_data'] = $_POST;
+    header("Location: ../HTML/parcela_nou.php?error=geometry");
+    exit;
 }
 
 // -----------------------------------------
@@ -80,19 +89,27 @@ $stmt->bind_param(
     $tipus_sol
 );
 
-if ($stmt->execute()) {
-    echo "<h2 style='color:green'>✔ Parcel·la guardada correctament</h2>";
-    echo "<p><b>ID:</b> " . $conn->insert_id . "</p>";
-    echo "<p><a href='../HTML/parcela.html'>➕ Afegir una altra parcel·la</a></p>";
-    echo "<p><a href='../HTML/mapa_exploracio.html'> 👁 Veure les parcel·les</a></p>";
-} else {
-    echo "<p style='color:red'>Error: " . $stmt->error . "</p>";
+try {
+    if ($stmt->execute()) {
+        unset($_SESSION['form_data']);
+        header("Location: consulta_parcela_sector.php");
+        exit;
+    }
+} catch (mysqli_sql_exception $e) {
+    $_SESSION['form_data'] = $_POST;
+    if ($e->getCode() === 1062) {
+        header("Location: ../HTML/parcela_nou.php?error=ref_cadastral_dup");
+        exit;
+    }
+    header("Location: ../HTML/parcela_nou.php?error=save");
+    exit;
 }
+
+$_SESSION['form_data'] = $_POST;
+header("Location: ../HTML/parcela_nou.php?error=save");
+exit;
 
 $stmt->close();
 $conn->close();
 
 ?>
-
-
-

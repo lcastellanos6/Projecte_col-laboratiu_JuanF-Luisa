@@ -17,6 +17,7 @@ composer.lock
 
 # Archivos temporales o de caché
 /.history/
+/archivadas 24-11
 *.log
 *.cache
 *.tmp

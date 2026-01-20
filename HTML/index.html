@@ -27,8 +27,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const appShell = document.querySelector('.app-shell');
 
     if (toggleButton && appShell) {
+        const syncToggleState = () => {
+            const isCollapsed = appShell.classList.contains('sidebar-collapsed');
+            toggleButton.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        };
+
+        syncToggleState();
+
         toggleButton.addEventListener('click', () => {
             appShell.classList.toggle('sidebar-collapsed');
+            syncToggleState();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                appShell.classList.add('sidebar-collapsed');
+                syncToggleState();
+            }
         });
     }
 });
@@ -45,11 +60,12 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="hero-text">
 
 <div class="hero-brand">
-<button class="hero-menu-toggle" id="menuToggle">
-<i class="fa-solid fa-bars"></i>
+<button class="hero-menu-toggle" type="button" id="menuToggle" aria-expanded="false" aria-controls="dashboardDropdown">
+<span class="sr-only">Obrir el menú principal</span>
+<i class="fa-solid fa-bars" aria-hidden="true"></i>
 </button>
 
-<img src="logo.png">
+<img src="logo.png" alt="Logo Explotació">
 <div class="hero-copy">
 <h1>Gestió de l'Explotació Fruiteres</h1>
 <span>Panell de control general</span>
@@ -73,40 +89,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="app-container">
 
-<!-- ===== SIDEBAR ===== -->
-<aside class="sidebar">
+    <aside id="dashboardDropdown" class="sidebar">
+        <button class="sidebar-close" type="button" aria-label="Tancar el menú" onclick="document.getElementById('menuToggle').click()">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <div class="app-menu">
+            <div class="menu-section">
+                <button class="menu-section-header" type="button">
+                    <span class="menu-title"><span class="menu-icon">📌</span><span class="menu-label">Gestió de cultius</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="menu-section-body">
+                <button onclick="openPage('../PHP/consulta_parcela_sector.php')">Parcel·les i sectors</button>
+                <button onclick="openPage('sol.html')">Terres</button>
+                <button onclick="openPage('especie.html')">Espècies</button>
+                <button onclick="openPage('varietat.html')">Varietats</button>
+                <button onclick="openPage('infraestructura.html')">Infraestructura</button>
+                <button onclick="openPage('plantacio.html')">Plantació</button>
+                <button onclick="openPage('fila.html')">Files</button>
+                <button onclick="openPage('previsio_collita.html')">Previsió de collita</button>
+                </div>
+            </div>
 
-<div class="app-menu">
-
-<!-- ===== CULTIUS ===== -->
-<div class="menu-section">
-<button class="menu-section-header">
-📌 Gestió de cultius <i class="fa-solid fa-chevron-down"></i>
-</button>
-<div class="menu-section-body">
-<button onclick="openPage('parcela.html')">Parcel·les</button>
-<button onclick="openPage('mapa_exploracio.html')">Visualitzar parcel·les</button>
-<button onclick="openPage('sector.html')">Seccions</button>
-<button onclick="openPage('sol.html')">Terres</button>
-<button onclick="openPage('especie.html')">Espècies</button>
-<button onclick="openPage('varietat.html')">Varietats</button>
-<button onclick="openPage('infraestructura.html')">Infraestructura</button>
-<button onclick="openPage('plantacio.html')">Plantació</button>
-<button onclick="openPage('fila.html')">Files</button>
-<button onclick="openPage('previsio_collita.html')">Previsió collita</button>
-</div>
-</div>
-
-<!-- ===== CONSULTES ===== -->
-<div class="menu-section">
-<button class="menu-section-header">
-🔎 Consultes <i class="fa-solid fa-chevron-down"></i>
-</button>
-<div class="menu-section-body">
-<button onclick="openPage('../PHP/consulta_parcela_sector.php')">Parcel·les i sectors</button>
-<button onclick="openPage('../PHP/consulta_collita.php')">Collites</button>
-</div>
-</div>
+        <div class="menu-section">
+            <button class="menu-section-header" type="button">
+                <span>🔎 Consultes</span>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="menu-section-body">
+                <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
+                <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
+                
+            </div>
+        </div>
 
 <!-- ===== OPERACIONS ===== -->
 <div class="menu-section">
@@ -115,11 +130,22 @@ document.addEventListener('DOMContentLoaded', function() {
 </button>
 <div class="menu-section-body">
 <button onclick="openPage('tractament.html')">Tractaments</button>
+<button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
 <button onclick="openPage('aplicacio.html')">Aplicació</button>
+<button onclick="openPage('aplicacio_productes.html')">Aplicació de productes</button>
 <button onclick="openPage('producte.html')">Productes</button>
+<button onclick="openPage('pla_producte.html')">Pla de producte</button>
 <button onclick="openPage('magatzem.html')">Magatzem</button>
+<button onclick="openPage('producte_lot.html')">Lot de producte</button>
 <button onclick="openPage('moviment_lot.html')">Moviment estoc</button>
-<button onclick="openPage('tasques.html')">Tasques</button>
+<button onclick="openPage('../PHP/tasca.php')">Tasques</button>
+<button onclick="openPage('../PHP/calendari_tasques.php')">Calendari Tasques</button>
+<button onclick="openPage('seguiment.html')">Seguiment</button>
+<button onclick="openPage('registre.html')">Registre</button>
+<button onclick="openPage('collita.html')">Collita</button>
+<button onclick="openPage('lot_produccio.html')">Lot de producció</button>
+<button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
+<button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
 </div>
 </div>
 
@@ -130,12 +156,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </button>
 <div class="menu-section-body">
 <button onclick="openPage('treballador.html')">Treballadors</button>
+<button onclick="openPage('operari.html')">Operari</button>
+<button onclick="openPage('maquinaria.html')">Maquinària</button>
 <button onclick="openPage('contracte.html')">Contractes</button>
-<button onclick="openPage('../PHP/tasca.php')">Tasca</button>
-<button onclick="openPage('../PHP/calendari_tasques.php')">Calendari tasques</button>
-<button onclick="openPage('absencia.php')">Absències</button>
+<button onclick="openPage('absencia.html')">Absències</button>
+<button onclick="openPage('documentacio.html')">Documentació</button>
+<button onclick="openPage('departament.html')">Departaments</button>
 <button onclick="openPage('equip.html')">Equips</button>
+<button onclick="openPage('membres_equip.html')">Membres del equip</button>
 <button onclick="openPage('epis.html')">EPIs</button>
+<button onclick="openPage('lliurament_epis.html')">Lliurament EPIs</button>
+<button onclick="openPage('horari.html')">Horaris model</button>
+<button onclick="openPage('calendari.html')">Calendaris model</button>
 </div>
 </div>
 
@@ -173,10 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </aside>
 
-<!-- ===== CONTINGUT ===== -->
-<div class="app-content">
-<iframe id="contentFrame" src="parcela.html"></iframe>
-</div>
+    <div class="app-content">
+        <iframe id="contentFrame" src="../PHP/consulta_parcela_sector.php"></iframe>
+    </div>
 
 </div>
 </div>
