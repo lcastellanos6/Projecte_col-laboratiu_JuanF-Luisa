@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button onclick="openPage('sol.html')">Terres</button>
                 <button onclick="openPage('especie.html')">Espècies</button>
                 <button onclick="openPage('varietat.html')">Varietats</button>
+                <button onclick="openPage('../PHP/comparativa_varietats.php')">Comparacio</button>
                 <button onclick="openPage('infraestructura.html')">Infraestructura</button>
                 <button onclick="openPage('plantacio.html')">Plantació</button>
                 <button onclick="openPage('fila.html')">Files</button>
@@ -111,17 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
 
-        <div class="menu-section">
-            <button class="menu-section-header" type="button">
-                <span>🔎 Consultes</span>
-                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="menu-section-body">
-                <button onclick="openPage('../PHP/consulta_parcela_sector.php')"> 🔍 Consultar parcel·les i sectors </button>
-                <button onclick="openPage('../PHP/consulta_collita.php')">🔍 Consultar collites </button>
-                
-            </div>
-        </div>
 
 <!-- ===== OPERACIONS ===== -->
 <div class="menu-section">
@@ -142,7 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('../PHP/calendari_tasques.php')">Calendari Tasques</button>
 <button onclick="openPage('seguiment.html')">Seguiment</button>
 <button onclick="openPage('registre.html')">Registre</button>
-<button onclick="openPage('collita.html')">Collita</button>
+<button onclick="openPage('../PHP/collita_nova.php')">Collita</button>
+<button onclick="openPage('../PHP/produccio.php')">Produccio de collita</button>
 <button onclick="openPage('lot_produccio.html')">Lot de producció</button>
 <button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
 <button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
@@ -159,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('operari.html')">Operari</button>
 <button onclick="openPage('maquinaria.html')">Maquinària</button>
 <button onclick="openPage('contracte.html')">Contractes</button>
-<button onclick="openPage('absencia.html')">Absències</button>
+<button onclick="openPage('absencia.php')">Absències</button>
 <button onclick="openPage('documentacio.html')">Documentació</button>
 <button onclick="openPage('departament.html')">Departaments</button>
 <button onclick="openPage('equip.html')">Equips</button>
