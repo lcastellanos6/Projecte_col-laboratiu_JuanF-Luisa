@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
                 <div class="menu-section-body">
                 <button onclick="openPage('../PHP/consulta_parcela_sector.php')">Parcel·les i sectors</button>
+                <button onclick="openPage('../PHP/consulta_cultius_varietats.php')">Cultius i varietats</button>
                 <button onclick="openPage('sol.html')">Terres</button>
                 <button onclick="openPage('especie.html')">Espècies</button>
                 <button onclick="openPage('varietat.html')">Varietats</button>
