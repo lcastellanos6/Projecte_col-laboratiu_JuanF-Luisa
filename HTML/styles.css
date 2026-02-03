@@ -152,9 +152,9 @@ body.login-page .login-card {
 
 /* Contenidor general i marges */
 .page {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: clamp(1rem, 1.4vw, 1.5rem);
   color: #2f4f2f;
 }
 
@@ -348,8 +348,17 @@ form button:hover {
 }
 
 /* Taules de dades */
-.table {
+.table-scroll {
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
   color: #2f4f2f;

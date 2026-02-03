@@ -236,6 +236,7 @@ if ($result) {
 <div class="panel mt-2">
 <?php
 if (!empty($parceles)): ?>
+    <div class="table-scroll">
     <table id="resultTable" class="table">
         <tr>
             <th>Parcel·la</th>
@@ -310,6 +311,7 @@ if (!empty($parceles)): ?>
         <?php endforeach; ?>
         <?php endforeach; ?>
     </table>
+    </div>
 <?php else: ?>
     <p>No hi ha resultats amb aquests filtres.</p>
 <?php endif; ?>
