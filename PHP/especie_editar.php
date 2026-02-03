@@ -67,7 +67,7 @@ if (!$especie) {
     </div>
 
     <div class="panel">
-        <form method="post" action="especie_editar.php" id="form-especie" data-id="<?php echo (int)$especie['id_especie']; ?>">
+        <form method="post" action="especie_editar.php" id="form-especie" data-id="<?php echo (int)$especie['id_especie']; ?>" data-dup-comu="0" data-dup-cientific="0">
             <input type="hidden" name="id_especie" value="<?php echo (int)$especie['id_especie']; ?>">
 
             <label>Nom comú:</label>
@@ -80,7 +80,7 @@ if (!$especie) {
             <datalist id="llista_nom_cientific"></datalist>
             <p id="avisa_cientific" class="alert err" style="display:none;">Ja existeix una espècie amb aquest nom científic.</p>
 
-            <button type="submit" class="btn btn-primary btn-full mt-2">Guardar canvis</button>
+            <button type="submit" class="btn btn-primary btn-full mt-2" id="btn-guardar">Guardar canvis</button>
             <a class="btn btn-ghost btn-full mt-2" href="consulta_cultius_varietats.php">Cancel·lar</a>
         </form>
     </div>
@@ -107,13 +107,29 @@ if (!$especie) {
           opt.value = item;
           list.appendChild(opt);
         });
-        if (avisa && data.exact) {
-          avisa.style.display = 'block';
+        const teDuplicat = !!data.exact && (valor || '').trim() !== '';
+        if (avisa) {
+          avisa.style.display = teDuplicat ? 'block' : 'none';
         }
+        actualitzarDuplicats(camp, teDuplicat);
       })
       .catch(() => {
         if (avisa) avisa.style.display = 'none';
+        actualitzarDuplicats(camp, false);
       });
+  }
+
+  function actualitzarDuplicats(camp, teDuplicat) {
+    const form = document.getElementById('form-especie');
+    if (!form) return;
+    if (camp === 'nom_comu') {
+      form.dataset.dupComu = teDuplicat ? '1' : '0';
+    } else {
+      form.dataset.dupCientific = teDuplicat ? '1' : '0';
+    }
+    const btn = document.getElementById('btn-guardar');
+    const bloqueja = form.dataset.dupComu === '1' || form.dataset.dupCientific === '1';
+    if (btn) btn.disabled = bloqueja;
   }
 
   function debounce(fn, wait) {
@@ -138,6 +154,15 @@ if (!$especie) {
       inputCientific.addEventListener('input', debounce(() => {
         carregarSuggeriments('nom_cientific', inputCientific.value, 'llista_nom_cientific', 'avisa_cientific', idEspecie);
       }, 200));
+    }
+
+    if (form) {
+      form.addEventListener('submit', (ev) => {
+        const bloqueja = form.dataset.dupComu === '1' || form.dataset.dupCientific === '1';
+        if (bloqueja) {
+          ev.preventDefault();
+        }
+      });
     }
   });
 </script>

@@ -48,7 +48,7 @@ $conn->close();
     </div>
 
     <div class="panel">
-        <form method="post" action="especie_nova.php" id="form-especie">
+        <form method="post" action="especie_nova.php" id="form-especie" data-dup-comu="0" data-dup-cientific="0">
             <label>Nom comú:</label>
             <input type="text" name="nom_comu" id="nom_comu" list="llista_nom_comu" required>
             <datalist id="llista_nom_comu"></datalist>
@@ -59,7 +59,7 @@ $conn->close();
             <datalist id="llista_nom_cientific"></datalist>
             <p id="avisa_cientific" class="alert err" style="display:none;">Ja existeix una espècie amb aquest nom científic.</p>
 
-            <button type="submit" class="btn btn-primary btn-full mt-2">Guardar espècie</button>
+            <button type="submit" class="btn btn-primary btn-full mt-2" id="btn-guardar">Guardar espècie</button>
             <a class="btn btn-ghost btn-full mt-2" href="consulta_cultius_varietats.php">Tornar a la consulta</a>
         </form>
     </div>
@@ -80,13 +80,29 @@ $conn->close();
           opt.value = item;
           list.appendChild(opt);
         });
-        if (avisa && data.exact) {
-          avisa.style.display = 'block';
+        const teDuplicat = !!data.exact && (valor || '').trim() !== '';
+        if (avisa) {
+          avisa.style.display = teDuplicat ? 'block' : 'none';
         }
+        actualitzarDuplicats(camp, teDuplicat);
       })
       .catch(() => {
         if (avisa) avisa.style.display = 'none';
+        actualitzarDuplicats(camp, false);
       });
+  }
+
+  function actualitzarDuplicats(camp, teDuplicat) {
+    const form = document.getElementById('form-especie');
+    if (!form) return;
+    if (camp === 'nom_comu') {
+      form.dataset.dupComu = teDuplicat ? '1' : '0';
+    } else {
+      form.dataset.dupCientific = teDuplicat ? '1' : '0';
+    }
+    const btn = document.getElementById('btn-guardar');
+    const bloqueja = form.dataset.dupComu === '1' || form.dataset.dupCientific === '1';
+    if (btn) btn.disabled = bloqueja;
   }
 
   function debounce(fn, wait) {
@@ -109,6 +125,16 @@ $conn->close();
       inputCientific.addEventListener('input', debounce(() => {
         carregarSuggeriments('nom_cientific', inputCientific.value, 'llista_nom_cientific', 'avisa_cientific');
       }, 200));
+    }
+
+    const form = document.getElementById('form-especie');
+    if (form) {
+      form.addEventListener('submit', (ev) => {
+        const bloqueja = form.dataset.dupComu === '1' || form.dataset.dupCientific === '1';
+        if (bloqueja) {
+          ev.preventDefault();
+        }
+      });
     }
   });
 </script>
