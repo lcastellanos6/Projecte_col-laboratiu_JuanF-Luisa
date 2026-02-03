@@ -92,8 +92,12 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Editar varietat</title>
     <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+  <div style="padding:15px; background:#f4fff4; border-bottom:1px solid #ddd; text-align:right;">
+    <a href="#" class="btn btn-primary" onclick="history.back(); return false;"><i class="fa-solid fa-arrow-left"></i> Tornar</a>
+  </div>
 <div class="page">
     <div class="page-header">
         <h1>Editar varietat</h1>

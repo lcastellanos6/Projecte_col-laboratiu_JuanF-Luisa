@@ -5,7 +5,29 @@ $conn = db_connect();
 $id_varietat = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id_varietat) {
     $conn->close();
-    header('Location: consulta_cultius_varietats.php?err=varietat_eliminar');
+    echo "<!DOCTYPE html>
+    <html lang='ca'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Error de varietat</title>
+        <link rel='stylesheet' href='../HTML/styles.css'>
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'>
+    </head>
+    <body>
+      <div style='padding:15px; background:#f4fff4; border-bottom:1px solid #ddd; text-align:right;'>
+        <a href='#' class='btn btn-primary' onclick='history.back(); return false;'><i class='fa-solid fa-arrow-left'></i> Tornar</a>
+      </div>
+      <div class='page'>
+        <div class='page-header'>
+          <h1>Error de varietat</h1>
+        </div>
+        <div class='panel'>
+          <p>No s'ha pogut eliminar la varietat perquè l'identificador no és vàlid.</p>
+          <a class='btn btn-ghost btn-full mt-2' href='consulta_cultius_varietats.php'>Tornar a la consulta</a>
+        </div>
+      </div>
+    </body>
+    </html>";
     exit;
 }
 
