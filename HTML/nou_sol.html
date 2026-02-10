@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registre del tipus de sòl</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+
+<div class="page-header">
+  <h2>Registre del tipus de sòl</h2>
+</div>
+
+<div class="panel">
+<form action="../PHP/guardar_sol.php" method="post">
+    
+    <label>Tipus de sòl *</label>
+    <input type="text" name="tipus" id="tipus-sol" required autocomplete="off">
+    <small id="tipus-avis" style="display:none;color:#b42318;">Aquest tipus de sòl ja existeix.</small>
+
+    <label>pH</label>
+    <input type="number" step="0.01" name="ph">
+
+    <label>Matèria orgànica (%)</label>
+    <input type="number" step="0.01" name="materia_organica">
+
+    <label>Observacions</label>
+    <textarea name="observacions"></textarea>
+
+    <button type="submit" class="btn btn-primary btn-full mt-2" id="btn-guardar-sol">Guardar sòl</button>
+</form>
+</div>
+
+</div>
+<script>
+  const inputTipus = document.getElementById('tipus-sol');
+  const avis = document.getElementById('tipus-avis');
+  const btnGuardar = document.getElementById('btn-guardar-sol');
+  let debounceId = null;
+  let controller = null;
+
+  function normalitzaText(text) {
+    return text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
+  function marcaDuplicat(existeix, nomTrobat) {
+    if (existeix) {
+      const nom = nomTrobat ? ` (${nomTrobat})` : '';
+      avis.textContent = `Aquest tipus de sòl ja existeix${nom}.`;
+      avis.style.display = 'block';
+      inputTipus.setCustomValidity('Duplicat');
+      btnGuardar.disabled = true;
+      return;
+    }
+    avis.style.display = 'none';
+    inputTipus.setCustomValidity('');
+    btnGuardar.disabled = false;
+  }
+
+  async function comprovaDuplicat() {
+    const valor = inputTipus.value;
+    if (!valor.trim()) {
+      marcaDuplicat(false);
+      return;
+    }
+
+    if (controller) {
+      controller.abort();
+    }
+    controller = new AbortController();
+
+    try {
+      const resp = await fetch(`../PHP/ajax_sol_tipus_check.php?tipus=${encodeURIComponent(valor)}`, {
+        signal: controller.signal
+      });
+      if (!resp.ok) {
+        marcaDuplicat(false);
+        return;
+      }
+      const data = await resp.json();
+      const existeix = !!data.exists;
+      if (existeix && data.normalized) {
+        const inputNorm = normalitzaText(valor);
+        if (inputNorm !== data.normalized) {
+          marcaDuplicat(false);
+          return;
+        }
+      }
+      marcaDuplicat(existeix, data.match || '');
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        marcaDuplicat(false);
+      }
+    }
+  }
+
+  inputTipus.addEventListener('input', () => {
+    clearTimeout(debounceId);
+    debounceId = setTimeout(comprovaDuplicat, 250);
+  });
+</script>
+</body>
+</html>

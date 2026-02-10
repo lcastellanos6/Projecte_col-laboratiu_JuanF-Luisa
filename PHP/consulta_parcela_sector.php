@@ -186,6 +186,7 @@ if ($result) {
     <div class="page-header-actions">
       <a class="btn btn-primary" href="../HTML/parcela_nou.php">Nova parcel·la</a>
       <a class="btn btn-primary" href="../HTML/sector_nou.php">Nou sector</a>
+      <a class="btn btn-primary" href="../HTML/nou_sol.html">Nou sol</a>
     </div>
   </div>
 </div>
