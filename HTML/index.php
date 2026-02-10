@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </button>
 <div class="menu-section-body">
 <button onclick="openPage('tractament.html')">Tractaments</button>
+<button onclick="openPage('../PHP/tractament.php')">Calendari de Tractaments</button>
 <button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
 <button onclick="openPage('aplicacio.html')">Aplicació</button>
 <button onclick="openPage('aplicacio_productes.html')">Aplicació de productes</button>
@@ -138,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('lot_produccio.html')">Lot de producció</button>
 <button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
 <button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
+<button onclick="openPage('../PHP/mapa_calor_parceles.php')">Mapa de calor</button>
 </div>
 </div>
 
