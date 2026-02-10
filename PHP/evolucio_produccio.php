@@ -56,6 +56,7 @@ while ($row = $result->fetch_assoc()) {
 }
 
 // Datasets para Chart.js
+///
 $colors = ["#2f7d2f", "#4caf50", "#81c784", "#a5d6a7", "#66bb6a"];
 $datasets = [];
 
