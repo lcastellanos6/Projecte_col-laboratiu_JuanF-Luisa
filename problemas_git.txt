@@ -1,0 +1,5 @@
+No veo todas las ramas en origin
+    Solución:
+        git remote set-branches origin '*'
+        git fetch --all --prune
+        git branch -r
