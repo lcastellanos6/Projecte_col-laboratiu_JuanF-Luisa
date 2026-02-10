@@ -23,6 +23,10 @@ $treballadors = $conn->query("
 <div class="page-header">
     <h1>Registrar absència</h1>
     <p class="page-subtitle">Controla vacances, baixes i altres absències.</p>
+  <div class="page-header-actions">
+      <a class="btn btn-primary" href="../PHP/calendari_mensual.php">Calendari absències</a>
+    </div>
+
 </div>
 
 <div class="panel">

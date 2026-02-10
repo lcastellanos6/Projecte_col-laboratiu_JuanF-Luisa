@@ -56,7 +56,7 @@ $nextAny = date('Y', strtotime("+1 month", strtotime($primer_dia)));
 <style>
 body { font-family: Arial; padding:20px; }
 .calendar { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
-.day { border:1px solid #ccc; min-height:150px; padding:5px; font-size:12px; position:relative; }
+.day { border:1px solid #ccc; min-height:150px; padding:5px; font-size:12px; }
 .header { background:#eee; font-weight:bold; text-align:center; padding:5px; }
 
 .planificada { background:#cce5ff; padding:3px; margin:2px 0; border-radius:3px; }
@@ -64,26 +64,18 @@ body { font-family: Arial; padding:20px; }
 .feta { background:#d4edda; padding:3px; margin:2px 0; border-radius:3px; }
 .cancel_lada { background:#f8d7da; padding:3px; margin:2px 0; border-radius:3px; }
 
-.add-btn {
-    position:absolute;
-    top:4px;
-    right:4px;
-    cursor:pointer;
-    font-size:14px;
+.day img { max-width:70px; margin-top:4px; display:block; }
+
+.nav { margin-bottom:15px; }
+.nav a {
+    text-decoration:none;
+    padding:6px 10px;
+    background:#2f7d2f;
+    color:white;
+    border-radius:5px;
+    margin-right:5px;
 }
 
-.day img { max-width:70px; margin-top:4px; display:block; }
-.nav {
-    margin-bottom: 15px;
-}
-.nav a {
-    text-decoration: none;
-    padding: 6px 10px;
-    background: #2f7d2f;
-    color: white;
-    border-radius: 5px;
-    margin-right: 5px;
-}
 .modal {
     display:none;
     position:fixed;
@@ -92,7 +84,6 @@ body { font-family: Arial; padding:20px; }
     justify-content:center;
     align-items:center;
 }
-
 .modal-content {
     background:#fff;
     padding:20px;
@@ -104,8 +95,12 @@ body { font-family: Arial; padding:20px; }
 <body>
 
 <h1>📅 Calendari de tasques <?= "$mes / $any" ?></h1>
-<div class="nav"> <a href="?mes=<?= $prevMes ?>&any=<?= $prevAny ?>">⬅ Mes anterior</a> <a href="?mes=<?= date('m') ?>&any=<?= date('Y') ?>">📍 Mes actual</a> <a href="?mes=<?= $nextMes ?>&any=<?= $nextAny ?>">Mes següent ➡</a> </div>
 
+<div class="nav">
+    <a href="?mes=<?= $prevMes ?>&any=<?= $prevAny ?>">⬅ Mes anterior</a>
+    <a href="?mes=<?= date('m') ?>&any=<?= date('Y') ?>">📍 Mes actual</a>
+    <a href="?mes=<?= $nextMes ?>&any=<?= $nextAny ?>">Mes següent ➡</a>
+</div>
 
 <div class="calendar">
 <?php
@@ -118,9 +113,6 @@ for ($dia=1; $dia<=$dies_mes; $dia++):
 ?>
 <div class="day">
 <strong><?= $dia ?></strong>
-
-<!-- BOTÓN AÑADIR -->
-<span class="add-btn" onclick="openModal('', '<?= "$any-$mes-$dia" ?>')">➕</span>
 
 <?php
 if (!empty($cal[$dia])):
@@ -146,6 +138,7 @@ $cls = strtolower(str_replace(' ','_',$t['estat']));
 <button onclick="openModal(<?= $t['id_tasca'] ?>)">✏️ Editar</button>
 </div>
 <?php endforeach; endif; ?>
+
 </div>
 <?php endfor; ?>
 </div>
@@ -153,7 +146,7 @@ $cls = strtolower(str_replace(' ','_',$t['estat']));
 <!-- MODAL -->
 <div id="modal" class="modal">
 <div class="modal-content">
-<h3>Registrar / modificar tasca</h3>
+<h3>Modificar tasca</h3>
 
 <form action="tasca_registrar.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="id_tasca" id="modal_id">
@@ -189,6 +182,7 @@ function closeModal(){
 
 </body>
 </html>
+
 
 
 
