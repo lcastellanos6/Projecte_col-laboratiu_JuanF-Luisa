@@ -928,3 +928,66 @@ body.login-page {
 .mt-3 {
   margin-top: 0.75rem;
 }
+
+.checkbox-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.checkbox-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d7e7d7;
+  background: #f7fbf7;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.multiselect {
+  position: relative;
+  margin-top: 0.35rem;
+}
+
+.multiselect-toggle {
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid #d7e7d7;
+  background: #ffffff;
+  color: #2f4f2f;
+  cursor: pointer;
+}
+
+.multiselect-toggle::after {
+  content: "▾";
+  float: right;
+  color: #6b8f6b;
+}
+
+.multiselect-panel {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  margin-top: 0.35rem;
+  background: #ffffff;
+  border: 1px solid #d7e7d7;
+  border-radius: 0.6rem;
+  padding: 0.5rem;
+  max-height: 240px;
+  overflow: auto;
+  box-shadow: 0 10px 20px rgba(47, 125, 47, 0.12);
+}
+
+.multiselect.is-open .multiselect-panel {
+  display: block;
+}

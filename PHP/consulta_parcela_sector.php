@@ -26,7 +26,7 @@ SELECT
     p.municipi,
     p.superficie AS sup_parcela,
     p.orientacio,
-    p.tipus_sol,
+    ps.tipus_sol,
     s.id_sector,
     s.nom        AS nom_sector,
     s.superficie AS sup_sector,
@@ -34,6 +34,12 @@ SELECT
     ST_AsGeoJSON(p.geometria) AS parcela_geojson,
     ST_AsGeoJSON(s.geometria) AS sector_geojson
 FROM parcela p
+LEFT JOIN (
+    SELECT ps.id_parcela, GROUP_CONCAT(DISTINCT so.tipus ORDER BY so.tipus SEPARATOR ', ') AS tipus_sol
+    FROM parcela_sol ps
+    JOIN sol so ON so.id_sol = ps.id_sol
+    GROUP BY ps.id_parcela
+) ps ON ps.id_parcela = p.id_parcela
 LEFT JOIN sector_parcela sp ON sp.id_parcela = p.id_parcela
 LEFT JOIN sector s          ON s.id_sector   = sp.id_sector
 ";

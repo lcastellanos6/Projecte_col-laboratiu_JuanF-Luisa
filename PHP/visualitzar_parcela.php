@@ -59,6 +59,23 @@ if (!$parcela) {
     exit;
 }
 
+// Sols de la parcel·la
+$parcela_sols = [];
+$stmt = $conn->prepare("
+    SELECT so.tipus
+    FROM parcela_sol ps
+    JOIN sol so ON so.id_sol = ps.id_sol
+    WHERE ps.id_parcela = ?
+    ORDER BY so.tipus
+");
+$stmt->bind_param("i", $id_parcela);
+$stmt->execute();
+$res = $stmt->get_result();
+while ($row = $res->fetch_assoc()) {
+    $parcela_sols[] = $row['tipus'];
+}
+$stmt->close();
+
 // Sectors associats
 $stmt = $conn->prepare("
     SELECT s.*, ST_AsGeoJSON(s.geometria) AS geometria_geojson
@@ -272,7 +289,7 @@ $conn->close();
                     <dt>Descripció</dt><dd><?php echo show_value($parcela['descripcio']); ?></dd>
                     <dt>Pendent</dt><dd><?php echo format_number($parcela['pendent']); ?></dd>
                     <dt>Orientació</dt><dd><?php echo show_value($parcela['orientacio']); ?></dd>
-                    <dt>Tipus de sòl</dt><dd><?php echo show_value($parcela['tipus_sol']); ?></dd>
+                    <dt>Tipus de sòl</dt><dd><?php echo show_value(!empty($parcela_sols) ? implode(', ', $parcela_sols) : null); ?></dd>
                     <dt>Edafo</dt><dd><?php echo show_value($parcela['edafo']); ?></dd>
                     <dt>Documentació</dt><dd><?php echo show_value($parcela['documentacio']); ?></dd>
                     <dt>Creat</dt><dd><?php echo format_date($parcela['created_at']); ?></dd>

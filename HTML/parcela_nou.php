@@ -1,5 +1,20 @@
 <?php
 session_start();
+require_once __DIR__ . '/../PHP/db.php';
+
+$conn = db_connect();
+$stmt = $conn->prepare("SELECT id_sol, tipus FROM sol ORDER BY tipus");
+$stmt->execute();
+$res = $stmt->get_result();
+$sols = [];
+if ($res) {
+    while ($row = $res->fetch_assoc()) {
+        $sols[] = $row;
+    }
+}
+$stmt->close();
+$conn->close();
+
 $old = $_SESSION['form_data'] ?? [];
 unset($_SESSION['form_data']);
 
@@ -11,6 +26,15 @@ function old($key, $default = '') {
 function selected($key, $value) {
     global $old;
     return (isset($old[$key]) && $old[$key] === $value) ? 'selected' : '';
+}
+
+function selected_multi($key, $value) {
+    global $old;
+    $values = $old[$key] ?? [];
+    if (!is_array($values)) {
+        $values = [$values];
+    }
+    return in_array($value, $values, true) ? 'selected' : '';
 }
 ?>
 <!DOCTYPE html>
@@ -63,7 +87,28 @@ function selected($key, $value) {
         <input type="hidden" name="geometria_kml" id="geometria_kml" value="<?= old('geometria_kml') ?>">
 
         <label>Tipus de sòl:</label>
-        <input type="text" name="tipus_sol" value="<?= old('tipus_sol') ?>">
+        <?php if (!empty($sols)): ?>
+          <p style="margin-top:6px; color:#4c6b4c;">Pots marcar més d'un sòl.</p>
+          <div class="multiselect" data-multiselect>
+            <button type="button" class="multiselect-toggle">Selecciona sòls</button>
+            <div class="multiselect-panel">
+              <div class="checkbox-list">
+                <?php foreach ($sols as $sol): ?>
+                  <?php
+                    $id_sol = htmlspecialchars($sol['id_sol'], ENT_QUOTES, 'UTF-8');
+                    $checked = selected_multi('id_sol', (string)$sol['id_sol']) ? 'checked' : '';
+                  ?>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="id_sol[]" value="<?= $id_sol ?>" <?= $checked ?>>
+                    <span><?= htmlspecialchars($sol['tipus'], ENT_QUOTES, 'UTF-8') ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          </div>
+        <?php else: ?>
+          <p style="margin-top:8px; color:#8a2a2a;">No hi ha sòls disponibles. Crea un sòl abans d'assignar-lo.</p>
+        <?php endif; ?>
 
         <label>Pendent (%):</label>
         <input type="number" step="0.01" name="pendent" value="<?= old('pendent') ?>">
@@ -195,6 +240,52 @@ function selected($key, $value) {
     });
 
     restoreGeometry();
+  </script>
+
+  <script>
+    (function () {
+      function initMultiselect(root) {
+        var toggle = root.querySelector('.multiselect-toggle');
+        var panel = root.querySelector('.multiselect-panel');
+        var checkboxes = root.querySelectorAll('input[type="checkbox"]');
+        if (!toggle || !panel) return;
+
+        function updateLabel() {
+          var labels = [];
+          checkboxes.forEach(function (cb) {
+            if (cb.checked) {
+              var text = cb.parentElement ? cb.parentElement.innerText.trim() : '';
+              if (text) labels.push(text);
+            }
+          });
+          if (labels.length === 0) {
+            toggle.textContent = 'Cap sòl seleccionat';
+          } else if (labels.length <= 2) {
+            toggle.textContent = labels.join(', ');
+          } else {
+            toggle.textContent = labels.length + ' sòls seleccionats';
+          }
+        }
+
+        toggle.addEventListener('click', function () {
+          root.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!root.contains(e.target)) {
+            root.classList.remove('is-open');
+          }
+        });
+
+        checkboxes.forEach(function (cb) {
+          cb.addEventListener('change', updateLabel);
+        });
+
+        updateLabel();
+      }
+
+      document.querySelectorAll('[data-multiselect]').forEach(initMultiselect);
+    })();
   </script>
 
 </body>

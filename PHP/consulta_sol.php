@@ -32,7 +32,8 @@ function format_num($valor): string {
     <title>Consulta de sòls</title>
     <link rel="stylesheet" href="../HTML/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
+
+      <style>
       .page-header-actions {
         display: flex;
         gap: 0.75rem;
@@ -64,7 +65,7 @@ function format_num($valor): string {
       </div>
       <div class="page-header-actions">
         <a class="btn btn-primary" href="../HTML/nou_sol.html">+Nou sol</a>
-        <a class="btn btn-ghost" href="#" onclick="history.back(); return false;">Tornar</a>
+        <a class="btn btn-primary" href="#" onclick="history.back(); return false;"> ← Tornar</a>
       </div>
     </div>
   </div>

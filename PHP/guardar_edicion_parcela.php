@@ -13,7 +13,6 @@ $edafo = $_POST['edafo'] ?? null;
 $documentacio = $_POST['documentacio'] ?? null;
 $pendent = (isset($_POST['pendent']) && $_POST['pendent'] !== '') ? floatval($_POST['pendent']) : null;
 $orientacio = $_POST['orientacio'] ?? null;
-$tipus_sol = $_POST['tipus_sol'] ?? '';
 
 // Recuperar foto actual
 $stmt = $conn->prepare("SELECT foto_url FROM parcela WHERE id_parcela=?");
@@ -52,13 +51,12 @@ if ($has_geometria) {
       foto_url=?,
       edafo=?,
       documentacio=?,
-      tipus_sol=?,
       pendent=?,
       orientacio=?
     WHERE id_parcela=?
     ");
     $stmt->bind_param(
-        "ssdssssssssdsi",
+        "ssdsssssssdsi",
         $ref_cadastral,
         $nom,
         $superficie,
@@ -69,7 +67,6 @@ if ($has_geometria) {
         $foto_url,
         $edafo,
         $documentacio,
-        $tipus_sol,
         $pendent,
         $orientacio,
         $id
@@ -85,13 +82,12 @@ if ($has_geometria) {
       foto_url=?,
       edafo=?,
       documentacio=?,
-      tipus_sol=?,
       pendent=?,
       orientacio=?
     WHERE id_parcela=?
     ");
     $stmt->bind_param(
-        "ssdsssssdssi",
+        "ssdsssssdsi",
         $ref_cadastral,
         $nom,
         $superficie,
@@ -100,7 +96,6 @@ if ($has_geometria) {
         $foto_url,
         $edafo,
         $documentacio,
-        $tipus_sol,
         $pendent,
         $orientacio,
         $id
@@ -108,6 +103,27 @@ if ($has_geometria) {
 }
 $stmt->execute();
 $stmt->close();
+
+$sol_ids = $_POST['id_sol'] ?? [];
+if (!is_array($sol_ids)) {
+    $sol_ids = [$sol_ids];
+}
+$sol_ids = array_values(array_unique(array_filter($sol_ids, 'ctype_digit')));
+
+$stmt = $conn->prepare("DELETE FROM parcela_sol WHERE id_parcela=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$stmt->close();
+
+if (!empty($sol_ids)) {
+    $insert_sol = $conn->prepare("INSERT INTO parcela_sol (id_parcela, id_sol) VALUES (?, ?)");
+    foreach ($sol_ids as $id_sol) {
+        $id_sol = (int)$id_sol;
+        $insert_sol->bind_param("ii", $id, $id_sol);
+        $insert_sol->execute();
+    }
+    $insert_sol->close();
+}
 
 header("Location: consulta_parcela_sector.php");
 exit;
