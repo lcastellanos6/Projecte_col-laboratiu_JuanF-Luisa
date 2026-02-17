@@ -46,12 +46,7 @@ $stmt->close();
 $conn->close();
 
 if ($ok) {
-    $retorn = $_SERVER['HTTP_REFERER'] ?? '';
-    if (ruta_retorn_segura($retorn)) {
-        header("Location: $retorn");
-    } else {
-        header("Location: ../HTML/nou_sol.html");
-    }
+    header("Location: consulta_sol.php");
     exit;
 }
 

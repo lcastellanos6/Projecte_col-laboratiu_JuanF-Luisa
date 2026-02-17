@@ -186,7 +186,10 @@ if ($result) {
     <div class="page-header-actions">
       <a class="btn btn-primary" href="../HTML/parcela_nou.php">Nova parcel·la</a>
       <a class="btn btn-primary" href="../HTML/sector_nou.php">Nou sector</a>
-      <a class="btn btn-primary" href="../HTML/nou_sol.html">Nou sol</a>
+      <a class="btn btn-primary" href="consulta_sol.php" style="background:#f4a261;">
+        <i class="fa-solid fa-eye" aria-hidden="true"></i>
+        Tipus sol
+      </a>
     </div>
   </div>
 </div>

@@ -63,10 +63,8 @@ function format_num($valor): string {
         <p class="page-subtitle">Consulta, edita o elimina els tipus de sòl registrats.</p>
       </div>
       <div class="page-header-actions">
-        <a class="btn btn-primary" href="consulta_sol.php" style="background:#f4a261;">
-          <i class="fa-solid fa-eye" aria-hidden="true"></i>
-          Tipus sol
-        </a>
+        <a class="btn btn-primary" href="../HTML/nou_sol.html">+Nou sol</a>
+        <a class="btn btn-ghost" href="#" onclick="history.back(); return false;">Tornar</a>
       </div>
     </div>
   </div>
