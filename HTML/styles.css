@@ -885,6 +885,12 @@ body.login-page {
   padding-left: 1.65rem;
 }
 
+.sidebar .menu-section-body button.is-active {
+  background: rgba(47, 125, 47, 0.12);
+  color: #1e4f1f;
+  font-weight: 600;
+}
+
 .app-shell.sidebar-collapsed .menu-label {
   display: none;
 }

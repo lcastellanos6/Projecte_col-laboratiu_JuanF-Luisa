@@ -13,9 +13,42 @@ session_start();
 <script>
 function openPage(url) {
     document.getElementById("contentFrame").src = url;
+    if (typeof window.setActiveMenu === 'function') {
+        window.setActiveMenu(url);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    const menuButtons = document.querySelectorAll('.menu-section-body button[data-url]');
+    const normalizeUrl = (url) => {
+        try {
+            const normalized = new URL(url, window.location.href).pathname;
+            return normalized.replace(/\/+$/g, '');
+        } catch (error) {
+            return String(url || '').replace(/\/+$/g, '');
+        }
+    };
+
+    window.setActiveMenu = (url) => {
+        const targetPath = normalizeUrl(url);
+
+        menuButtons.forEach((button) => {
+            const buttonPath = normalizeUrl(button.dataset.url || '');
+            const isActive = buttonPath === targetPath;
+            button.classList.toggle('is-active', isActive);
+
+            if (isActive) {
+                button.setAttribute('aria-current', 'page');
+                const section = button.closest('.menu-section');
+                if (section && !section.classList.contains('is-open')) {
+                    section.classList.add('is-open');
+                }
+            } else {
+                button.removeAttribute('aria-current');
+            }
+        });
+    };
 
     document.querySelectorAll('.menu-section-header').forEach(header => {
         header.addEventListener('click', () => {
@@ -25,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const toggleButton = document.getElementById('menuToggle');
     const appShell = document.querySelector('.app-shell');
+    const contentFrame = document.getElementById('contentFrame');
 
     if (toggleButton && appShell) {
         const syncToggleState = () => {
@@ -45,6 +79,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 syncToggleState();
             }
         });
+    }
+
+    if (contentFrame && typeof window.setActiveMenu === 'function') {
+        contentFrame.addEventListener('load', () => {
+            window.setActiveMenu(contentFrame.src);
+        });
+
+        window.setActiveMenu(contentFrame.src);
     }
 });
 </script>
@@ -100,13 +142,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                 </button>
                 <div class="menu-section-body">
-                <button onclick="openPage('../PHP/consulta_parcela_sector.php')">Parcel·les i sectors</button>
-                <button onclick="openPage('../PHP/consulta_cultius_varietats.php')">Cultius i varietats</button>
-                <button onclick="openPage('../PHP/comparativa_varietats.php')">Comparacio Parcel·les i Varietats</button>
-                <button onclick="openPage('../PHP/infraestructura.php')">Infraestructura</button>
-                <button onclick="openPage('plantacio.html')">Plantació</button>
-                <button onclick="openPage('fila.html')">Files</button>
-                <button onclick="openPage('previsio_collita.html')">Previsió de collita</button>
+                <button onclick="openPage('../PHP/consulta_parcela_sector.php')" data-url="../PHP/consulta_parcela_sector.php">Parcel·les i sectors</button>
+                <button onclick="openPage('../PHP/consulta_cultius_varietats.php')" data-url="../PHP/consulta_cultius_varietats.php">Cultius i varietats</button>
+                <button onclick="openPage('../PHP/comparativa_varietats.php')" data-url="../PHP/comparativa_varietats.php">Comparacio Parcel·les i Varietats</button>
+                <button onclick="openPage('../PHP/infraestructura.php')" data-url="../PHP/infraestructura.php">Infraestructura</button>
+                <button onclick="openPage('plantacio.html')" data-url="plantacio.html">Plantació</button>
+                <button onclick="openPage('fila.html')" data-url="fila.html">Files</button>
+                <button onclick="openPage('previsio_collita.html')" data-url="previsio_collita.html">Previsió de collita</button>
                 </div>
             </div>
 
@@ -117,26 +159,26 @@ document.addEventListener('DOMContentLoaded', function() {
 🌱 Operacions <i class="fa-solid fa-chevron-down"></i>
 </button>
 <div class="menu-section-body">
-<button onclick="openPage('tractament.html')">Tractaments</button>
-<button onclick="openPage('../PHP/tractament.php')">Calendari de Tractaments</button>
-<button onclick="openPage('pla_tractament.html')">Pla de tractaments</button>
-<button onclick="openPage('aplicacio.html')">Aplicació</button>
-<button onclick="openPage('aplicacio_productes.html')">Aplicació de productes</button>
-<button onclick="openPage('producte.html')">Productes</button>
-<button onclick="openPage('pla_producte.html')">Pla de producte</button>
-<button onclick="openPage('magatzem.html')">Magatzem</button>
-<button onclick="openPage('producte_lot.html')">Lot de producte</button>
-<button onclick="openPage('moviment_lot.html')">Moviment estoc</button>
-<button onclick="openPage('../PHP/tasca.php')">Tasques</button>
-<button onclick="openPage('../PHP/calendari_tasques.php')">Calendari Tasques</button>
-<button onclick="openPage('seguiment.html')">Seguiment</button>
-<button onclick="openPage('registre.html')">Registre</button>
-<button onclick="openPage('../PHP/collita_nova.php')">Collita</button>
-<button onclick="openPage('../PHP/produccio.php')">Produccio de collita</button>
-<button onclick="openPage('lot_produccio.html')">Lot de producció</button>
-<button onclick="openPage('control_qualitat.html')">Control de qualitat</button>
-<button onclick="openPage('estat_fenologic.html')">Estat fenològic</button>
-<button onclick="openPage('../PHP/mapa_calor_parceles.php')">Mapa de calor</button>
+<button onclick="openPage('tractament.html')" data-url="tractament.html">Tractaments</button>
+<button onclick="openPage('../PHP/tractament.php')" data-url="../PHP/tractament.php">Calendari de Tractaments</button>
+<button onclick="openPage('pla_tractament.html')" data-url="pla_tractament.html">Pla de tractaments</button>
+<button onclick="openPage('aplicacio.html')" data-url="aplicacio.html">Aplicació</button>
+<button onclick="openPage('aplicacio_productes.html')" data-url="aplicacio_productes.html">Aplicació de productes</button>
+<button onclick="openPage('producte.html')" data-url="producte.html">Productes</button>
+<button onclick="openPage('pla_producte.html')" data-url="pla_producte.html">Pla de producte</button>
+<button onclick="openPage('magatzem.html')" data-url="magatzem.html">Magatzem</button>
+<button onclick="openPage('producte_lot.html')" data-url="producte_lot.html">Lot de producte</button>
+<button onclick="openPage('moviment_lot.html')" data-url="moviment_lot.html">Moviment estoc</button>
+<button onclick="openPage('../PHP/tasca.php')" data-url="../PHP/tasca.php">Tasques</button>
+<button onclick="openPage('../PHP/calendari_tasques.php')" data-url="../PHP/calendari_tasques.php">Calendari Tasques</button>
+<button onclick="openPage('seguiment.html')" data-url="seguiment.html">Seguiment</button>
+<button onclick="openPage('registre.html')" data-url="registre.html">Registre</button>
+<button onclick="openPage('../PHP/collita_nova.php')" data-url="../PHP/collita_nova.php">Collita</button>
+<button onclick="openPage('../PHP/produccio.php')" data-url="../PHP/produccio.php">Produccio de collita</button>
+<button onclick="openPage('lot_produccio.html')" data-url="lot_produccio.html">Lot de producció</button>
+<button onclick="openPage('control_qualitat.html')" data-url="control_qualitat.html">Control de qualitat</button>
+<button onclick="openPage('estat_fenologic.html')" data-url="estat_fenologic.html">Estat fenològic</button>
+<button onclick="openPage('../PHP/mapa_calor_parceles.php')" data-url="../PHP/mapa_calor_parceles.php">Mapa de calor</button>
 </div>
 </div>
 
@@ -146,19 +188,19 @@ document.addEventListener('DOMContentLoaded', function() {
 👨‍🌾 Treballadors <i class="fa-solid fa-chevron-down"></i>
 </button>
 <div class="menu-section-body">
-<button onclick="openPage('treballador.html')">Treballadors</button>
-<button onclick="openPage('operari.html')">Operari</button>
-<button onclick="openPage('maquinaria.html')">Maquinària</button>
-<button onclick="openPage('contracte.html')">Contractes</button>
-<button onclick="openPage('absencia.php')">Absències</button>
-<button onclick="openPage('documentacio.html')">Documentació</button>
-<button onclick="openPage('departament.html')">Departaments</button>
-<button onclick="openPage('equip.html')">Equips</button>
-<button onclick="openPage('membres_equip.html')">Membres del equip</button>
-<button onclick="openPage('epis.html')">EPIs</button>
-<button onclick="openPage('lliurament_epis.html')">Lliurament EPIs</button>
-<button onclick="openPage('horari.html')">Horaris model</button>
-<button onclick="openPage('calendari.html')">Calendaris model</button>
+<button onclick="openPage('treballador.html')" data-url="treballador.html">Treballadors</button>
+<button onclick="openPage('operari.html')" data-url="operari.html">Operari</button>
+<button onclick="openPage('maquinaria.html')" data-url="maquinaria.html">Maquinària</button>
+<button onclick="openPage('contracte.html')" data-url="contracte.html">Contractes</button>
+<button onclick="openPage('absencia.php')" data-url="absencia.php">Absències</button>
+<button onclick="openPage('documentacio.html')" data-url="documentacio.html">Documentació</button>
+<button onclick="openPage('departament.html')" data-url="departament.html">Departaments</button>
+<button onclick="openPage('equip.html')" data-url="equip.html">Equips</button>
+<button onclick="openPage('membres_equip.html')" data-url="membres_equip.html">Membres del equip</button>
+<button onclick="openPage('epis.html')" data-url="epis.html">EPIs</button>
+<button onclick="openPage('lliurament_epis.html')" data-url="lliurament_epis.html">Lliurament EPIs</button>
+<button onclick="openPage('horari.html')" data-url="horari.html">Horaris model</button>
+<button onclick="openPage('calendari.html')" data-url="calendari.html">Calendaris model</button>
 </div>
 </div>
 
@@ -168,16 +210,16 @@ document.addEventListener('DOMContentLoaded', function() {
 ⏱️ Jornades i horaris <i class="fa-solid fa-chevron-down"></i>
 </button>
 <div class="menu-section-body">
-<button onclick="openPage('../PHP/registrar_jornada.php')">
+<button onclick="openPage('../PHP/registrar_jornada.php')" data-url="../PHP/registrar_jornada.php">
 ➕ Registrar jornada
 </button>
-<button onclick="openPage('../PHP/calendari_mensual.php')">
+<button onclick="openPage('../PHP/calendari_mensual.php')" data-url="../PHP/calendari_mensual.php">
 📆 Vista calendari
 </button>
-<button onclick="openPage('../PHP/calendari_absencies.php')">
+<button onclick="openPage('../PHP/calendari_absencies.php')" data-url="../PHP/calendari_absencies.php">
 📆 Vista calendari
 </button>
-<button onclick="openPage('../PHP/llista_jornades.php')">
+<button onclick="openPage('../PHP/llista_jornades.php')" data-url="../PHP/llista_jornades.php">
 📊 Resum hores treballades
 </button>
 </div>
@@ -189,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ⚙️ Configuració <i class="fa-solid fa-chevron-down"></i>
 </button>
 <div class="menu-section-body">
-<button onclick="openPage('login.html')">Usuaris</button>
+<button onclick="openPage('login.html')" data-url="login.html">Usuaris</button>
 </div>
 </div>
 
