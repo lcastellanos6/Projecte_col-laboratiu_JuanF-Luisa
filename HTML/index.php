@@ -102,11 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="menu-section-body">
                 <button onclick="openPage('../PHP/consulta_parcela_sector.php')">Parcel·les i sectors</button>
                 <button onclick="openPage('../PHP/consulta_cultius_varietats.php')">Cultius i varietats</button>
-                <button onclick="openPage('sol.html')">Terres</button>
-                <button onclick="openPage('especie.html')">Espècies</button>
-                <button onclick="openPage('varietat.html')">Varietats</button>
-                <button onclick="openPage('../PHP/comparativa_varietats.php')">Comparacio</button>
-                <button onclick="openPage('infraestructura.html')">Infraestructura</button>
+                <button onclick="openPage('../PHP/comparativa_varietats.php')">Comparacio Parcel·les i Varietats</button>
+                <button onclick="openPage('../PHP/infraestructura.php')">Infraestructura</button>
                 <button onclick="openPage('plantacio.html')">Plantació</button>
                 <button onclick="openPage('fila.html')">Files</button>
                 <button onclick="openPage('previsio_collita.html')">Previsió de collita</button>

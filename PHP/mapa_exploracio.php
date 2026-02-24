@@ -19,7 +19,13 @@ $filters = [];
 $params = [];
 
 if (!empty($_GET['tipus_sol'])) {
-    $filters[] = "tipus_sol = ?";
+    $filters[] = "EXISTS (
+        SELECT 1
+        FROM parcela_sol psf
+        JOIN sol sof ON sof.id_sol = psf.id_sol
+        WHERE psf.id_parcela = p.id_parcela
+          AND sof.tipus = ?
+    )";
     $params[] = $_GET['tipus_sol'];
 }
 if (!empty($_GET['orientacio'])) {
@@ -36,9 +42,15 @@ if (!empty($_GET['max_pendent'])) {
 }
 
 // Construir consulta
-$sql = "SELECT id_parcela, ref_cadastral, nom, superficie, descripcio, municipi, 
-               ST_AsGeoJSON(geometria) as geojson, geometria_kml, foto_url, edafo, documentacio, pendent, orientacio, tipus_sol, created_at
-        FROM parcela";
+$sql = "SELECT p.id_parcela, p.ref_cadastral, p.nom, p.superficie, p.descripcio, p.municipi, 
+               ST_AsGeoJSON(p.geometria) as geojson, p.geometria_kml, p.foto_url, p.edafo, p.documentacio, p.pendent, p.orientacio, ps.tipus_sol, p.created_at
+        FROM parcela p
+        LEFT JOIN (
+            SELECT ps.id_parcela, GROUP_CONCAT(DISTINCT so.tipus ORDER BY so.tipus SEPARATOR ', ') AS tipus_sol
+            FROM parcela_sol ps
+            JOIN sol so ON so.id_sol = ps.id_sol
+            GROUP BY ps.id_parcela
+        ) ps ON ps.id_parcela = p.id_parcela";
 
 if ($filters) {
     $sql .= " WHERE " . implode(" AND ", $filters);

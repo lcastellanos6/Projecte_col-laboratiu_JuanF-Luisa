@@ -23,7 +23,6 @@ $edafo = $_POST['edafo'] ?? null;
 $documentacio = $_POST['documentacio'] ?? null;
 $pendent = $_POST['pendent'] ?? null;
 $orientacio = $_POST['orientacio'] ?? null;
-$tipus_sol = $_POST['tipus_sol'] ?? null;
 
 if (empty(trim((string)$ref_cadastral)) || empty(trim((string)$nom))) {
     $_SESSION['form_data'] = $_POST;
@@ -67,13 +66,13 @@ if (empty($geometria)) {
 $sql = "INSERT INTO Parcela (
     ref_cadastral, nom, superficie, descripcio, municipi,
     geometria, geometria_kml, foto_url, edafo, documentacio,
-    pendent, orientacio, tipus_sol
-) VALUES (?, ?, ?, ?, ?, ST_GeomFromGeoJSON(?), ?, ?, ?, ?, ?, ?, ?)";
+    pendent, orientacio
+) VALUES (?, ?, ?, ?, ?, ST_GeomFromGeoJSON(?), ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 
 $stmt->bind_param(
-    "ssdsssssssdss",
+    "ssdsssssssds",
     $ref_cadastral,
     $nom,
     $superficie,
@@ -85,12 +84,26 @@ $stmt->bind_param(
     $edafo,
     $documentacio,
     $pendent,
-    $orientacio,
-    $tipus_sol
+    $orientacio
 );
 
 try {
     if ($stmt->execute()) {
+        $id_parcela = $conn->insert_id;
+        $sol_ids = $_POST['id_sol'] ?? [];
+        if (!is_array($sol_ids)) {
+            $sol_ids = [$sol_ids];
+        }
+        $sol_ids = array_values(array_unique(array_filter($sol_ids, 'ctype_digit')));
+        if (!empty($sol_ids)) {
+            $insert_sol = $conn->prepare("INSERT INTO parcela_sol (id_parcela, id_sol) VALUES (?, ?)");
+            foreach ($sol_ids as $id_sol) {
+                $id_sol = (int)$id_sol;
+                $insert_sol->bind_param("ii", $id_parcela, $id_sol);
+                $insert_sol->execute();
+            }
+            $insert_sol->close();
+        }
         unset($_SESSION['form_data']);
         header("Location: consulta_parcela_sector.php");
         exit;

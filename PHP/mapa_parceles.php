@@ -4,16 +4,22 @@ if ($conn->connect_error) die("Error BD");
 
 $res = $conn->query("
 SELECT 
-  id_parcela,
-  ref_cadastral,
-  nom,
-  municipi,
-  superficie,
-  tipus_sol,
-  pendent,
-  orientacio,
-  ST_AsGeoJSON(geometria) AS geo
-FROM parcela
+  p.id_parcela,
+  p.ref_cadastral,
+  p.nom,
+  p.municipi,
+  p.superficie,
+  ps.tipus_sol,
+  p.pendent,
+  p.orientacio,
+  ST_AsGeoJSON(p.geometria) AS geo
+FROM parcela p
+LEFT JOIN (
+  SELECT ps.id_parcela, GROUP_CONCAT(DISTINCT so.tipus ORDER BY so.tipus SEPARATOR ', ') AS tipus_sol
+  FROM parcela_sol ps
+  JOIN sol so ON so.id_sol = ps.id_sol
+  GROUP BY ps.id_parcela
+) ps ON ps.id_parcela = p.id_parcela
 ");
 
 $rows = [];
