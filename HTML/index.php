@@ -20,6 +20,27 @@ function openPage(url) {
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    const menuSections = Array.from(document.querySelectorAll('.menu-section'));
+    const menuStateKey = 'menu-seccions-obertes';
+    const saveOpenSections = () => {
+        const openIndexes = menuSections
+            .map((section, index) => (section.classList.contains('is-open') ? index : null))
+            .filter((index) => index !== null);
+        localStorage.setItem(menuStateKey, JSON.stringify(openIndexes));
+    };
+    const restoreOpenSections = () => {
+        try {
+            const stored = JSON.parse(localStorage.getItem(menuStateKey) || '[]');
+            menuSections.forEach((section, index) => {
+                if (stored.includes(index)) {
+                    section.classList.add('is-open');
+                }
+            });
+        } catch (error) {
+            localStorage.removeItem(menuStateKey);
+        }
+    };
+
     const menuButtons = document.querySelectorAll('.menu-section-body button[data-url]');
     const normalizeUrl = (url) => {
         try {
@@ -50,9 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
+    restoreOpenSections();
+
     document.querySelectorAll('.menu-section-header').forEach(header => {
         header.addEventListener('click', () => {
             header.closest('.menu-section').classList.toggle('is-open');
+            saveOpenSections();
         });
     });
 
