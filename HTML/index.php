@@ -16,32 +16,52 @@ function openPage(url) {
     if (typeof window.setActiveMenu === 'function') {
         window.setActiveMenu(url);
     }
+    if (typeof window.saveIframePage === 'function') {
+        window.saveIframePage(url);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
 
     const menuSections = Array.from(document.querySelectorAll('.menu-section'));
-    const menuStateKey = 'menu-seccions-obertes';
-    const saveOpenSections = () => {
-        const openIndexes = menuSections
-            .map((section, index) => (section.classList.contains('is-open') ? index : null))
-            .filter((index) => index !== null);
-        localStorage.setItem(menuStateKey, JSON.stringify(openIndexes));
+    const menuStateKey = 'menu-seccio-oberta';
+    const openSingleSection = (targetSection) => {
+        menuSections.forEach((section) => {
+            section.classList.toggle('is-open', section === targetSection);
+        });
     };
-    const restoreOpenSections = () => {
-        try {
-            const stored = JSON.parse(localStorage.getItem(menuStateKey) || '[]');
-            menuSections.forEach((section, index) => {
-                if (stored.includes(index)) {
-                    section.classList.add('is-open');
-                }
-            });
-        } catch (error) {
-            localStorage.removeItem(menuStateKey);
+    const closeAllSections = () => {
+        menuSections.forEach((section) => section.classList.remove('is-open'));
+    };
+    const saveOpenSection = (section) => {
+        const index = menuSections.indexOf(section);
+        if (index >= 0) {
+            localStorage.setItem(menuStateKey, String(index));
+        }
+    };
+    const clearOpenSection = () => {
+        localStorage.removeItem(menuStateKey);
+    };
+    const restoreOpenSection = () => {
+        const stored = Number.parseInt(localStorage.getItem(menuStateKey), 10);
+        if (Number.isInteger(stored) && menuSections[stored]) {
+            openSingleSection(menuSections[stored]);
         }
     };
 
     const menuButtons = document.querySelectorAll('.menu-section-body button[data-url]');
+    const iframeStateKey = 'menu-iframe-pagina';
+    const saveIframePage = (url) => {
+        if (url) {
+            localStorage.setItem(iframeStateKey, url);
+        }
+    };
+    const restoreIframePage = () => {
+        const stored = localStorage.getItem(iframeStateKey);
+        if (stored && contentFrame) {
+            contentFrame.src = stored;
+        }
+    };
     const normalizeUrl = (url) => {
         try {
             const normalized = new URL(url, window.location.href).pathname;
@@ -62,21 +82,31 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isActive) {
                 button.setAttribute('aria-current', 'page');
                 const section = button.closest('.menu-section');
-                if (section && !section.classList.contains('is-open')) {
-                    section.classList.add('is-open');
+                if (section) {
+                    openSingleSection(section);
+                    saveOpenSection(section);
                 }
             } else {
                 button.removeAttribute('aria-current');
             }
         });
     };
+    window.saveIframePage = saveIframePage;
 
-    restoreOpenSections();
+    restoreOpenSection();
 
     document.querySelectorAll('.menu-section-header').forEach(header => {
         header.addEventListener('click', () => {
-            header.closest('.menu-section').classList.toggle('is-open');
-            saveOpenSections();
+            const section = header.closest('.menu-section');
+            if (section) {
+                if (section.classList.contains('is-open')) {
+                    section.classList.remove('is-open');
+                    clearOpenSection();
+                } else {
+                    openSingleSection(section);
+                    saveOpenSection(section);
+                }
+            }
         });
     });
 
@@ -105,9 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (contentFrame && typeof window.setActiveMenu === 'function') {
+    if (contentFrame) {
+        restoreIframePage();
+
         contentFrame.addEventListener('load', () => {
             window.setActiveMenu(contentFrame.src);
+            saveIframePage(contentFrame.src);
         });
 
         window.setActiveMenu(contentFrame.src);
@@ -188,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('pla_tractament.html')" data-url="pla_tractament.html">Pla de tractaments</button>
 <button onclick="openPage('aplicacio.html')" data-url="aplicacio.html">Aplicació</button>
 <button onclick="openPage('aplicacio_productes.html')" data-url="aplicacio_productes.html">Aplicació de productes</button>
+<button onclick="openPage('../PHP/consulta_productes.php')" data-url="../PHP/consulta_productes.php">Consulta productes</button>
 <button onclick="openPage('producte.html')" data-url="producte.html">Productes</button>
 <button onclick="openPage('pla_producte.html')" data-url="pla_producte.html">Pla de producte</button>
 <button onclick="openPage('magatzem.html')" data-url="magatzem.html">Magatzem</button>
