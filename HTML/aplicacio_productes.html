@@ -16,7 +16,7 @@
 <form action="../PHP/guardar_aplicacio_productes.php" method="post">
 
         <label>ID Aplicació *</label>
-        <input type="number" name="id_aplicacio" required>
+        <input type="number" name="id_aplicacio" id="id_aplicacio" required>
 
         <label>ID Producte *</label>
         <input type="number" name="id_producte" required>
@@ -40,9 +40,19 @@
 
         <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Producte</button>
 
-    </form>
+</form>
 </div>
 
 </div>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const idAplicacio = params.get('id_aplicacio');
+    const input = document.getElementById('id_aplicacio');
+    if (idAplicacio && input) {
+      input.value = idAplicacio;
+    }
+  })();
+</script>
 </body>
 </html>

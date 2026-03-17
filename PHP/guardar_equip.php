@@ -17,7 +17,7 @@ $stmt->bind_param("sis", $nom, $id_departament, $descripcio);
 
 if ($stmt->execute()) {
     echo "<p>Equip registrat correctament.</p>";
-    echo "<a href='equip.html'>Tornar</a>";
+    echo "<a href='../HTML/equip.html'>Tornar</a>";
 } else {
     echo "Error: " . $stmt->error;
 }

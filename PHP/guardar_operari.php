@@ -28,7 +28,7 @@ $sql->bind_param("ssi", $nom, $carnet_aplicador, $id_treballador);
 
 if ($sql->execute()) {
     echo "<h3>Operari afegit correctament!</h3>";
-    echo "<a href='operari.html'>Tornar</a>";
+    echo "<a href='../HTML/operari.html'>Tornar</a>";
 } else {
     echo "Error: " . $conn->error;
 }

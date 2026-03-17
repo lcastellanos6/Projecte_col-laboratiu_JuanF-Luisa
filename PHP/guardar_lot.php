@@ -22,7 +22,7 @@ $data_compra = !empty($_POST['data_compra']) ? $_POST['data_compra'] : NULL;
 $preu_unitari = !empty($_POST['preu_unitari']) ? $_POST['preu_unitari'] : NULL;
 
 $stmt = $conn->prepare("
-    INSERT INTO lot (
+    INSERT INTO producte_lot (
         id_producte, numero_lot, data_caducitat, id_magatzem,
         quantitat_disponible, unitat, fabricant, proveidor,
         data_compra, preu_unitari
@@ -39,7 +39,7 @@ $stmt->bind_param(
 
 if ($stmt->execute()) {
     echo "<h3>Lot afegit correctament!</h3>";
-    echo "<a href='lot.html'>Afegir un altre</a>";
+    echo "<a href='../HTML/producte_lot.html'>Afegir un altre</a>";
 } else {
     echo "Error: " . $conn->error;
 }

@@ -19,7 +19,7 @@ $sql->bind_param("iiss", $id_pla, $id_producte, $dosi, $volum_caldo);
 
 if ($sql->execute()) {
     echo "<h3>Producte assignat correctament al pla de tractament!</h3>";
-    echo "<a href='pla_producte.html'>Tornar</a>";
+    echo "<a href='../HTML/pla_producte.html'>Tornar</a>";
 } else {
     echo "Error: " . $conn->error;
 }

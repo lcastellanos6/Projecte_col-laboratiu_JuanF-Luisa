@@ -1,41 +1,56 @@
-<!DOCTYPE html>
-<html lang="ca">
-<head>
-<meta charset="UTF-8">
-<title>Registre Climàtic</title>
-<link rel="stylesheet" href="../HTML/styles.css">
-</head>
+<?php
+require_once __DIR__ . '/db.php';
 
-<body>
+$conn = db_connect();
 
-<div class="page">
-<div class="page-header">
-  <h1>Afegir registre climàtic</h1>
-  <p class="page-subtitle">Desa dades anuals de temperatura, precipitació i altres factors.</p>
-</div>
+$id_plantacio_raw = trim($_POST['id_plantacio'] ?? '');
+$any_temp_raw = trim($_POST['any_temp'] ?? '');
+$temperatura_mitjana_raw = trim($_POST['temperatura_mitjana'] ?? '');
+$precipitacio_total_raw = trim($_POST['precipitacio_total'] ?? '');
+$altres_factors_raw = trim($_POST['altres_factors'] ?? '');
 
-<div class="panel">
-<form action="guardar_clima.php" method="post">
+if ($id_plantacio_raw === '' || $any_temp_raw === '' || !ctype_digit($id_plantacio_raw) || !ctype_digit($any_temp_raw)) {
+    $conn->close();
+    echo "<p style='color:red; font-weight:bold;'>ID plantació i any són obligatoris.</p>";
+    exit;
+}
 
-    <label>ID Plantació *</label>
-    <input type="number" name="id_plantacio" required>
+$id_plantacio = (int) $id_plantacio_raw;
+$any_temp = (int) $any_temp_raw;
+$temperatura_mitjana = ($temperatura_mitjana_raw !== '' && is_numeric($temperatura_mitjana_raw)) ? (float) $temperatura_mitjana_raw : null;
+$precipitacio_total = ($precipitacio_total_raw !== '' && is_numeric($precipitacio_total_raw)) ? (float) $precipitacio_total_raw : null;
+$altres_factors = $altres_factors_raw !== '' ? $altres_factors_raw : null;
 
-    <label>Any *</label>
-    <input type="number" name="any_temp" required>
+$stmt = $conn->prepare("
+    INSERT INTO clima (id_plantacio, any_temp, temperatura_mitjana, precipitacio_total, altres_factors)
+    VALUES (?, ?, ?, ?, ?)
+");
 
-    <label>Temperatura mitjana (°C)</label>
-    <input type="number" step="0.01" name="temperatura_mitjana">
+if ($stmt) {
+    $stmt->bind_param(
+        'iidds',
+        $id_plantacio,
+        $any_temp,
+        $temperatura_mitjana,
+        $precipitacio_total,
+        $altres_factors
+    );
 
-    <label>Precipitació total (mm)</label>
-    <input type="number" step="0.01" name="precipitacio_total">
+    if ($stmt->execute()) {
+        $stmt->close();
+        $conn->close();
+        echo "<h3>Registre climàtic guardat correctament!</h3>";
+        echo "<a href='../HTML/clima.html'>Afegir un altre</a>";
+        exit;
+    }
 
-    <label>Altres factors climàtics</label>
-    <textarea name="altres_factors"></textarea>
+    $error = $stmt->error;
+    $stmt->close();
+    $conn->close();
+    echo "Error en guardar: " . htmlspecialchars($error);
+    exit;
+}
 
-    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar registre</button>
-</form>
-</div>
-</div>
-
-</body>
-</html>
+$conn->close();
+echo "<p style='color:red; font-weight:bold;'>No s'ha pogut preparar la inserció.</p>";
+?>

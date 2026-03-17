@@ -34,7 +34,7 @@ $sql->bind_param("iissds",
 
 if ($sql->execute()) {
     echo "<h3>Registre guardat correctament!</h3>";
-    echo "<a href='registre.html'>Tornar</a>";
+    echo "<a href='../HTML/registre.html'>Tornar</a>";
 } else {
     echo "Error: " . $conn->error;
 }

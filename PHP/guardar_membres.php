@@ -19,7 +19,7 @@ $stmt->bind_param("iisss",$id_equip,$id_treballador,$rol_equip,$data_alta,$data_
 
 if($stmt->execute()){
     echo "<p>Treballador assignat correctament a l'equip.</p>";
-    echo "<a href='membres_equip.html'>Tornar</a>";
+    echo "<a href='../HTML/membres_equip.html'>Tornar</a>";
 }else{
     echo "Error: ".$stmt->error;
 }

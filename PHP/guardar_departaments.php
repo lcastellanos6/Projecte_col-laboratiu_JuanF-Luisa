@@ -24,7 +24,7 @@ $stmt->bind_param("ss", $nom, $descripcio);
 
 if ($stmt->execute()) {
     echo "<h2>Departament registrat correctament.</h2>";
-    echo "<a href='departament.html'>Tornar</a>";
+    echo "<a href='../HTML/departament.html'>Tornar</a>";
 } else {
     echo "<h2>Error: " . $stmt->error . "</h2>";
 }

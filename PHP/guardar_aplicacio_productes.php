@@ -32,7 +32,7 @@ $stmt->bind_param("iidsss",
 
 if ($stmt->execute()) {
     echo "<h3>Producte afegit correctament!</h3>";
-    echo "<a href='aplicacio_producte.html'>Afegir un altre</a>";
+    echo "<a href='../HTML/aplicacio_productes.html'>Afegir un altre</a>";
 } else {
     echo "Error: " . $conn->error;
 }

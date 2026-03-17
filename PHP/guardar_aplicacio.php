@@ -39,7 +39,7 @@ $stmt->bind_param(
 
 if ($stmt->execute()) {
     echo "<h3>Aplicació registrada correctament!</h3>";
-    echo "<a href='aplicacio.html'>Tornar</a>";
+    echo "<a href='../HTML/aplicacio.html'>Tornar</a>";
 } else {
     echo "Error: " . $conn->error;
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Afegir fila tractada</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+    <div class="page-header">
+        <h1>Afegir fila tractada a una aplicació</h1>
+    </div>
+
+    <div class="panel">
+        <form action="../PHP/guardar_aplicacio_fila.php" method="post">
+            <label>ID Aplicació *</label>
+            <input type="number" name="id_aplicacio" id="id_aplicacio" required>
+
+            <label>ID Fila *</label>
+            <input type="number" name="id_fila" required>
+
+            <label>Estat</label>
+            <select name="estat">
+                <option value="Fet">Fet</option>
+                <option value="Pendent">Pendent</option>
+                <option value="Parcial">Parcial</option>
+            </select>
+
+            <label>Volum caldo (L)</label>
+            <input type="number" step="0.01" name="volum_caldo_l">
+
+            <label>Data execució</label>
+            <input type="datetime-local" name="data_execucio">
+
+            <label>ID Operari execució</label>
+            <input type="number" name="id_operari_execucio">
+
+            <button type="submit" class="btn btn-primary btn-full mt-2">Guardar fila tractada</button>
+        </form>
+    </div>
+</div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const idAplicacio = params.get('id_aplicacio');
+    const input = document.getElementById('id_aplicacio');
+    if (idAplicacio && input) {
+      input.value = idAplicacio;
+    }
+  })();
+</script>
+</body>
+</html>

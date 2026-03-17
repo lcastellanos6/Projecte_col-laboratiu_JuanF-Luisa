@@ -30,6 +30,8 @@ if ($magatzem_result) {
 // --- CONSTRUIR CONSULTA AMB PREPARED STATEMENTS ---
 $sql = "
     SELECT
+        pl.id_lot,
+        p.id_producte,
         pl.numero_lot,
         pl.data_caducitat,
         pl.quantitat_disponible,
@@ -179,6 +181,7 @@ $conn->close();
       </div>
       <div class="page-header-actions">
         <a class="btn btn-primary" href="../HTML/producte_lot.html">Nou lot de producte</a>
+        <a class="btn" href="consulta_moviment_estoc.php">Veure moviments d'estoc</a>
       </div>
     </div>
   </div>
@@ -285,6 +288,7 @@ $conn->close();
               <th class="col-estoc">Proveïdor</th>
               <th class="col-estoc">Data compra</th>
               <th class="col-estoc">Preu unitari</th>
+              <th class="col-estoc">Accions</th>
           </tr>
           <?php foreach ($lots as $lot): ?>
           <tr>
@@ -310,6 +314,15 @@ $conn->close();
               <td class="col-estoc"><?php echo htmlspecialchars($lot['proveidor'] ?? ''); ?></td>
               <td class="col-estoc"><?php echo htmlspecialchars($lot['data_compra'] ?? ''); ?></td>
               <td class="col-estoc"><?php echo htmlspecialchars($lot['preu_unitari'] ?? ''); ?></td>
+              <td class="col-estoc">
+                <div class="table-actions">
+                  <a href="producte_detall.php?id_producte=<?php echo urlencode((string) ($lot['id_producte'] ?? '')); ?>">Detall producte</a>
+                  |
+                  <a href="producte_lot_detall.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>">Detall lot</a>
+                  |
+                  <a href="consulta_moviment_estoc.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>">Moviments</a>
+                </div>
+              </td>
           </tr>
           <?php endforeach; ?>
       </table>

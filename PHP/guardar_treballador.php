@@ -62,7 +62,7 @@ if ($stmt->execute()) {
     echo "<h2 style='color:green'>✅ Treballador guardat correctament!</h2>";
     echo "<p>ID assignat: " . $conn->insert_id . "</p>";
     if($fotografia) echo "<p>Foto pujada a: $fotografia</p>";
-    echo "<p><a href='treballador.html'>Afegir un altre treballador</a></p>";
+    echo "<p><a href='../HTML/treballador.html'>Afegir un altre treballador</a></p>";
 } else {
     echo "<p style='color:red'>❌ Error en guardar: " . $stmt->error . "</p>";
 }

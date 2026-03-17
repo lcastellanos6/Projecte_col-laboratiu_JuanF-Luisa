@@ -30,7 +30,7 @@ $stmt->bind_param("ssssi", $nom, $descripcio, $hora_inici, $hora_fi, $pausa_minu
 if($stmt->execute()){
     echo "<p style='color:green'>✅ Horari guardat correctament!</p>";
     echo "<p>ID assignat: " . $conn->insert_id . "</p>";
-    echo "<p><a href='horari.html'>Afegir un altre horari</a></p>";
+    echo "<p><a href='../HTML/horari.html'>Afegir un altre horari</a></p>";
 }else{
     echo "<p style='color:red'>❌ Error: ".$stmt->error."</p>";
 }

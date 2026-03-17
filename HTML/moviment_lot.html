@@ -32,7 +32,7 @@ button:hover { background:#3d9b3d; }
 <form action="../PHP/guardar_moviment_lot.php" method="post">
 
     <label>ID Lot *</label>
-    <input type="number" name="id_lot" required>
+    <input type="number" name="id_lot" id="id_lot" required>
 
     <label>Data (si no s’indica, s’utilitzarà l’actual)</label>
     <input type="datetime-local" name="data">
@@ -55,6 +55,17 @@ button:hover { background:#3d9b3d; }
 
     <button type="submit">Guardar Moviment</button>
 </form>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const idLot = params.get('id_lot');
+    const input = document.getElementById('id_lot');
+    if (idLot && input) {
+      input.value = idLot;
+    }
+  })();
+</script>
 
 </body>
 </html>

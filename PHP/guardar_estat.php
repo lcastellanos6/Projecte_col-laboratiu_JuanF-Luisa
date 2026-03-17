@@ -21,7 +21,7 @@ $sql->bind_param("ss", $codi, $nom);
 
 if ($sql->execute()) {
     echo "<h3>Estat fenològic guardat correctament!</h3>";
-    echo "<a href='estat_fenologic.html'>Tornar</a>";
+    echo "<a href='../HTML/estat_fenologic.html'>Tornar</a>";
 } else {
     echo "Error: " . $conn->error;
 }

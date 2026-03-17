@@ -21,7 +21,7 @@ $stmt->bind_param("ss", $nom, $descripcio);
 if($stmt->execute()){
     echo "<p style='color:green'>✅ Calendari guardat correctament!</p>";
     echo "<p>ID assignat: " . $conn->insert_id . "</p>";
-    echo "<p><a href='calendari.html'>Afegir un altre calendari</a></p>";
+    echo "<p><a href='../HTML/calendari.html'>Afegir un altre calendari</a></p>";
 }else{
     echo "<p style='color:red'>❌ Error: ".$stmt->error."</p>";
 }

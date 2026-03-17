@@ -39,7 +39,7 @@ $stmt->bind_param(
 
 if ($stmt->execute()) {
     echo "<p>Contracte registrat correctament.</p>";
-    echo "<a href='contracte.html'>Tornar</a>";
+    echo "<a href='../HTML/contracte.html'>Tornar</a>";
 } else {
     echo "Error: " . $stmt->error;
 }

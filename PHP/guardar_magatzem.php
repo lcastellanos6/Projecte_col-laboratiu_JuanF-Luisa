@@ -18,7 +18,7 @@ $stmt->bind_param("ss", $nom, $ubicacio);
 
 if ($stmt->execute()) {
     echo "<h3>Magatzem afegit correctament!</h3>";
-    echo "<a href='magatzem.html'>Afegir un altre</a>";
+    echo "<a href='../HTML/magatzem.html'>Afegir un altre</a>";
 } else {
     echo "Error: " . $conn->error;
 }

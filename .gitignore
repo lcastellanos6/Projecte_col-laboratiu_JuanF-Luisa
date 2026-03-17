@@ -26,3 +26,11 @@ composer.lock
 
 # Archivos de IDE o editor
 .vscode/
+
+# Archivos de agentes de IA
+AGENTS.md
+/PROMPTS
+/PROMPTS/
+/PDFs
+/PDFs/
+/AGENTS.md
