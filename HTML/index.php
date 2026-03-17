@@ -216,16 +216,17 @@ document.addEventListener('DOMContentLoaded', function() {
 🌱 Operacions <i class="fa-solid fa-chevron-down"></i>
 </button>
 <div class="menu-section-body">
-<button onclick="openPage('tractament.html')" data-url="tractament.html">Nou tractament</button>
+<button onclick="openPage('tractament.php')" data-url="tractament.php">Nou tractament</button>
 <button onclick="openPage('../PHP/tractament.php')" data-url="../PHP/tractament.php">Calendari de Tractaments</button>
-<button onclick="openPage('pla_tractament.html')" data-url="pla_tractament.html">Nou pla de tractaments</button>
-<button onclick="openPage('aplicacio.html')" data-url="aplicacio.html">Nova aplicació</button>
+<button onclick="openPage('pla_tractament.php')" data-url="pla_tractament.php">Nou pla de tractaments</button>
+<button onclick="openPage('../HTML/calendari_tractament.php')" data-url="../HTML/calendari_tractament.php">Calendari Pla de tractaments</button>
+<button onclick="openPage('aplicacio.php')" data-url="aplicacio.php">Nova aplicació</button>
 <button onclick="openPage('../PHP/consulta_productes.php')" data-url="../PHP/consulta_productes.php">Consulta productes</button>
 <button onclick="openPage('producte.html')" data-url="producte.html">Nou producte</button>
 <button onclick="openPage('magatzem.html')" data-url="magatzem.html">Nou magatzem</button>
 <button onclick="openPage('../PHP/tasca.php')" data-url="../PHP/tasca.php">Tasques</button>
 <button onclick="openPage('../PHP/calendari_tasques.php')" data-url="../PHP/calendari_tasques.php">Calendari Tasques</button>
-<button onclick="openPage('seguiment.html')" data-url="seguiment.html">Nou seguiment</button>
+<button onclick="openPage('seguiment.php')" data-url="seguiment.php">Nou seguiment</button>
 <button onclick="openPage('registre.html')" data-url="registre.html">Nou registre</button>
 <button onclick="openPage('../PHP/collita_nova.php')" data-url="../PHP/collita_nova.php">Collita</button>
 <button onclick="openPage('../PHP/produccio.php')" data-url="../PHP/produccio.php">Produccio de collita</button>
@@ -234,10 +235,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('estat_fenologic.html')" data-url="estat_fenologic.html">Nou estat fenològic</button>
 <button onclick="openPage('../PHP/mapa_calor_parceles.php')" data-url="../PHP/mapa_calor_parceles.php">Mapa de calor</button>
 <div class="menu-subheader">Detall tècnic</div>
-<button onclick="openPage('aplicacio_productes.html')" data-url="aplicacio_productes.html">Aplicació de productes</button>
-<button onclick="openPage('pla_producte.html')" data-url="pla_producte.html">Pla de producte</button>
-<button onclick="openPage('producte_lot.html')" data-url="producte_lot.html">Lot de producte</button>
-<button onclick="openPage('moviment_lot.html')" data-url="moviment_lot.html">Moviment estoc</button>
+<button onclick="openPage('aplicacio_productes.php')" data-url="aplicacio_productes.php">Aplicació de productes</button>
+<button onclick="openPage('pla_producte.php')" data-url="pla_producte.php">Pla de producte</button>
+<button onclick="openPage('producte_lot.php')" data-url="producte_lot.php">Lot de producte</button>
+<button onclick="openPage('moviment_lot.php')" data-url="moviment_lot.php">Moviment estoc</button>
 </div>
 </div>
 

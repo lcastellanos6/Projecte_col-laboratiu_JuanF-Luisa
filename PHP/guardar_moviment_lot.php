@@ -19,7 +19,7 @@ $motiu        = isset($_POST['motiu']) ? $_POST['motiu'] : '';
 $id_aplicacio = !empty($_POST['id_aplicacio']) ? intval($_POST['id_aplicacio']) : null;
 $observacions = !empty($_POST['observacions']) ? $_POST['observacions'] : null;
 
-// Preparar consulta (taula correcte: moviment_estoc)
+// Preparar consulta
 $stmt = $conn->prepare("
     INSERT INTO moviment_estoc (id_lot, data, quantitat, motiu, id_aplicacio, observacions)
     VALUES (?, ?, ?, ?, ?, ?)
@@ -29,7 +29,7 @@ if (!$stmt) {
     die("Error en preparar la consulta: " . $conn->error);
 }
 
-// Tipus: id_lot (i), data (s), quantitat (d), motiu (s), id_aplicacio (i), observacions (s)
+// Vincular paràmetres. Tipus: i=int, s=string, d=double
 $stmt->bind_param(
     "isdiss",
     $id_lot,
