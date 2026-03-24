@@ -3,69 +3,56 @@ require_once __DIR__ . '/db.php';
 
 $conn = db_connect();
 
+// Dades
 $lot_id_raw = trim($_POST['lot_id'] ?? '');
 $data_control = trim($_POST['data_control'] ?? '');
-$calibre_raw = trim($_POST['calibre'] ?? '');
-$color_raw = trim($_POST['color'] ?? '');
-$fermesa_raw = trim($_POST['fermesa'] ?? '');
-$defectes_raw = trim($_POST['defectes'] ?? '');
-$sabor_raw = trim($_POST['sabor'] ?? '');
-$aroma_raw = trim($_POST['aroma'] ?? '');
-$observacions_raw = trim($_POST['observacions'] ?? '');
-$qualificacio_final_raw = trim($_POST['qualificacio_final'] ?? '');
 
+$calibre = trim($_POST['calibre'] ?? '') ?: null;
+$color = trim($_POST['color'] ?? '') ?: null;
+$fermesa = trim($_POST['fermesa'] ?? '') ?: null;
+$defectes = trim($_POST['defectes'] ?? '') ?: null;
+$sabor = trim($_POST['sabor'] ?? '') ?: null;
+$aroma = trim($_POST['aroma'] ?? '') ?: null;
+$observacions = trim($_POST['observacions'] ?? '') ?: null;
+$qualificacio_final = trim($_POST['qualificacio_final'] ?? '') ?: null;
+
+// Validació
 if ($lot_id_raw === '' || $data_control === '' || !ctype_digit($lot_id_raw)) {
-    $conn->close();
-    echo "<p style='color:red; font-weight:bold;'>Dades obligatòries no vàlides.</p>";
+    echo "Dades incorrectes";
     exit;
 }
 
-$lot_id = (int) $lot_id_raw;
-$calibre = $calibre_raw !== '' ? $calibre_raw : null;
-$color = $color_raw !== '' ? $color_raw : null;
-$fermesa = $fermesa_raw !== '' ? $fermesa_raw : null;
-$defectes = $defectes_raw !== '' ? $defectes_raw : null;
-$sabor = $sabor_raw !== '' ? $sabor_raw : null;
-$aroma = $aroma_raw !== '' ? $aroma_raw : null;
-$observacions = $observacions_raw !== '' ? $observacions_raw : null;
-$qualificacio_final = $qualificacio_final_raw !== '' ? $qualificacio_final_raw : null;
+$lot_id = (int)$lot_id_raw;
 
+// SQL
 $stmt = $conn->prepare("
     INSERT INTO control_qualitat
-        (lot_id, data_control, calibre, color, fermesa, defectes, sabor, aroma, observacions, qualificacio_final)
+    (lot_id, data_control, calibre, color, fermesa, defectes, sabor, aroma, observacions, qualificacio_final)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
-if ($stmt) {
-    $stmt->bind_param(
-        'isssssssss',
-        $lot_id,
-        $data_control,
-        $calibre,
-        $color,
-        $fermesa,
-        $defectes,
-        $sabor,
-        $aroma,
-        $observacions,
-        $qualificacio_final
-    );
+$stmt->bind_param(
+    "isssssssss",
+    $lot_id,
+    $data_control,
+    $calibre,
+    $color,
+    $fermesa,
+    $defectes,
+    $sabor,
+    $aroma,
+    $observacions,
+    $qualificacio_final
+);
 
-    if ($stmt->execute()) {
-        $stmt->close();
-        $conn->close();
-        echo "<h3>Control de qualitat registrat correctament!</h3>";
-        echo "<a href='../HTML/control_qualitat.html'>Afegir un altre</a>";
-        exit;
-    }
-
-    $error = $stmt->error;
-    $stmt->close();
-    $conn->close();
-    echo "Error en guardar: " . htmlspecialchars($error);
-    exit;
+// Execució
+if ($stmt->execute()) {
+    echo "<h3>Control guardat correctament!</h3>";
+    echo "<a href='../HTML/control_qualitat.html'>Tornar</a>";
+} else {
+    echo "Error: " . $stmt->error;
 }
 
+$stmt->close();
 $conn->close();
-echo "<p style='color:red; font-weight:bold;'>No s'ha pogut preparar la inserció.</p>";
 ?>

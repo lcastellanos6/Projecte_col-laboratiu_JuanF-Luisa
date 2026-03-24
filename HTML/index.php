@@ -227,11 +227,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('../PHP/tasca.php')" data-url="../PHP/tasca.php">Tasques</button>
 <button onclick="openPage('../PHP/calendari_tasques.php')" data-url="../PHP/calendari_tasques.php">Calendari Tasques</button>
 <button onclick="openPage('seguiment.php')" data-url="seguiment.php">Nou seguiment</button>
-<button onclick="openPage('registre.html')" data-url="registre.html">Nou registre</button>
+<button onclick="openPage('registre.php')" data-url="registre.php">Nou registre</button>
 <button onclick="openPage('../PHP/collita_nova.php')" data-url="../PHP/collita_nova.php">Collita</button>
 <button onclick="openPage('../PHP/produccio.php')" data-url="../PHP/produccio.php">Produccio de collita</button>
 <button onclick="openPage('lot_produccio.html')" data-url="lot_produccio.html">Lot de producció</button>
-<button onclick="openPage('control_qualitat.html')" data-url="control_qualitat.html">Nou control de qualitat</button>
+<button onclick="openPage('control_qualitat.php')" data-url="control_qualitat.php">Nou control de qualitat</button>
 <button onclick="openPage('estat_fenologic.html')" data-url="estat_fenologic.html">Nou estat fenològic</button>
 <button onclick="openPage('../PHP/mapa_calor_parceles.php')" data-url="../PHP/mapa_calor_parceles.php">Mapa de calor</button>
 <div class="menu-subheader">Detall tècnic</div>
