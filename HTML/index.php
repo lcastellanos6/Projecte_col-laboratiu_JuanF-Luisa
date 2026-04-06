@@ -1,5 +1,9 @@
 <?php
 session_start();
+require_once __DIR__ . '/../PHP/producte_stock_alerts.php';
+$stockAlertSummary = get_producte_stock_alert_summary();
+$stockAlertCount = (int) ($stockAlertSummary['count'] ?? 0);
+$stockAlertAvailable = (bool) ($stockAlertSummary['available'] ?? false);
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -172,6 +176,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <div class="hero-inline-actions">
+<?php if ($stockAlertAvailable): ?>
+<a class="stock-alert-link" href="../PHP/notificacions_stock.php" title="Veure alertes" onclick="openPage('../PHP/notificacions_stock.php'); return false;">
+<span class="stock-alert-label">Alertes</span>
+<span class="stock-alert-count"><?php echo $stockAlertCount; ?></span>
+</a>
+<?php else: ?>
+<span class="stock-alert-link is-disabled" title="Cal migrar la base de dades per activar alertes">
+<span class="stock-alert-label">Alertes no disponibles</span>
+</span>
+<?php endif; ?>
 <?php if(isset($_SESSION['usuari'])): ?>
 <div class="hero-session-info">
 <p><?= htmlspecialchars($_SESSION['usuari']) ?></p>
@@ -222,6 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button onclick="openPage('../HTML/calendari_tractament.php')" data-url="../HTML/calendari_tractament.php">Calendari Pla de tractaments</button>
 <button onclick="openPage('aplicacio.php')" data-url="aplicacio.php">Nova aplicació</button>
 <button onclick="openPage('../PHP/consulta_productes.php')" data-url="../PHP/consulta_productes.php">Consulta productes</button>
+<button onclick="openPage('../PHP/notificacions_stock.php')" data-url="../PHP/notificacions_stock.php">Alertes</button>
 <button onclick="openPage('producte.html')" data-url="producte.html">Nou producte</button>
 <button onclick="openPage('magatzem.html')" data-url="magatzem.html">Nou magatzem</button>
 <button onclick="openPage('../PHP/tasca.php')" data-url="../PHP/tasca.php">Tasques</button>
