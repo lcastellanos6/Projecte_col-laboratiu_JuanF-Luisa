@@ -1,137 +1,122 @@
-# Prompt para Codex (Proyecto DAW) – Gestión de Cultivos y Variedades
+# SISTEMA CODEX - MODO PROFESIONAL
 
-Eres un asistente de programación. Trabajas en un proyecto DAW con **PHP + MySQL (mysqli)** y **Apache XAMPP**.
+## CONTEXTO
+Proyecto DAW con:
+- Base de datos (`web.sql`)
+- Codigo PHP/HTML
+- Documentacion
 
-## Objetivo
+---
 
-Implementar la funcionalidad **“Gestión de Cultivos y Variedades”** e integrarla en el menú principal.
+## ARQUITECTURA
 
-Se requiere una **pantalla de consulta** con filtros (estilo `consulta_parcela_sector.php`) y, desde ahí, poder realizar **CRUD** (ver/editar/eliminar) de:
+### 1. Agente Auditor
+- Analiza:
+  - SQL (PRIORIDAD)
+  - Codigo
+  - Documentacion
+- Detecta:
+  - Que existe
+  - Que falta
+  - Inconsistencias
 
-- **Especies** (`especie`)
-- **Variedades** (`varietat`)
+---
 
-Debe mantener **la misma estética/layout** que las pantallas actuales de Parcelas/Sectores.
+### 2. Agente Implementador
+- Ejecuta cambios
+- Cambios pequenos
+- No rompe estructura existente
+- No asume nada
 
-## Reglas importantes (no saltártelas)
+---
 
-1. **NO inventes** nombres de archivos, tablas, columnas ni rutas. Si falta información imprescindible, **pregunta antes**.
-2. Los **textos visibles** (títulos, botones, avisos) y los **comentarios del código** deben estar en **catalán**.
-3. La carpeta pública es **`/HTML`** y el backend es **`/PHP`**.
-4.
-5. Reglas de borrado:
-   - **Especie**: NO se puede eliminar si tiene variedades asociadas (`varietat.id_especie`). Mostrar aviso claro.
-   - **Variedad**: NO se puede eliminar si tiene dependencias en `plantacio` o `sector_varietat`. Mostrar aviso claro.
-6. La tabla `varietat` ya tiene el campo **`foto_url`** (`VARCHAR(255) NULL`).
-   - Incluirlo en los formularios de crear/editar.
-   - Mostrar miniatura en la consulta si existe (con `onerror` para ocultar si falla).
-7. La consulta debe permitir filtrar por **especie** y por **variedad**.
-   - El select de variedad debe ser **dependiente** de la especie vía **AJAX**.
-8. Seguridad mínima:
-   - Consultas con parámetros: **prepared statements**.
-   - Validar IDs como enteros.
-   - Evitar SQL injection.
-9. Tras acciones (crear/editar/eliminar), redirigir a la consulta con `msg` o `err` por querystring.
-10. **No introduzcas frameworks externos**. Solo PHP + mysqli + HTML/JS.
+### 3. Agente Validador
+- Verifica:
+  - Coherencia con SQL
+  - Coherencia con codigo
+  - Impacto del cambio
 
-## Esquema BBDD (no inventar otros)
+---
 
-- `especie(id_especie PK, nom_cientific, nom_comu)`
-- `varietat(id_varietat PK, id_especie FK, nom_cientific, nom_comu, caracteristiques_agronomiques, cicle_vegetatiu, requisits_pollinitzacio, productivitat_mitjana, qualitats_organoleptiques, foto_url)`
-- `plantacio(id_plantacio PK, id_varietat FK, ...)`
-- `sector_varietat(id_sector, id_varietat, id_data) PK compuesta, FK a varietat`
+## FLUJO OBLIGATORIO
 
-> IMPORTANTE: **No modificar la estructura de la BBDD**. `foto_url` ya existe.
+1. Analisis
+2. Plan de cambios
+3. Implementacion
+4. Validacion
 
-## Archivos necesarios (crear o adaptar)
+---
 
-### 0) Conexión a BBDD
+## REGLA CRITICA
 
-- **Reutiliza** el archivo de conexión existente si ya hay uno en el proyecto.
-- Si NO existe ningún patrón reutilizable, crea `PHP/db.php` con una función `db_connect()` (mysqli, utf8mb4).
+No puedes implementar nada sin haber hecho antes:
 
-### 1) Pantalla principal de consulta
+1. Analisis
+2. Plan de cambios
 
-Crear: `PHP/consulta_cultius_varietats.php`
+Si falta informacion:
+-> detenerse y pedir aclaracion
 
-- Estética/layout: **igual** que `PHP/consulta_parcela_sector.php`.
-- Filtros:
-  - Select `id_especie` (todas/una)
-  - Select `id_varietat` (todas/una), dependiente de especie
-- Tabla listado:
-  - Especie (nombre común + científico)
-  - Variedad (nombre común + científico)
-  - `productivitat_mitjana`
-  - Foto (miniatura si `foto_url`)
-  - Acciones (especie y variedad): **Ver / Editar / Eliminar**
-- Botones:
-  - “+ Nueva especie” → `especie_nova.php`
-  - “+ Nueva variedad” → `varietat_nova.php`
+---
 
-### 2) AJAX de variedades por especie
+## ORDEN DE VERIFICACION
 
-Crear: `PHP/ajax_varietats_by_especie.php`
+1. SQL (fuente de verdad)
+2. Codigo
+3. Documentacion
 
-- Input: `GET id_especie`
-- Output: JSON de objetos `{id_varietat, nom_comu, nom_cientific}`
+---
 
-### 3) CRUD Especies
+## PROHIBIDO ASUMIR
 
-Crear o adaptar:
+Clasificar siempre como:
 
-- `PHP/especie_nova.php`
-- `PHP/especie_editar.php`
-- `PHP/especie_detall.php`
-- `PHP/especie_eliminar.php`
+- CONFIRMADO POR SQL
+- CONFIRMADO POR CODIGO
+- CONFIRMADO POR DOCUMENTACION
+- INFERIDO
+- NO ENCONTRADO
+- DUDOSO
 
-Regla de eliminar:
+---
 
-- Antes de hacer `DELETE`, comprobar:
-  - `SELECT COUNT(*) FROM varietat WHERE id_especie = ?`
-  - Si > 0 → NO eliminar y mostrar aviso claro.
+## GESTION DE INCERTIDUMBRE
 
-### 4) CRUD Variedades
+- NO ENCONTRADO -> detener y pedir datos
+- DUDOSO -> continuar con advertencia
+- INFERIDO -> permitido, pero justificar
 
-Crear o adaptar:
+---
 
-- `PHP/varietat_nova.php`
-- `PHP/varietat_editar.php`
-- `PHP/varietat_detall.php`
-- `PHP/varietat_eliminar.php`
+## REGLAS DE CAMBIO
 
-Formularios:
+- Cambios pequenos
+- No refactor masivo
+- No romper estructura
+- No inventar nombres
 
-- `id_especie` debe ser un **select** (NO pedir ID a mano).
-- Campos:
-  - `nom_cientific`, `nom_comu`
-  - `caracteristiques_agronomiques`, `cicle_vegetatiu`, `requisits_pollinitzacio`
-  - `productivitat_mitjana`, `qualitats_organoleptiques`
-  - `foto_url`
+---
 
-Regla de eliminar:
+## REGLA DE LOGICA UNICA
 
-- Antes de hacer `DELETE`, comprobar:
-  - `SELECT COUNT(*) FROM plantacio WHERE id_varietat = ?`
-  - `SELECT COUNT(*) FROM sector_varietat WHERE id_varietat = ?`
-  - Si alguno > 0 → NO eliminar y mostrar aviso claro.
+No se permite duplicar logica.
 
-## Integración en el menú
+Toda logica critica debe:
+- venir de una unica query
+- o una unica funcion
 
-- En el menú, añadir o actualizar la opción:
-  - “Cultivos y variedades” → abre `../PHP/consulta_cultius_varietats.php`
+---
 
-## Estética y coherencia
+## VALIDACION OBLIGATORIA
 
-- Para todas las páginas nuevas, reutiliza la misma estructura de HTML, CSS y componentes visuales que `consulta_parcela_sector.php`.
-- No toques el estilo global, solo reutiliza.
+- Rompe algo existente?
+- Es coherente con SQL?
+- Afecta otras partes del sistema?
 
-## Entregable
+---
 
-1. Proporciona el **código completo** de cada archivo creado o modificado.
-2. Indica los **cambios exactos** que haces en el menú de `HTML/index.php`.
-3. Si detectas que ya existen archivos equivalentes (conexión BBDD, helpers, plantillas), **adáptate** al patrón existente y evita duplicados.
+## EJECUCION DE TAREAS LOCALES
 
-## Archivos del proyecto
-
-El proyecto está en el repositorio abierto
-
+- En cada ejecucion, revisar este directorio y detectar archivos `Tarea*.md`.
+- Si el usuario solicita implementar o auditar tareas, ejecutar las instrucciones definidas en esos `Tarea*.md`.
+- Aplicar siempre el flujo obligatorio: analisis -> plan de cambios -> implementacion -> validacion.
