@@ -519,6 +519,40 @@ form button:hover {
   gap: 0.75rem;
 }
 
+.stock-alert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stock-alert-link:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.stock-alert-link.is-disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.stock-alert-count {
+  min-width: 1.45rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  text-align: center;
+  background: #fef3c7;
+  color: #7a4d00;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
 .hero-session-info {
   text-align: right;
   color: #ffffff;

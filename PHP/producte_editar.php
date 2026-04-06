@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $classificacio_toxicologica_raw = trim($_POST['classificacio_toxicologica'] ?? '');
     $restriccions_usu_raw = trim($_POST['restriccions_usu'] ?? '');
     $compatible_integrada_raw = trim($_POST['compatible_integrada'] ?? '1');
+    $stock_minim_raw = trim($_POST['stock_minim'] ?? '');
 
     if (!$id_producte || $nom_comercial === '') {
         $conn->close();
@@ -35,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $classificacio_toxicologica = $classificacio_toxicologica_raw !== '' ? $classificacio_toxicologica_raw : null;
     $restriccions_usu = $restriccions_usu_raw !== '' ? $restriccions_usu_raw : null;
     $compatible_integrada = ($compatible_integrada_raw === '0') ? 0 : 1;
+    $stock_minim = ($stock_minim_raw !== '' && is_numeric($stock_minim_raw)) ? (float) $stock_minim_raw : 0.0;
 
     $stmt = $conn->prepare("
         UPDATE producte
@@ -50,13 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             termini_seguretat_dies = ?,
             classificacio_toxicologica = ?,
             restriccions_usu = ?,
-            compatible_integrada = ?
+            compatible_integrada = ?,
+            stock_minim = ?
         WHERE id_producte = ?
     ");
 
     if ($stmt) {
         $stmt->bind_param(
-            'ssssssssissii',
+            'ssssssssissidi',
             $tipus,
             $nom_comercial,
             $materia_activa,
@@ -69,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $classificacio_toxicologica,
             $restriccions_usu,
             $compatible_integrada,
+            $stock_minim,
             $id_producte
         );
 
@@ -107,7 +111,8 @@ $stmt = $conn->prepare("
         termini_seguretat_dies,
         classificacio_toxicologica,
         restriccions_usu,
-        compatible_integrada
+        compatible_integrada,
+        stock_minim
     FROM producte
     WHERE id_producte = ?
     LIMIT 1
@@ -140,6 +145,7 @@ if (!$producte) {
 <body>
 <div class="page">
     <div class="page-header">
+        <p><a class="badge badge-link" href="producte_detall.php?id_producte=<?php echo (int) $producte['id_producte']; ?>">&larr; Atras</a></p>
         <h1>Editar producte</h1>
     </div>
 
@@ -189,6 +195,9 @@ if (!$producte) {
                 <option value="1" <?php echo !empty($producte['compatible_integrada']) ? 'selected' : ''; ?>>Sí</option>
                 <option value="0" <?php echo empty($producte['compatible_integrada']) ? 'selected' : ''; ?>>No</option>
             </select>
+
+            <label>Stock mínim</label>
+            <input type="number" step="0.001" name="stock_minim" value="<?php echo htmlspecialchars($producte['stock_minim'] ?? '0.000'); ?>">
 
             <button type="submit" class="btn btn-primary btn-full mt-2">Guardar canvis</button>
             <a class="btn btn-ghost btn-full mt-2" href="producte_detall.php?id_producte=<?php echo (int) $producte['id_producte']; ?>">Cancel·lar</a>

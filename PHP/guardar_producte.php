@@ -21,6 +21,7 @@ $termini_seguretat_dies = !empty($_POST['termini_seguretat_dies']) ? intval($_PO
 $classificacio_toxicologica = $_POST['classificacio_toxicologica'] ?? null;
 $restriccions_usu = $_POST['restriccions_usu'] ?? null;
 $compatible_integrada = isset($_POST['compatible_integrada']) ? intval($_POST['compatible_integrada']) : 1;
+$stock_minim = (isset($_POST['stock_minim']) && is_numeric($_POST['stock_minim'])) ? (float) $_POST['stock_minim'] : 0.0;
 
 // Validació bàsica
 if (empty($tipus) || empty($nom_comercial)) {
@@ -32,15 +33,15 @@ if (empty($tipus) || empty($nom_comercial)) {
 $sql = "INSERT INTO producte (
     tipus, nom_comercial, materia_activa, concentracio, espectre_accio, cultius_autoritzats,
     dosi_recomendada, dosi_maxima, termini_seguretat_dies, classificacio_toxicologica,
-    restriccions_usu, compatible_integrada
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    restriccions_usu, compatible_integrada, stock_minim
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 if (!$stmt) die("❌ Error en preparar la consulta: " . $conn->error);
 
 // Vincular paràmetres
 $stmt->bind_param(
-    "ssssssssissi",
+    "ssssssssissid",
     $tipus,
     $nom_comercial,
     $materia_activa,
@@ -52,7 +53,8 @@ $stmt->bind_param(
     $termini_seguretat_dies,
     $classificacio_toxicologica,
     $restriccions_usu,
-    $compatible_integrada
+    $compatible_integrada,
+    $stock_minim
 );
 
 // Executar

@@ -58,6 +58,7 @@ if (!$producte) {
 <body>
 <div class="page">
     <div class="page-header">
+        <p><a class="badge badge-link" href="consulta_productes.php">&larr; Atras</a></p>
         <h1>Detall de producte</h1>
     </div>
 
