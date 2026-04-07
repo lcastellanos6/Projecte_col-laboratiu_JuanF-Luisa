@@ -15,8 +15,22 @@
 <div class="panel">
 <form action="../PHP/guardar_contractre.php" method="POST">
 
-    <label for="id_treballador">Treballador (ID)</label>
-    <input type="number" name="id_treballador" required>
+    <!-- Treballador: desplegable -->
+    <label for="id_treballador">Treballador</label>
+    <select name="id_treballador" required>
+        <option value="">Selecciona un treballador</option>
+        <?php
+        $conn = new mysqli("localhost","root","","web");
+        if ($conn->connect_error) die("Error connexió: " . $conn->connect_error);
+
+        $res = $conn->query("SELECT id_treballador, nom_complet FROM treballador");
+        while($row = $res->fetch_assoc()){
+            echo "<option value='{$row['id_treballador']}'>{$row['nom_complet']}</option>";
+        }
+
+        $conn->close();
+        ?>
+    </select>
 
     <label for="tipus_contracte">Tipus de contracte</label>
     <select name="tipus_contracte">

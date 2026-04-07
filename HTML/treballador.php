@@ -15,6 +15,7 @@
 
   <div class="panel">
 <form action="../PHP/guardar_treballador.php" method="post" enctype="multipart/form-data">
+
     <label>Nom complet:</label>
     <input type="text" name="nom_complet" required>
 
@@ -60,14 +61,45 @@
         <option value="0" selected>No</option>
     </select>
 
-    <label>ID Posició:</label>
-    <input type="number" name="id_posicio">
+    <!-- ID Posició -->
+    <label>Posició:</label>
+    <select name="id_posicio">
+        <option value="">Selecciona posició</option>
+        <?php
+        $conn = new mysqli("localhost","root","","web");
+        if ($conn->connect_error) die("Error connexió");
 
-    <label>ID Calendari Model:</label>
-    <input type="number" name="id_calendari_model">
+        $res = $conn->query("SELECT id_posicio, nom FROM posicio");
+        while($row = $res->fetch_assoc()){
+            echo "<option value='{$row['id_posicio']}'>{$row['nom']}</option>";
+        }
+        ?>
+    </select>
 
-    <label>ID Horari Model:</label>
-    <input type="number" name="id_horari_model">
+    <!-- ID Calendari Model -->
+    <label>Calendari Model:</label>
+    <select name="id_calendari_model">
+        <option value="">Selecciona calendari model</option>
+        <?php
+        $res2 = $conn->query("SELECT id_calendari_model, nom FROM calendari_model");
+        while($row = $res2->fetch_assoc()){
+            echo "<option value='{$row['id_calendari_model']}'>{$row['nom']}</option>";
+        }
+        ?>
+    </select>
+
+    <!-- ID Horari Model -->
+    <label>Horari Model:</label>
+    <select name="id_horari_model">
+        <option value="">Selecciona horari model</option>
+        <?php
+        $res3 = $conn->query("SELECT id_horari_model, nom FROM horari_model");
+        while($row = $res3->fetch_assoc()){
+            echo "<option value='{$row['id_horari_model']}'>{$row['nom']}</option>";
+        }
+        $conn->close();
+        ?>
+    </select>
 
     <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Treballador</button>
 </form>

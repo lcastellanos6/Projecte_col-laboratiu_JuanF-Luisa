@@ -15,11 +15,34 @@
 <div class="panel">
 <form action="../PHP/guardar_epis.php" method="POST" enctype="multipart/form-data">
 
-    <label for="id_treballador">Treballador (ID)</label>
-    <input type="number" name="id_treballador" required>
+    <!-- Treballador: desplegable -->
+    <label for="id_treballador">Treballador</label>
+    <select name="id_treballador" required>
+        <option value="">Selecciona un treballador</option>
+        <?php
+        $conn = new mysqli("localhost","root","","web");
+        if ($conn->connect_error) die("Error connexió: " . $conn->connect_error);
 
-    <label for="id_epi_tipus">Tipus EPI (ID)</label>
-    <input type="number" name="id_epi_tipus" required>
+        $res = $conn->query("SELECT id_treballador, nom_complet FROM treballador");
+        while($row = $res->fetch_assoc()){
+            echo "<option value='{$row['id_treballador']}'>{$row['nom_complet']}</option>";
+        }
+        ?>
+    </select>
+
+    <!-- Tipus EPI: desplegable -->
+    <label for="id_epi_tipus">Tipus EPI</label>
+    <select name="id_epi_tipus" required>
+        <option value="">Selecciona un tipus d'EPI</option>
+        <?php
+        $res = $conn->query("SELECT id_epi_tipus, nom FROM epi_tipus");
+        while($row = $res->fetch_assoc()){
+            echo "<option value='{$row['id_epi_tipus']}'>{$row['nom']}</option>";
+        }
+
+        $conn->close();
+        ?>
+    </select>
 
     <label for="talla">Talla</label>
     <input type="text" name="talla">

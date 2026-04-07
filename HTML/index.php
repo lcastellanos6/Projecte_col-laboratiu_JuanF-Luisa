@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 require_once __DIR__ . '/../PHP/producte_stock_alerts.php';
 $stockAlertSummary = get_producte_stock_alert_summary();
@@ -9,7 +9,7 @@ $stockAlertAvailable = (bool) ($stockAlertSummary['available'] ?? false);
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<title>GestiÃ³ de l'ExplotaciÃ³ Fruiteres</title>
+<title>Gestió de l'Explotació Fruiteres</title>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -217,9 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button onclick="openPage('../PHP/consulta_cultius_varietats.php')" data-url="../PHP/consulta_cultius_varietats.php">Cultius i varietats</button>
                 <button onclick="openPage('../PHP/comparativa_varietats.php')" data-url="../PHP/comparativa_varietats.php">Comparacio ParcelÂ·les i Varietats</button>
                 <button onclick="openPage('../PHP/infraestructura.php')" data-url="../PHP/infraestructura.php">Infraestructura</button>
-                <button onclick="openPage('plantacio.html')" data-url="plantacio.html">PlantaciÃ³</button>
-                <button onclick="openPage('fila.html')" data-url="fila.html">Files</button>
-                <button onclick="openPage('previsio_collita.html')" data-url="previsio_collita.html">PrevisiÃ³ de collita</button>
+                <button onclick="openPage('plantacio.php')" data-url="plantacio.php">PlantaciÃ³</button>
+                <button onclick="openPage('fila.php')" data-url="fila.php">Files</button>
+                <button onclick="openPage('previsio_collita.php')" data-url="previsio_collita.php">PrevisiÃ³ de collita</button>
                 </div>
             </div>
 
@@ -263,17 +263,17 @@ document.addEventListener('DOMContentLoaded', function() {
 ðŸ‘¨â€ðŸŒ¾ Treballadors <i class="fa-solid fa-chevron-down"></i>
 </button>
 <div class="menu-section-body">
-<button onclick="openPage('treballador.html')" data-url="treballador.html">Treballadors</button>
+<button onclick="openPage('treballador.php')" data-url="treballador.php">Treballadors</button>
 <button onclick="openPage('operari.html')" data-url="operari.html">Operari</button>
 <button onclick="openPage('maquinaria.html')" data-url="maquinaria.html">MaquinÃ ria</button>
-<button onclick="openPage('contracte.html')" data-url="contracte.html">Contractes</button>
+<button onclick="openPage('contracte.php')" data-url="contracte.php">Contractes</button>
 <button onclick="openPage('absencia.php')" data-url="absencia.php">AbsÃ¨ncies</button>
 <button onclick="openPage('documentacio.html')" data-url="documentacio.html">DocumentaciÃ³</button>
 <button onclick="openPage('departament.html')" data-url="departament.html">Departaments</button>
 <button onclick="openPage('equip.html')" data-url="equip.html">Equips</button>
-<button onclick="openPage('membres_equip.html')" data-url="membres_equip.html">Membres del equip</button>
+<button onclick="openPage('membres_equip.php')" data-url="membres_equip.php">Membres del equip</button>
 <button onclick="openPage('epis.html')" data-url="epis.html">EPIs</button>
-<button onclick="openPage('lliurament_epis.html')" data-url="lliurament_epis.html">Lliurament EPIs</button>
+<button onclick="openPage('lliurament_epis.php')" data-url="lliurament_epis.php">Lliurament EPIs</button>
 <button onclick="openPage('horari.html')" data-url="horari.html">Horaris model</button>
 <button onclick="openPage('calendari.html')" data-url="calendari.html">Calendaris model</button>
 </div>

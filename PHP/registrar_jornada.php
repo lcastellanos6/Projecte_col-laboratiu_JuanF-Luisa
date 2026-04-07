@@ -25,6 +25,7 @@ if (!$tasques) {
 <head>
 <meta charset="UTF-8">
 <title>Registrar jornada laboral</title>
+<link rel="stylesheet" href="styles.css">
 <style>
 body { font-family: Arial, sans-serif; background:#f5fff5; padding:20px; }
 form {
