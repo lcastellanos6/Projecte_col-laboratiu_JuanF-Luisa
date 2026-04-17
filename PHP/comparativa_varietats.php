@@ -1,67 +1,105 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "web");
-if ($conn->connect_error) die("Error BD: " . $conn->connect_error);
-$conn->set_charset("utf8");
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
 
-// FILTRO POR AÑO (opcional)
-$year_filter = isset($_GET['any']) ? intval($_GET['any']) : null;
-$where = $year_filter ? "WHERE YEAR(c.data_inici) = $year_filter" : "";
+$yearFilter = filter_input(INPUT_GET, 'any', FILTER_VALIDATE_INT);
+$yearFilter = $yearFilter ?: null;
 
-// CONSULTA: producción por parcela y variedad
+// Factors editables per normalitzar unitats de collita a kg equivalents.
+$caixaKg = filter_input(INPUT_GET, 'caixa_kg', FILTER_VALIDATE_FLOAT);
+$binKg = filter_input(INPUT_GET, 'bin_kg', FILTER_VALIDATE_FLOAT);
+$caixaKg = ($caixaKg && $caixaKg > 0) ? $caixaKg : 18.0;
+$binKg = ($binKg && $binKg > 0) ? $binKg : 300.0;
+
 $sql = "
-SELECT 
-    p.id_plantacio,
+SELECT
+    p.id_parcela,
+    p.nom AS parcela_nom,
     s.nom AS sector_nom,
     v.nom_comu AS varietat_nom,
-    p.num_arbres_total,
-    IFNULL(SUM(c.quantitat_total),0) AS total_collita
-FROM plantacio p
-JOIN sector s ON p.id_sector = s.id_sector
-JOIN varietat v ON p.id_varietat = v.id_varietat
-LEFT JOIN collita c ON c.plantacio_id = p.id_plantacio
-$where
-GROUP BY p.id_plantacio, v.nom_comu, s.nom, p.num_arbres_total
-ORDER BY s.nom, p.id_plantacio, v.nom_comu
+    COALESCE(pl.num_arbres_total, 0) AS num_arbres_total,
+    COALESCE(
+        SUM(
+            CASE
+                WHEN c.unitat = 'kg' THEN c.quantitat_total
+                WHEN c.unitat = 'caixa' THEN c.quantitat_total * ?
+                WHEN c.unitat = 'bin' THEN c.quantitat_total * ?
+                ELSE 0
+            END
+        ),
+        0
+    ) AS total_collita_kg
+FROM plantacio pl
+JOIN sector s ON s.id_sector = pl.id_sector
+JOIN sector_parcela sp ON sp.id_sector = s.id_sector
+JOIN parcela p ON p.id_parcela = sp.id_parcela
+JOIN varietat v ON v.id_varietat = pl.id_varietat
+LEFT JOIN collita c
+    ON c.plantacio_id = pl.id_plantacio
+   AND (? IS NULL OR YEAR(c.data_inici) = ?)
+GROUP BY
+    p.id_parcela, p.nom, s.nom, v.nom_comu, pl.num_arbres_total
+ORDER BY p.nom, v.nom_comu
 ";
 
-$result = $conn->query($sql);
-if(!$result) die("Error SQL: ".$conn->error);
-
-// Preparar datos
-$parcelas = [];
-$varietats = [];
-while($row = $result->fetch_assoc()){
-    $parcelas[$row['id_plantacio']] = [
-        'sector' => $row['sector_nom'],
-        'arboles' => $row['num_arbres_total']
-    ];
-    $varietats[$row['id_plantacio']][$row['varietat_nom']] = (float)$row['total_collita'];
+$stmt = $conn->prepare($sql);
+if (!$stmt) {
+    die("Error SQL: " . $conn->error);
 }
 
-// Etiquetas y datasets para Chart.js
-$labels = [];
-$datasets = [];
-$colores = ["#2f7d2f","#55a455","#7fc97f","#a8d5a2","#cce5cc"];
-$varietat_names = [];
+$stmt->bind_param('ddii', $caixaKg, $binKg, $yearFilter, $yearFilter);
+$stmt->execute();
+$result = $stmt->get_result();
 
-foreach($varietats as $id_plantacio => $data){
-    $labels[] = "Parcela $id_plantacio";
-    foreach($data as $varietat => $total){
-        if(!in_array($varietat, $varietat_names)) $varietat_names[] = $varietat;
+$parceles = [];
+$varietatsPerParcela = [];
+$varietatNames = [];
+
+while ($row = $result->fetch_assoc()) {
+    $parcelaId = (int) ($row['id_parcela'] ?? 0);
+    $varietat = (string) ($row['varietat_nom'] ?? '');
+    $valorKg = (float) ($row['total_collita_kg'] ?? 0);
+
+    if (!isset($parceles[$parcelaId])) {
+        $parceles[$parcelaId] = [
+            'nom' => (string) ($row['parcela_nom'] ?? "Parcel·la {$parcelaId}"),
+            'sector' => (string) ($row['sector_nom'] ?? '-'),
+            'arbres' => (int) ($row['num_arbres_total'] ?? 0),
+        ];
+    }
+
+    if ($varietat !== '') {
+        if (!isset($varietatsPerParcela[$parcelaId][$varietat])) {
+            $varietatsPerParcela[$parcelaId][$varietat] = 0.0;
+        }
+        $varietatsPerParcela[$parcelaId][$varietat] += $valorKg;
+        if (!in_array($varietat, $varietatNames, true)) {
+            $varietatNames[] = $varietat;
+        }
     }
 }
 
-// Crear dataset por variedad
+$stmt->close();
+$conn->close();
+
+sort($varietatNames, SORT_NATURAL | SORT_FLAG_CASE);
+
+$labels = [];
+foreach ($parceles as $idParcela => $meta) {
+    $labels[] = $meta['nom'] . " (#{$idParcela})";
+}
+
+$colors = ['#2f7d2f', '#55a455', '#7fc97f', '#a8d5a2', '#cce5cc', '#1f5f8b', '#f59e0b', '#dc2626'];
 $datasets = [];
-foreach($varietat_names as $index => $varietat){
-    $data = [];
-    foreach($varietats as $id_plantacio => $v_data){
-        $data[] = isset($v_data[$varietat]) ? $v_data[$varietat] : 0;
+foreach ($varietatNames as $index => $varietat) {
+    $serie = [];
+    foreach (array_keys($parceles) as $idParcela) {
+        $serie[] = (float) ($varietatsPerParcela[$idParcela][$varietat] ?? 0);
     }
     $datasets[] = [
-        "label" => $varietat,
-        "data" => $data,
-        "backgroundColor" => $colores[$index % count($colores)]
+        'label' => $varietat,
+        'data' => $serie,
+        'backgroundColor' => $colors[$index % count($colors)],
     ];
 }
 ?>
@@ -70,76 +108,102 @@ foreach($varietat_names as $index => $varietat){
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<title>Comparativa Parcel·les i Varietats</title>
+<title>Comparativa parcel·les i varietats</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="../HTML/styles.css">
-<style>
-body{font-family:Arial,sans-serif;padding:20px;background:#fdfdfd;color:#333}
-h1,h2{color:#2f7d2f;margin-bottom:15px}
-table{border-collapse:collapse;width:100%;margin-top:20px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-th,td{border:1px solid #ccc;padding:10px;text-align:left}
-th{background:#eee}
-canvas{margin-top:20px;background:#fff;padding:10px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-form{margin-bottom:20px}
-select,input{padding:6px;margin-top:3px;border-radius:4px;border:1px solid #ccc}
-button{padding:8px 14px;border:none;border-radius:6px;background:#2f7d2f;color:#fff;cursor:pointer;font-weight:bold;margin-left:10px}
-button:hover{background:#256b25}
-</style>
 </head>
 <body>
+<div class="page">
+  <div class="page-header">
+    <h1>Comparativa parcel·les i varietats</h1>
+    <p class="page-subtitle">Producció normalitzada en kg equivalents per comparar resultats entre parcel·les i varietats.</p>
+  </div>
 
-<h1>📊 Comparativa Parcel·les i Varietats</h1>
+  <div class="panel">
+    <form method="get" class="form-grid-3">
+      <label>Filtrar per any (opcional)</label>
+      <input type="number" name="any" min="2000" max="2100" value="<?= htmlspecialchars((string) ($yearFilter ?? '')) ?>" placeholder="2026">
 
-<!-- FILTRO AÑO -->
-<form method="get">
-    <label>Filtrar per any:</label>
-    <input type="number" name="any" value="<?= $year_filter ?? '' ?>" placeholder="2026">
-    <button>Filtrar</button>
-</form>
+      <label>Conversió 1 caixa = kg</label>
+      <input type="number" step="0.1" name="caixa_kg" value="<?= htmlspecialchars((string) $caixaKg) ?>">
 
-<!-- GRÁFICA -->
-<h2>Producció per Parcela i Varietat</h2>
-<canvas id="graficaVarietats" style="max-width:900px;"></canvas>
+      <label>Conversió 1 bin = kg</label>
+      <input type="number" step="0.1" name="bin_kg" value="<?= htmlspecialchars((string) $binKg) ?>">
 
-<!-- TABLA RESUMEN -->
-<h2>Taula Resum</h2>
-<table>
-<tr>
-    <th>Parcela</th>
-    <th>Sector</th>
-    <th>Arbres</th>
-    <?php foreach($varietat_names as $v): ?>
-    <th><?= htmlspecialchars($v) ?></th>
-    <?php endforeach; ?>
-</tr>
-<?php foreach($varietats as $id_plantacio => $v_data): ?>
-<tr>
-    <td><?= $id_plantacio ?></td>
-    <td><?= htmlspecialchars($parcelas[$id_plantacio]['sector']) ?></td>
-    <td><?= $parcelas[$id_plantacio]['arboles'] ?></td>
-    <?php foreach($varietat_names as $v): ?>
-    <td><?= isset($v_data[$v]) ? $v_data[$v] : '0' ?></td>
-    <?php endforeach; ?>
-</tr>
-<?php endforeach; ?>
-</table>
+      <button type="submit" class="btn btn-primary mt-2">Aplicar filtres</button>
+    </form>
+  </div>
+
+  <div class="panel mt-2">
+    <h2 class="panel-title">Producció per parcel·la i varietat</h2>
+    <canvas id="graficaVarietats"></canvas>
+  </div>
+
+  <div class="panel mt-2">
+    <h2 class="panel-title">Taula resum (kg equivalents)</h2>
+    <div class="table-scroll">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Parcel·la</th>
+          <th>Sector</th>
+          <th>Arbres</th>
+          <?php foreach ($varietatNames as $v): ?>
+            <th><?= htmlspecialchars($v) ?></th>
+          <?php endforeach; ?>
+          <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (empty($parceles)): ?>
+          <tr><td colspan="<?= 4 + count($varietatNames) ?>">No hi ha dades per als filtres actuals.</td></tr>
+        <?php else: ?>
+          <?php foreach ($parceles as $idParcela => $meta): ?>
+            <?php $totalFila = 0.0; ?>
+            <tr>
+              <td><?= htmlspecialchars($meta['nom']) ?> (#<?= (int) $idParcela ?>)</td>
+              <td><?= htmlspecialchars($meta['sector']) ?></td>
+              <td><?= (int) $meta['arbres'] ?></td>
+              <?php foreach ($varietatNames as $v): ?>
+                <?php
+                  $valor = (float) ($varietatsPerParcela[$idParcela][$v] ?? 0);
+                  $totalFila += $valor;
+                ?>
+                <td><?= number_format($valor, 2, ',', '.') ?></td>
+              <?php endforeach; ?>
+              <td><strong><?= number_format($totalFila, 2, ',', '.') ?></strong></td>
+            </tr>
+          <?php endforeach; ?>
+        <?php endif; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <script>
 const ctx = document.getElementById('graficaVarietats').getContext('2d');
 const data = {
-    labels: <?= json_encode($labels) ?>,
-    datasets: <?= json_encode($datasets) ?>
+  labels: <?= json_encode($labels, JSON_UNESCAPED_UNICODE) ?>,
+  datasets: <?= json_encode($datasets, JSON_UNESCAPED_UNICODE) ?>
 };
-new Chart(ctx,{
-    type:'bar',
-    data:data,
-    options:{
-        responsive:true,
-        plugins:{legend:{position:'top'}},
-        scales:{y:{beginAtZero:true,title:{display:true,text:'Kg / unitats'}}}
+
+new Chart(ctx, {
+  type: 'bar',
+  data,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'kg equivalents' }
+      }
     }
+  }
 });
 </script>
-
 </body>
 </html>
