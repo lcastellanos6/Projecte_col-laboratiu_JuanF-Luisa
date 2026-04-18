@@ -1847,6 +1847,25 @@ INSERT INTO `varietat` VALUES (1,1,'Prunus persica var. platycarpa','Paraguayo',
 /*!40000 ALTER TABLE `varietat` ENABLE KEYS */;
 
 --
+-- Table structure for table `usuari`
+--
+
+DROP TABLE IF EXISTS `usuari`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuari` (
+  `id_usuari` int(11) NOT NULL AUTO_INCREMENT,
+  `usuari` varchar(80) NOT NULL,
+  `contrasenya_hash` varchar(255) NOT NULL,
+  `rol` enum('admin','usuari') NOT NULL DEFAULT 'usuari',
+  `actiu` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_usuari`),
+  UNIQUE KEY `uq_usuari_usuari` (`usuari`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping routines for database 'web'
 --
 

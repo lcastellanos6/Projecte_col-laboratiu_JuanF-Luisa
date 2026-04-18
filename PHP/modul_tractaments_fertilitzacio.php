@@ -140,7 +140,7 @@ SELECT
     p.id_producte,
     p.nom_comercial,
     p.tipus,
-    p.stock_minim,
+    0 AS stock_minim,
     COALESCE(st.stock_actual, 0) AS stock_actual,
     COALESCE(consum.consum_dia, 0) AS consum_dia,
     MIN(pl.data_caducitat) AS propera_caducitat
@@ -161,7 +161,7 @@ LEFT JOIN (
     GROUP BY pl.id_producte
 ) consum ON consum.id_producte = p.id_producte
 LEFT JOIN producte_lot pl ON pl.id_producte = p.id_producte
-GROUP BY p.id_producte, p.nom_comercial, p.tipus, p.stock_minim, st.stock_actual, consum.consum_dia
+GROUP BY p.id_producte, p.nom_comercial, p.tipus, st.stock_actual, consum.consum_dia
 ORDER BY p.nom_comercial
 ";
 $stmtEstoc = $conn->prepare($sqlEstoc);
@@ -263,9 +263,9 @@ $stmtNutricio->close();
 // 7) Traçabilitat lot -> collita -> aplicació (via tasca)
 $sqlTracabilitat = "
 SELECT
-    lp.id_lot_produccio,
+    lp.lot_id AS id_lot_produccio,
     lp.codi_lot,
-    lp.data_produccio,
+    lp.data_creacio AS data_produccio,
     lp.quantitat,
     lp.unitat,
     c.collita_id,
@@ -284,7 +284,7 @@ LEFT JOIN tasca t ON t.collita_id = c.collita_id AND t.id_aplicacio IS NOT NULL
 LEFT JOIN aplicacio a ON a.id_aplicacio = t.id_aplicacio
 LEFT JOIN aplicacio_producte ap ON ap.id_aplicacio = a.id_aplicacio
 LEFT JOIN producte p ON p.id_producte = ap.id_producte
-ORDER BY lp.id_lot_produccio DESC, a.data DESC
+ORDER BY lp.lot_id DESC, a.data DESC
 LIMIT 100
 ";
 $stmtTracabilitat = $conn->prepare($sqlTracabilitat);

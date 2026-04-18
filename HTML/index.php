@@ -1,9 +1,17 @@
 ﻿<?php
 session_start();
-require_once __DIR__ . '/../PHP/producte_stock_alerts.php';
-$stockAlertSummary = get_producte_stock_alert_summary();
-$stockAlertCount = (int) ($stockAlertSummary['count'] ?? 0);
-$stockAlertAvailable = (bool) ($stockAlertSummary['available'] ?? false);
+
+$stockAlertSummary = null;
+if (isset($_SESSION['usuari'])) {
+    require_once __DIR__ . '/../PHP/producte_stock_alerts.php';
+    $stockAlertSummary = get_producte_stock_alert_summary();
+}
+
+$personalAlertSummary = null;
+if (isset($_SESSION['usuari'])) {
+    require_once __DIR__ . '/../PHP/personal_alerts.php';
+    $personalAlertSummary = get_personal_alert_summary(30);
+}
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -167,22 +175,34 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
 
         <div class="hero-inline-actions">
-          <?php if ($stockAlertAvailable): ?>
-            <a class="stock-alert-link" href="../PHP/notificacions_stock.php" title="Veure alertes" onclick="openPage('../PHP/notificacions_stock.php'); return false;">
-              <span class="stock-alert-label">Alertes</span>
-              <span class="stock-alert-count"><?php echo $stockAlertCount; ?></span>
-            </a>
-          <?php else: ?>
-            <span class="stock-alert-link is-disabled" title="Cal migrar la base de dades per activar alertes">
-              <span class="stock-alert-label">Alertes no disponibles</span>
-            </span>
-          <?php endif; ?>
-
           <?php if (isset($_SESSION['usuari'])): ?>
             <div class="hero-session-info">
               <p><?= htmlspecialchars($_SESSION['usuari']) ?></p>
               <small><?= date('d/m/Y') ?></small>
             </div>
+            <?php if (is_array($stockAlertSummary) && !empty($stockAlertSummary['available'])): ?>
+              <?php if ((int)($stockAlertSummary['count'] ?? 0) > 0): ?>
+                <a class="btn btn-primary" href="../PHP/notificacions_stock.php" title="Productes amb stock baix">
+                  Alertes estoc (<?php echo (int) $stockAlertSummary['count']; ?>)
+                </a>
+              <?php else: ?>
+                <a class="btn btn-ghost" href="../PHP/notificacions_stock.php" title="No hi ha alertes d'estoc">
+                  Alertes estoc (0)
+                </a>
+              <?php endif; ?>
+            <?php endif; ?>
+            <?php if (is_array($personalAlertSummary) && !empty($personalAlertSummary['available'])): ?>
+              <?php if ((int)($personalAlertSummary['count'] ?? 0) > 0): ?>
+                <a class="btn btn-primary" href="../PHP/notificacions_personal.php" title="Alertes de personal">
+                  Alertes personal (<?php echo (int) $personalAlertSummary['count']; ?>)
+                </a>
+              <?php else: ?>
+                <a class="btn btn-ghost" href="../PHP/notificacions_personal.php" title="Alertes de personal">
+                  Alertes personal (0)
+                </a>
+              <?php endif; ?>
+            <?php endif; ?>
+            <a class="btn btn-ghost" href="logout.php">Tancar sessió</a>
           <?php else: ?>
             <a class="login-cta" href="login.html">Inicia sessió</a>
           <?php endif; ?>
@@ -239,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <button onclick="openPage('registre.php')" data-url="registre.php">Nou registre</button>
             <button onclick="openPage('../PHP/collita_nova.php')" data-url="../PHP/collita_nova.php">Collita</button>
             <button onclick="openPage('../PHP/produccio.php')" data-url="../PHP/produccio.php">Producció de collita</button>
-            <button onclick="openPage('lot_produccio.html')" data-url="lot_produccio.html">Lot de producció</button>
+            <button onclick="openPage('lot_produccio.php')" data-url="lot_produccio.php">Lot de producció</button>
             <button onclick="openPage('control_qualitat.php')" data-url="control_qualitat.php">Nou control de qualitat</button>
             <button onclick="openPage('estat_fenologic.html')" data-url="estat_fenologic.html">Nou estat fenològic</button>
             <button onclick="openPage('../PHP/mapa_calor_parceles.php')" data-url="../PHP/mapa_calor_parceles.php">Mapa de calor</button>
@@ -262,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <button onclick="openPage('maquinaria.html')" data-url="maquinaria.html">Maquinària</button>
             <button onclick="openPage('contracte.html')" data-url="contracte.html">Contractes</button>
             <button onclick="openPage('absencia.php')" data-url="absencia.php">Absències</button>
+            <button onclick="openPage('../PHP/notificacions_personal.php')" data-url="../PHP/notificacions_personal.php">Alertes personal</button>
             <button onclick="openPage('documentacio.html')" data-url="documentacio.html">Documentació</button>
             <button onclick="openPage('departament.html')" data-url="departament.html">Departaments</button>
             <button onclick="openPage('equip.html')" data-url="equip.html">Equips</button>

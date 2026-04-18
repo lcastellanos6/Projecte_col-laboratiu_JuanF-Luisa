@@ -1,5 +1,7 @@
 <?php
-$conn = new mysqli("localhost","root","","web");
+require_once __DIR__ . '/db.php';
+
+$conn = db_connect();
 
 $id = intval($_POST['id'] ?? 0);
 $ref_cadastral = $_POST['ref_cadastral'] ?? '';
@@ -25,18 +27,25 @@ $foto_url = $row['foto_url'] ?? null;
 
 // Pujada de foto nova
 if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-    $uploadDir = "uploads/";
+    $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR;
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
     $fileName = time() . "_" . basename($_FILES['foto']['name']);
     $filePath = $uploadDir . $fileName;
     if (move_uploaded_file($_FILES['foto']['tmp_name'], $filePath)) {
-        $foto_url = $filePath;
+        $foto_url = "uploads/" . $fileName;
     }
 }
 
 $has_geometria = !empty($geometria);
+
+if ($has_geometria) {
+    $geometria_geometry = geojson_feature_to_geometry_json($geometria);
+    if ($geometria_geometry === null) {
+        $has_geometria = false;
+    }
+}
 
 if ($has_geometria) {
     $stmt = $conn->prepare("
@@ -62,7 +71,7 @@ if ($has_geometria) {
         $superficie,
         $descripcio,
         $municipi,
-        $geometria,
+        $geometria_geometry,
         $geometria_kml,
         $foto_url,
         $edafo,

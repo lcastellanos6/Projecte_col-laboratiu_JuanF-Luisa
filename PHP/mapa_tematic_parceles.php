@@ -168,6 +168,29 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
+// External SIG layers (WMS)
+const wmsCatastro = L.tileLayer.wms('https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx', {
+  layers: 'catastro',
+  format: 'image/png',
+  transparent: true,
+  opacity: 0.6,
+  attribution: 'Dirección General del Catastro'
+});
+
+const wmsNatura2000 = L.tileLayer.wms('https://wms.mapama.gob.es/sig/Biodiversidad/RedNatura/wms.aspx', {
+  layers: 'PS.ProtectedSite',
+  format: 'image/png',
+  transparent: true,
+  version: '1.3.0',
+  opacity: 0.55,
+  attribution: 'MITECO (Red Natura 2000)'
+});
+
+L.control.layers(null, {
+  'Catastro (WMS)': wmsCatastro,
+  'Red Natura 2000 (WMS)': wmsNatura2000
+}, { collapsed: true }).addTo(map);
+
 let layer = null;
 const layerSelector = document.getElementById('tipus-capa');
 const kpiBox = document.getElementById('kpis');

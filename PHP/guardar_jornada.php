@@ -69,7 +69,7 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo "<script>
         alert('✅ Jornada registrada correctament');
-        window.location.href = 'calendari_jornades.php';
+        window.location.href = 'llista_jornades.php';
     </script>";
 } else {
     echo "<script>

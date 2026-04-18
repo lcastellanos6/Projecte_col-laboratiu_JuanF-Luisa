@@ -71,9 +71,9 @@ $items = [
     ],
     [
         'bloc' => 'Capes tematiques SIG (meteo, restriccions, sensors)',
-        'estat' => 'Dubtos / parcial',
-        'tipus_estat' => 'warn',
-        'detall' => 'Implementat mapa tematic intern (clima, infraestructures, incidencies i tasques). Pendent SIG extern oficial.',
+        'estat' => 'Implementat (WMS extern)',
+        'tipus_estat' => 'ok',
+        'detall' => 'Mapa temàtic intern + capes externes WMS (Catastro i Red Natura 2000). Meteo/sensors externs encara no integrats.',
         'enllac' => 'mapa_tematic_parceles.php',
     ],
 ];

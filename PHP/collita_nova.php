@@ -1,8 +1,7 @@
 <?php
-// Conexión a la base de datos
-$conn = new mysqli("localhost", "root", "", "web");
-if ($conn->connect_error) die("Error BD: " . $conn->connect_error);
-$conn->set_charset("utf8");
+require_once __DIR__ . '/db.php';
+
+$conn = db_connect();
 
 // CONSULTA PLANTACIONS / PARCEL·LES
 $plantacions = $conn->query("
@@ -16,6 +15,15 @@ $plantacions = $conn->query("
     ORDER BY s.nom, p.id_plantacio
 ");
 
+// OPERARIS (responsable/cap d'equip)
+$operaris = $conn->query("SELECT id_operari, nom FROM operari ORDER BY nom");
+
+// EQUIPS
+$equips = $conn->query("SELECT id_equip, nom FROM equip ORDER BY nom");
+
+// ESTATS FENOLÒGICS
+$estats = $conn->query("SELECT id_estat, nom_estat FROM estat_fenologic ORDER BY id_estat");
+
 // CONSULTA COLLITES
 $collites = $conn->query("
     SELECT c.*, s.nom AS sector_nom
@@ -24,6 +32,9 @@ $collites = $conn->query("
     JOIN sector s ON p.id_sector = s.id_sector
     ORDER BY c.data_inici DESC
 ");
+
+$error = $_GET['error'] ?? '';
+$ok = $_GET['ok'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -47,7 +58,22 @@ th{background:#eee}
 </head>
 <body>
 
-<h1>🍎 Gestió de la Collita</h1>
+<h1>Gestió de la Collita</h1>
+
+<?php if ($ok === '1'): ?>
+  <div style="margin:10px 0; padding:10px 12px; border:1px solid #b9e2c1; background:#f0fff4; color:#1a5c2e; border-radius:6px;">
+    Collita guardada correctament.
+  </div>
+<?php endif; ?>
+<?php if ($error !== ''): ?>
+  <div style="margin:10px 0; padding:10px 12px; border:1px solid #e3b2b2; background:#fff5f5; color:#8a2a2a; border-radius:6px;">
+    <?php if ($error === 'required'): ?>
+      Falten camps obligatoris (plantació i data d'inici).
+    <?php else: ?>
+      No s'ha pogut guardar la collita.
+    <?php endif; ?>
+  </div>
+<?php endif; ?>
 
 <!-- FORMULARI -->
 <form action="collita_guardar.php" method="post">
@@ -60,6 +86,22 @@ th{background:#eee}
       <?= "ID: ".$p['id_plantacio']." | Sector: ".htmlspecialchars($p['sector_nom'])." | Plantació: ".$p['data_plantacio']." | Arbres: ".$p['num_arbres_total'] ?>
     </option>
   <?php endwhile; ?>
+</select>
+
+<label>Operari (cap d'equip / responsable)</label>
+<select name="id_operari">
+  <option value="">-- Sense assignar --</option>
+  <?php if ($operaris): while($o = $operaris->fetch_assoc()): ?>
+    <option value="<?= (int)$o['id_operari'] ?>"><?= htmlspecialchars($o['nom'] ?? '') ?></option>
+  <?php endwhile; endif; ?>
+</select>
+
+<label>Equip</label>
+<select name="id_equip">
+  <option value="">-- Sense assignar --</option>
+  <?php if ($equips): while($e = $equips->fetch_assoc()): ?>
+    <option value="<?= (int)$e['id_equip'] ?>"><?= htmlspecialchars($e['nom'] ?? '') ?></option>
+  <?php endwhile; endif; ?>
 </select>
 
 <label>Data inici *</label>
@@ -76,6 +118,14 @@ th{background:#eee}
   <option value="kg">Kg</option>
   <option value="caixa">Caixes</option>
   <option value="bin">Bins</option>
+</select>
+
+<label>Estat fenològic</label>
+<select name="id_estat">
+  <option value="">-- No indicat --</option>
+  <?php if ($estats): while($es = $estats->fetch_assoc()): ?>
+    <option value="<?= (int)$es['id_estat'] ?>"><?= htmlspecialchars($es['nom_estat'] ?? '') ?></option>
+  <?php endwhile; endif; ?>
 </select>
 
 <label>Condicions ambientals</label>
@@ -131,5 +181,9 @@ function toggle(){
 
 </body>
 </html>
+
+<?php
+$conn->close();
+?>
 
 

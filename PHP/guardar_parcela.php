@@ -1,23 +1,19 @@
 <?php
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "web";
+require_once __DIR__ . '/db.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) die("Error de connexió: " . $conn->connect_error);
+$conn = db_connect();
 
 // VARIABLES FORM
-$ref_cadastral = $_POST['ref_cadastral'];
+$ref_cadastral = $_POST['ref_cadastral'] ?? '';
 $nom = $_POST['nom'] ?? null;
 $superficie = $_POST['superficie'] ?? null;
 $descripcio = $_POST['descripcio'] ?? null;
 $municipi = $_POST['municipi'] ?? null;
 
-$geometria = $_POST['geometria'];          // GeoJSON
-$geometria_kml = $_POST['geometria_kml'];  // text GeoJSON
+$geometria = $_POST['geometria'] ?? '';          // GeoJSON (Leaflet returns Feature)
+$geometria_kml = $_POST['geometria_kml'] ?? '';  // text (stored as-is)
 
 $edafo = $_POST['edafo'] ?? null;
 $documentacio = $_POST['documentacio'] ?? null;
@@ -37,7 +33,7 @@ $foto_url = null;
 
 if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
 
-    $uploadDir = "uploads/";
+    $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR;
 
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
@@ -47,7 +43,7 @@ if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
     $filePath = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES['foto']['tmp_name'], $filePath)) {
-        $foto_url = $filePath;
+        $foto_url = "uploads/" . $fileName;
     }
 }
 
@@ -60,14 +56,24 @@ if (empty($geometria)) {
     exit;
 }
 
+$geometria_geometry = geojson_feature_to_geometry_json($geometria);
+if ($geometria_geometry === null) {
+    $_SESSION['form_data'] = $_POST;
+    header("Location: ../HTML/parcela_nou.php?error=geometry");
+    exit;
+}
+
 // -----------------------------------------
 // INSERT FINAL
 // -----------------------------------------
-$sql = "INSERT INTO Parcela (
+$sqlLegacy = "INSERT INTO parcela (
     ref_cadastral, nom, superficie, descripcio, municipi,
     geometria, geometria_kml, foto_url, edafo, documentacio,
     pendent, orientacio
 ) VALUES (?, ?, ?, ?, ?, ST_GeomFromGeoJSON(?), ?, ?, ?, ?, ?, ?)";
+
+$sql = "INSERT INTO parcela (ref_cadastral, nom, superficie, descripcio, municipi, geometria, geometria_kml, foto_url, edafo, documentacio, pendent, orientacio)
+VALUES (?, ?, ?, ?, ?, ST_GeomFromGeoJSON(?), ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 
@@ -78,7 +84,7 @@ $stmt->bind_param(
     $superficie,
     $descripcio,
     $municipi,
-    $geometria,
+    $geometria_geometry,
     $geometria_kml,
     $foto_url,
     $edafo,
