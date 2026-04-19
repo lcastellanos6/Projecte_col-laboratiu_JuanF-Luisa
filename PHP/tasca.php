@@ -1,9 +1,24 @@
 <?php
-$conn = new mysqli("localhost","root","","web");
-if ($conn->connect_error) die("Error BD");
-$conn->set_charset("utf8");
+session_start();
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
 
-$res = $conn->query("SELECT * FROM tasca ORDER BY created_at DESC");
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
+
+if ($rol_usuari === 'admin') {
+    $res = $conn->query("SELECT * FROM tasca ORDER BY created_at DESC");
+} else {
+    // Si és treballador, només veu les seves tasques assignades
+    $stmt = $conn->prepare("SELECT t.* 
+                            FROM tasca t 
+                            JOIN treballador_tasca tt ON t.id_tasca = tt.id_tasca 
+                            WHERE tt.id_treballador = ? 
+                            ORDER BY t.created_at DESC");
+    $stmt->bind_param("i", $id_treballador);
+    $stmt->execute();
+    $res = $stmt->get_result();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -61,55 +76,55 @@ a{text-decoration:none;margin-right:8px}
   📅 Calendari
 </a>
 
-<h1>🛠️ Registrar noves tasques</h1>
+  <h1>🛠️ <?= $rol_usuari === 'admin' ? 'Registrar noves tasques' : 'Registrar la meva tasca' ?></h1>
 
-<!-- FORMULARIO NUEVA TAREA -->
-<form action="tasca_guardar.php" method="post">
-  <label>Nom de la tasca *</label>
-  <input type="text" name="nom_tasca" required>
+  <!-- FORMULARIO NUEVA TAREA -->
+  <form action="tasca_guardar.php" method="post">
+    <label>Nom de la tasca *</label>
+    <input type="text" name="nom_tasca" required>
 
-  <label>Tipus de tasca</label>
-  <input type="text" name="tipus_tasca">
+    <label>Tipus de tasca</label>
+    <input type="text" name="tipus_tasca">
 
-  <label>Data inici</label>
-  <input type="date" name="data_inici">
+    <label>Data inici</label>
+    <input type="date" name="data_inici" value="<?= date('Y-m-d') ?>">
 
-  <label>Data final</label>
-  <input type="date" name="data_final">
+    <label>Data final</label>
+    <input type="date" name="data_final">
 
-  <label>Durada estimada</label>
-  <input type="text" name="durada_estimada">
+    <label>Durada estimada</label>
+    <input type="text" name="durada_estimada">
 
-  <label>Personal requerit</label>
-  <input type="number" name="personal_requerit">
+    <label>Personal requerit</label>
+    <input type="number" name="personal_requerit" value="<?= $rol_usuari === 'admin' ? '' : '1' ?>">
 
-  <label>Equipament necessari</label>
-  <textarea name="equipament_necessari"></textarea>
+    <label>Equipament necessari</label>
+    <textarea name="equipament_necessari"></textarea>
 
-  <label>Instruccions</label>
-  <textarea name="instruccions"></textarea>
+    <label>Instruccions</label>
+    <textarea name="instruccions"></textarea>
 
-  <label>Dependències</label>
-  <textarea name="dependencies"></textarea>
+    <label>Dependències</label>
+    <textarea name="dependencies"></textarea>
 
-  <label>Estat</label>
-  <select name="estat">
-    <option value="Planificada">Planificada</option>
-    <option value="En curs">En curs</option>
-    <option value="Feta">Feta</option>
-    <option value="Cancel·lada">Cancel·lada</option>
-  </select>
+    <label>Estat</label>
+    <select name="estat">
+      <option value="Planificada">Planificada</option>
+      <option value="En curs" selected>En curs</option>
+      <option value="Feta">Feta</option>
+      <option value="Cancel·lada">Cancel·lada</option>
+    </select>
 
-  <button class="btn">Guardar tasca</button>
-</form>
+    <button class="btn">Guardar tasca</button>
+  </form>
 
 <!-- BOTÓN MOSTRAR TABLA -->
-<div style="margin-top:20px;">
+<div style="margin-top:20px;" class="<?= $rol_usuari !== 'admin' ? 'hidden' : '' ?>">
   <button class="btn-sec" onclick="toggleTasques()">📋 Tasques existents</button>
 </div>
 
 <!-- TABLA OCULTA -->
-<div id="tasques" class="hidden">
+<div id="tasques" class="<?= $rol_usuari !== 'admin' ? '' : 'hidden' ?>">
 <table>
 <tr>
   <th>Nom</th>
@@ -137,8 +152,10 @@ a{text-decoration:none;margin-right:8px}
 
   <td>
     <a href="tasca_editar.php?id=<?= $t['id_tasca'] ?>">✏️ Editar</a>
-    <a href="tasca_eliminar.php?id=<?= $t['id_tasca'] ?>"
-       onclick="return confirm('Eliminar aquesta tasca?')">🗑️</a>
+    <?php if ($rol_usuari === 'admin'): ?>
+      <a href="tasca_eliminar.php?id=<?= $t['id_tasca'] ?>"
+         onclick="return confirm('Eliminar aquesta tasca?')">🗑️</a>
+    <?php endif; ?>
   </td>
 </tr>
 <?php endwhile; ?>

@@ -20,7 +20,7 @@ function fetch_all_assoc(mysqli_result $result): array
     return $rows;
 }
 
-function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
+function get_personal_alerts(int $dies = 30, ?mysqli $conn = null, ?int $id_treballador = null): array
 {
     $dies = max(1, min(365, $dies));
     $owns = false;
@@ -35,6 +35,8 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         'error'     => '',
     ];
 
+    $whereClause = $id_treballador ? " AND t.id_treballador = ? " : "";
+
     // 1) Contracts ending soon
     $sqlContractes = "
         SELECT
@@ -48,6 +50,7 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         JOIN treballador t ON t.id_treballador = c.id_treballador
         WHERE c.data_finalitzacio IS NOT NULL
           AND c.data_finalitzacio <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+          $whereClause
         ORDER BY c.data_finalitzacio ASC
     ";
     
@@ -58,7 +61,13 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         if ($owns) $conn->close();
         return $payload;
     }
-    $stmt->bind_param('i', $dies);
+    
+    if ($id_treballador) {
+        $stmt->bind_param('ii', $dies, $id_treballador);
+    } else {
+        $stmt->bind_param('i', $dies);
+    }
+    
     $stmt->execute();
     $res = $stmt->get_result();
     $contractes = $res ? fetch_all_assoc($res) : [];
@@ -78,6 +87,7 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         JOIN formacio_certificacio fc ON fc.id_formacio_cert = tfc.id_formacio_cert
         WHERE tfc.data_caducitat IS NOT NULL
           AND tfc.data_caducitat <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+          $whereClause
         ORDER BY tfc.data_caducitat ASC
     ";
     
@@ -88,15 +98,20 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         if ($owns) $conn->close();
         return $payload;
     }
-    $stmt->bind_param('i', $dies);
+    
+    if ($id_treballador) {
+        $stmt->bind_param('ii', $dies, $id_treballador);
+    } else {
+        $stmt->bind_param('i', $dies);
+    }
+    
     $stmt->execute();
     $res = $stmt->get_result();
     $certs = $res ? fetch_all_assoc($res) : [];
     $stmt->close();
 
     // 3) Existing alerts table (pending)
-    // Mostrem totes les pendents, independentment de la data, 
-    // ja que si és pendent s'ha de veure sempre.
+    $whereClauseManual = $id_treballador ? " AND a.id_treballador = ? " : "";
     $sqlManual = "
         SELECT
           a.id_treballador,
@@ -108,6 +123,7 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         FROM alerta a
         JOIN treballador t ON t.id_treballador = a.id_treballador
         WHERE a.estat = 'Pendent'
+        $whereClauseManual
         ORDER BY a.data_avis ASC
     ";
     
@@ -118,6 +134,11 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         if ($owns) $conn->close();
         return $payload;
     }
+    
+    if ($id_treballador) {
+        $stmt->bind_param('i', $id_treballador);
+    }
+    
     $stmt->execute();
     $res = $stmt->get_result();
     $manuals = $res ? fetch_all_assoc($res) : [];
@@ -137,12 +158,17 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         JOIN epi_tipus et ON et.id_epi_tipus = le.id_epi_tipus
         WHERE le.data_caducitat IS NOT NULL
           AND le.data_caducitat <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+          $whereClause
         ORDER BY le.data_caducitat ASC
     ";
     
     $stmt = $conn->prepare($sqlEPIs);
     if ($stmt) {
-        $stmt->bind_param('i', $dies);
+        if ($id_treballador) {
+            $stmt->bind_param('ii', $dies, $id_treballador);
+        } else {
+            $stmt->bind_param('i', $dies);
+        }
         $stmt->execute();
         $res = $stmt->get_result();
         $epis = $res ? fetch_all_assoc($res) : [];
@@ -165,12 +191,17 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         WHERE ab.estat != 'Tancada' AND ab.estat != 'Rebutjada'
           AND ab.data_fi IS NOT NULL
           AND ab.data_fi <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+          $whereClause
         ORDER BY ab.data_fi ASC
     ";
     
     $stmt = $conn->prepare($sqlAbsencies);
     if ($stmt) {
-        $stmt->bind_param('i', $dies);
+        if ($id_treballador) {
+            $stmt->bind_param('ii', $dies, $id_treballador);
+        } else {
+            $stmt->bind_param('i', $dies);
+        }
         $stmt->execute();
         $res = $stmt->get_result();
         $absencies = $res ? fetch_all_assoc($res) : [];
@@ -192,12 +223,17 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         JOIN treballador t ON t.id_treballador = rd.id_treballador
         WHERE rd.data_caducitat IS NOT NULL
           AND rd.data_caducitat <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+          $whereClause
         ORDER BY rd.data_caducitat ASC
     ";
     
     $stmt = $conn->prepare($sqlDocs);
     if ($stmt) {
-        $stmt->bind_param('i', $dies);
+        if ($id_treballador) {
+            $stmt->bind_param('ii', $dies, $id_treballador);
+        } else {
+            $stmt->bind_param('i', $dies);
+        }
         $stmt->execute();
         $res = $stmt->get_result();
         $docs = $res ? fetch_all_assoc($res) : [];
@@ -228,9 +264,9 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
     return $payload;
 }
 
-function get_personal_alert_summary(int $dies = 30, ?mysqli $conn = null): array
+function get_personal_alert_summary(int $dies = 30, ?mysqli $conn = null, ?int $id_treballador = null): array
 {
-    $result = get_personal_alerts($dies, $conn);
+    $result = get_personal_alerts($dies, $conn, $id_treballador);
     return [
         'available' => (bool) ($result['available'] ?? false),
         'count'     => is_array($result['alerts'] ?? null) ? count($result['alerts']) : 0,

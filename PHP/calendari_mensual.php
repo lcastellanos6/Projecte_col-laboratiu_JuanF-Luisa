@@ -1,6 +1,10 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "web");
-if ($conn->connect_error) die("Error BD");
+session_start();
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
+
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
 
 // Mes y año
 $mes = $_GET['mes'] ?? date('m');
@@ -10,7 +14,7 @@ $primer_dia = "$any-$mes-01";
 $dies_mes = date('t', strtotime($primer_dia));
 $dia_setmana = date('N', strtotime($primer_dia)); // 1 = lunes
 
-// ================= FESTIVOS ESPAÑA + CATALUNYA =================
+// ... rest of festius ...
 $festius = [
 
     // ESPAÑA
@@ -31,25 +35,38 @@ $festius = [
 ];
 
 // ================= JORNADAS =================
-$jornades = $conn->query("
-    SELECT j.data_hora_inici, j.data_hora_fi, t.nom_complet
-    FROM jornada j
-    JOIN treballador t ON t.id_treballador = j.id_treballador
-    WHERE MONTH(j.data_hora_inici) = $mes
-      AND YEAR(j.data_hora_inici) = $any
-");
+if ($rol_usuari === 'admin') {
+    $sql_jorn = "SELECT j.data_hora_inici, j.data_hora_fi, t.nom_complet
+                 FROM jornada j
+                 JOIN treballador t ON t.id_treballador = j.id_treballador
+                 WHERE MONTH(j.data_hora_inici) = $mes
+                   AND YEAR(j.data_hora_inici) = $any";
+} else {
+    $sql_jorn = "SELECT j.data_hora_inici, j.data_hora_fi, t.nom_complet
+                 FROM jornada j
+                 JOIN treballador t ON t.id_treballador = j.id_treballador
+                 WHERE j.id_treballador = $id_treballador
+                   AND MONTH(j.data_hora_inici) = $mes
+                   AND YEAR(j.data_hora_inici) = $any";
+}
+$jornades = $conn->query($sql_jorn);
 
 // ================= AUSENCIAS =================
-$absencies = $conn->query("
-    SELECT a.*, t.nom_complet
-    FROM absencia a
-    JOIN treballador t ON t.id_treballador = a.id_treballador
-    WHERE (
-        MONTH(a.data_inici) = $mes OR
-        MONTH(a.data_fi) = $mes
-    )
-    AND YEAR(a.data_inici) = $any
-");
+if ($rol_usuari === 'admin') {
+    $sql_abs = "SELECT a.*, t.nom_complet
+                FROM absencia a
+                JOIN treballador t ON t.id_treballador = a.id_treballador
+                WHERE (MONTH(a.data_inici) = $mes OR MONTH(a.data_fi) = $mes)
+                AND YEAR(a.data_inici) = $any";
+} else {
+    $sql_abs = "SELECT a.*, t.nom_complet
+                FROM absencia a
+                JOIN treballador t ON t.id_treballador = a.id_treballador
+                WHERE a.id_treballador = $id_treballador
+                AND (MONTH(a.data_inici) = $mes OR MONTH(a.data_fi) = $mes)
+                AND YEAR(a.data_inici) = $any";
+}
+$absencies = $conn->query($sql_abs);
 
 // ================= INDEXAR POR DÍA =================
 $cal = [];

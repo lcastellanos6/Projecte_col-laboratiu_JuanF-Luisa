@@ -1,10 +1,17 @@
 <?php
+session_start();
 require_once __DIR__ . '/personal_alerts.php';
+
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
 
 $dies = filter_input(INPUT_GET, 'dies', FILTER_VALIDATE_INT);
 $dies = ($dies && $dies > 0) ? $dies : 30;
 
-$result = get_personal_alerts($dies);
+// Si no es admin, filtramos por su ID
+$filter_id = ($rol_usuari === 'admin') ? null : $id_treballador;
+
+$result = get_personal_alerts($dies, null, $filter_id);
 $alerts = $result['alerts'];
 $available = (bool) $result['available'];
 $error = (string) $result['error'];

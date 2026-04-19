@@ -1,6 +1,10 @@
 <?php
-$conn = new mysqli("localhost","root","","web");
-if ($conn->connect_error) die("Error BD");
+session_start();
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
+
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
 
 $stmt = $conn->prepare("
 INSERT INTO tasca
@@ -24,5 +28,15 @@ $stmt->bind_param(
 );
 
 $stmt->execute();
+$id_tasca = $stmt->insert_id;
+
+// Si el creador es un trabajador, se la auto-asigna
+if ($rol_usuari !== 'admin' && $id_treballador) {
+    $data_avui = date('Y-m-d');
+    $estat = $_POST['estat'];
+    $stmt_as = $conn->prepare("INSERT INTO treballador_tasca (id_treballador, id_tasca, data_assignacio, estat) VALUES (?, ?, ?, ?)");
+    $stmt_as->bind_param("iiss", $id_treballador, $id_tasca, $data_avui, $estat);
+    $stmt_as->execute();
+}
 
 header("Location: tasca.php");

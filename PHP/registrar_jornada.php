@@ -1,23 +1,37 @@
 <?php
-// Mostrar errores de PHP para depuración
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+session_start();
+require_once __DIR__ . '/db.php';
 
-// Conexión a la base de datos
-$conn = new mysqli("localhost", "root", "", "web");
-if ($conn->connect_error) {
-    die("Error al conectar con la base de datos: " . $conn->connect_error);
+// Verificar sessió
+if (!isset($_SESSION['usuari'])) {
+    header("Location: ../HTML/login.php");
+    exit;
 }
+
+$id_treballador_sessio = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
+
+$conn = db_connect();
 
 // Consultas a la base de datos
-$treballadors = $conn->query("SELECT id_treballador, nom_complet FROM treballador ORDER BY nom_complet");
-if (!$treballadors) {
-    die("Error al consultar treballadors: " . $conn->error);
-}
+if ($rol_usuari === 'admin') {
+    $treballadors = $conn->query("SELECT id_treballador, nom_complet FROM treballador ORDER BY nom_complet");
+    $tasques = $conn->query("SELECT id_tasca, nom_tasca FROM tasca ORDER BY nom_tasca");
+} else {
+    // Si és treballador, només es veu a ell mateix i les seves tasques
+    $stmt_t = $conn->prepare("SELECT id_treballador, nom_complet FROM treballador WHERE id_treballador = ?");
+    $stmt_t->bind_param("i", $id_treballador_sessio);
+    $stmt_t->execute();
+    $treballadors = $stmt_t->get_result();
 
-$tasques = $conn->query("SELECT id_tasca, nom_tasca FROM tasca ORDER BY nom_tasca");
-if (!$tasques) {
-    die("Error al consultar tasques: " . $conn->error);
+    $stmt_ta = $conn->prepare("SELECT t.id_tasca, t.nom_tasca 
+                               FROM tasca t 
+                               JOIN treballador_tasca tt ON t.id_tasca = tt.id_tasca 
+                               WHERE tt.id_treballador = ? 
+                               ORDER BY t.nom_tasca");
+    $stmt_ta->bind_param("i", $id_treballador_sessio);
+    $stmt_ta->execute();
+    $tasques = $stmt_ta->get_result();
 }
 ?>
 <!DOCTYPE html>

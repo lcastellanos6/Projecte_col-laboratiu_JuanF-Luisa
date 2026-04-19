@@ -1,22 +1,42 @@
 <?php
-$conn = new mysqli("localhost","root","","web");
-if ($conn->connect_error) die("Error BD: " . $conn->connect_error);
-$conn->set_charset("utf8");
+session_start();
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
+
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
 
 // Consulta: horas totales por trabajador, por semana y por mes
-$sql = "
-SELECT 
-  t.id_treballador,
-  t.nom_complet AS nom,
-  YEAR(j.data_hora_inici) AS any,
-  MONTH(j.data_hora_inici) AS mes,
-  WEEK(j.data_hora_inici, 1) AS setmana,
-  SUM((TIMESTAMPDIFF(MINUTE, j.data_hora_inici, j.data_hora_fi) - COALESCE(j.minuts_pausa,0))/60) AS hores_totals
-FROM jornada j
-JOIN treballador t ON t.id_treballador = j.id_treballador
-GROUP BY t.id_treballador, any, mes, setmana
-ORDER BY t.nom_complet, any, mes, setmana
-";
+if ($rol_usuari === 'admin') {
+    $sql = "
+    SELECT 
+      t.id_treballador,
+      t.nom_complet AS nom,
+      YEAR(j.data_hora_inici) AS any,
+      MONTH(j.data_hora_inici) AS mes,
+      WEEK(j.data_hora_inici, 1) AS setmana,
+      SUM((TIMESTAMPDIFF(MINUTE, j.data_hora_inici, j.data_hora_fi) - COALESCE(j.minuts_pausa,0))/60) AS hores_totals
+    FROM jornada j
+    JOIN treballador t ON t.id_treballador = j.id_treballador
+    GROUP BY t.id_treballador, any, mes, setmana
+    ORDER BY t.nom_complet, any, mes, setmana
+    ";
+} else {
+    $sql = "
+    SELECT 
+      t.id_treballador,
+      t.nom_complet AS nom,
+      YEAR(j.data_hora_inici) AS any,
+      MONTH(j.data_hora_inici) AS mes,
+      WEEK(j.data_hora_inici, 1) AS setmana,
+      SUM((TIMESTAMPDIFF(MINUTE, j.data_hora_inici, j.data_hora_fi) - COALESCE(j.minuts_pausa,0))/60) AS hores_totals
+    FROM jornada j
+    JOIN treballador t ON t.id_treballador = j.id_treballador
+    WHERE j.id_treballador = $id_treballador
+    GROUP BY t.id_treballador, any, mes, setmana
+    ORDER BY any DESC, mes DESC, setmana DESC
+    ";
+}
 
 $res = $conn->query($sql);
 if (!$res) die("Error consulta: " . $conn->error);

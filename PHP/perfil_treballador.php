@@ -112,8 +112,8 @@ $res_d = $stmt_d->get_result();
 while ($row = $res_d->fetch_assoc()) {
     $documents[] = $row;
 }
-
-$conn->close();
+// He eliminat $conn->close() d'aquí per evitar l'error "mysqli object is already closed" 
+// al carregar les noves pestanyes de Jornades i Absències.
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -233,6 +233,32 @@ $conn->close();
             display: block;
         }
     </style>
+    <script>
+        function showTab(btn, tabId) {
+            // Amagar tots els continguts
+            const contents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            
+            // Desactivar tots els botons
+            const buttons = document.getElementsByClassName('tab-btn');
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            
+            // Mostrar el seleccionat
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // Activar el botó clicat
+            if (btn) {
+                btn.classList.add('active');
+            }
+        }
+    </script>
 </head>
 <body class="page">
     <div class="profile-container">
@@ -268,12 +294,15 @@ $conn->close();
         </div>
 
         <div class="section-tabs">
-            <button class="tab-btn active" onclick="showTab(event, 'personal')">Dades Personals</button>
-            <button class="tab-btn" onclick="showTab(event, 'laboral')">Informació Laboral</button>
-            <button class="tab-btn" onclick="showTab(event, 'tasques')">Tasques (<?= count($tasques) ?>)</button>
-            <button class="tab-btn" onclick="showTab(event, 'formacio')">Certificacions (<?= count($formacions) ?>)</button>
-            <button class="tab-btn" onclick="showTab(event, 'epis')">EPIs (<?= count($epis) ?>)</button>
-            <button class="tab-btn" onclick="showTab(event, 'documents')">Documents (<?= count($documents) ?>)</button>
+            <button class="tab-btn active" onclick="showTab(this, 'personal')">Dades Personals</button>
+            <button class="tab-btn" onclick="showTab(this, 'laboral')">Informació Laboral</button>
+            <button class="tab-btn" onclick="showTab(this, 'tasques')">Tasques (<?= count($tasques) ?>)</button>
+            <button class="tab-btn" onclick="showTab(this, 'formacio')">Certificacions (<?= count($formacions) ?>)</button>
+            <button class="tab-btn" onclick="showTab(this, 'epis')">EPIs (<?= count($epis) ?>)</button>
+            <button class="tab-btn" onclick="showTab(this, 'jornades')">Jornades</button>
+            <button class="tab-btn" onclick="showTab(this, 'absencies')">Absències</button>
+            <button class="tab-btn" onclick="showTab(this, 'documents')">Documents (<?= count($documents) ?>)</button>
+            <button class="tab-btn" onclick="showTab(this, 'config')"><i class="fa-solid fa-gear"></i> Configuració</button>
         </div>
 
         <!-- TAB PERSONAL -->
@@ -458,6 +487,100 @@ $conn->close();
             </div>
         </div>
 
+        <!-- TAB JORNADES -->
+        <div id="jornades" class="tab-content">
+            <div class="panel">
+                <h3 class="panel-title">Registre de Jornades (Últimes 20)</h3>
+                <?php
+                if (!$conn || !($conn instanceof mysqli) || @$conn->connect_errno || !@$conn->ping()) {
+                    $conn = db_connect();
+                }
+                $stmt_jorn = $conn->prepare("SELECT j.*, t.nom_tasca 
+                                            FROM jornada j 
+                                            LEFT JOIN tasca t ON j.id_tasca = t.id_tasca 
+                                            WHERE j.id_treballador = ? 
+                                            ORDER BY j.data_hora_inici DESC LIMIT 20");
+                $stmt_jorn->bind_param("i", $id_treballador);
+                $stmt_jorn->execute();
+                $res_jorn = $stmt_jorn->get_result();
+                if ($res_jorn->num_rows === 0): ?>
+                    <p class="page-subtitle">No hi ha jornades registrades.</p>
+                <?php else: ?>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Entrada</th>
+                                <th>Sortida</th>
+                                <th>Pausa</th>
+                                <th>Tasca</th>
+                                <th>Hores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($j = $res_jorn->fetch_assoc()): 
+                                $inici = new DateTime($j['data_hora_inici']);
+                                $fi = new DateTime($j['data_hora_fi']);
+                                $interval = $inici->diff($fi);
+                                $minuts_totals = ($interval->h * 60) + $interval->i - ($j['minuts_pausa'] ?? 0);
+                                $hores = round($minuts_totals / 60, 2);
+                            ?>
+                                <tr>
+                                    <td><?= $inici->format('d/m/Y') ?></td>
+                                    <td><?= $inici->format('H:i') ?></td>
+                                    <td><?= $fi->format('H:i') ?></td>
+                                    <td><?= $j['minuts_pausa'] ?> min</td>
+                                    <td><?= htmlspecialchars($j['nom_tasca'] ?? 'General') ?></td>
+                                    <td><strong><?= $hores ?> h</strong></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- TAB ABSÈNCIES -->
+        <div id="absencies" class="tab-content">
+            <div class="panel">
+                <h3 class="panel-title">Historial d'Absències</h3>
+                <?php
+                if (!$conn || !($conn instanceof mysqli) || @$conn->connect_errno || !@$conn->ping()) {
+                    $conn = db_connect();
+                }
+                $stmt_abs = $conn->prepare("SELECT * FROM absencia WHERE id_treballador = ? ORDER BY data_inici DESC");
+                $stmt_abs->bind_param("i", $id_treballador);
+                $stmt_abs->execute();
+                $res_abs = $stmt_abs->get_result();
+                if ($res_abs->num_rows === 0): ?>
+                    <p class="page-subtitle">No hi ha absències registrades.</p>
+                <?php else: ?>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tipus</th>
+                                <th>Inici</th>
+                                <th>Final</th>
+                                <th>Estat</th>
+                                <th>Observacions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($abs = $res_abs->fetch_assoc()): ?>
+                                <tr>
+                                    <td><strong><?= htmlspecialchars($abs['tipus']) ?></strong></td>
+                                    <td><?= date('d/m/Y', strtotime($abs['data_inici'])) ?></td>
+                                    <td><?= $abs['data_fi'] ? date('d/m/Y', strtotime($abs['data_fi'])) : '—' ?></td>
+                                    <td><span class="badge"><?= htmlspecialchars($abs['estat']) ?></span></td>
+                                    <td><?= htmlspecialchars($abs['observacions'] ?? '') ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        </div>
+
         <!-- TAB DOCUMENTS -->
         <div id="documents" class="tab-content">
             <div class="panel">
@@ -491,7 +614,14 @@ $conn->close();
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="<?= htmlspecialchars($d['ruta_url']) ?>" target="_blank" class="btn btn-ghost btn-sm">
+                                        <?php 
+                                        $url = htmlspecialchars($d['ruta_url']);
+                                        // Si la ruta es relativa y empieza con 'docs/', nos aseguramos de que apunte al directorio correcto
+                                        if (strpos($d['ruta_url'], 'docs/') === 0) {
+                                            $url = '../PHP/' . $url;
+                                        }
+                                        ?>
+                                        <a href="<?= $url ?>" target="_blank" class="btn btn-ghost btn-sm">
                                             <i class="fa-solid fa-file-pdf"></i> Veure
                                         </a>
                                     </td>
@@ -502,29 +632,44 @@ $conn->close();
                 <?php endif; ?>
             </div>
         </div>
-    </div>
 
-    <script>
-        function showTab(e, tabId) {
-            if (e) e.preventDefault();
-            
-            // Amagar tots els continguts
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // Desactivar tots els botons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // Mostrar el seleccionat
-            const targetTab = document.getElementById(tabId);
-            if (targetTab) targetTab.classList.add('active');
-            
-            // Activar el botó clicat
-            if (e && e.currentTarget) {
-                e.currentTarget.classList.add('active');
-            }
-        }
-    </script>
+        <!-- TAB CONFIGURACIÓ -->
+        <div id="config" class="tab-content">
+            <div class="info-grid">
+                <div class="info-group">
+                    <h3><i class="fa-solid fa-lock"></i> Seguretat</h3>
+                    <p class="page-subtitle">Aquí pots canviar la teva contrasenya d'accés al sistema.</p>
+                    <form action="perfil_canviar_clau.php" method="post" class="mt-2">
+                        <div class="data-row">
+                            <label class="data-label">Contrasenya actual</label>
+                            <input type="password" name="clau_actual" required>
+                        </div>
+                        <div class="data-row">
+                            <label class="data-label">Nova contrasenya</label>
+                            <input type="password" name="clau_nova" required>
+                        </div>
+                        <div class="data-row">
+                            <label class="data-label">Repeteix la nova contrasenya</label>
+                            <input type="password" name="clau_nova_rep" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Actualitzar contrasenya</button>
+                    </form>
+                </div>
+
+                <div class="info-group">
+                    <h3><i class="fa-solid fa-circle-info"></i> Preferències</h3>
+                    <p class="page-subtitle">Opcions de visualització del perfil.</p>
+                    <div class="data-row">
+                        <span class="data-label">Idioma del sistema</span>
+                        <span class="data-value">Català (per defecte)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Notificacions per email</span>
+                        <span class="data-value"><?= $treballador['email'] ? 'Actives' : 'No configurat' ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

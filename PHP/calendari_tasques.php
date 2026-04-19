@@ -1,7 +1,10 @@
 <?php
-$conn = new mysqli("localhost","root","","web");
-if ($conn->connect_error) die("Error BD");
-$conn->set_charset("utf8");
+session_start();
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
+
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
 
 // ================== MES Y AÑO ==================
 $mes = $_GET['mes'] ?? date('m');
@@ -12,14 +15,26 @@ $dies_mes = date('t', strtotime($primer_dia));
 $dia_setmana = date('N', strtotime($primer_dia));
 
 // ================== CARGAR TAREAS ==================
-$tascas = $conn->query("
-SELECT id_tasca, nom_tasca, data_inici, data_final, estat,
-       data_inici_real, data_fi_real, notes, foto
-FROM tasca
-WHERE
-    COALESCE(data_inici_real, data_inici) <= LAST_DAY('$primer_dia')
-AND COALESCE(data_fi_real, data_final, data_inici_real, data_inici) >= '$primer_dia'
-");
+if ($rol_usuari === 'admin') {
+    $sql = "SELECT id_tasca, nom_tasca, data_inici, data_final, estat,
+                   data_inici_real, data_fi_real, notes, foto
+            FROM tasca
+            WHERE
+                COALESCE(data_inici_real, data_inici) <= LAST_DAY('$primer_dia')
+            AND COALESCE(data_fi_real, data_final, data_inici_real, data_inici) >= '$primer_dia'";
+} else {
+    $sql = "SELECT t.id_tasca, t.nom_tasca, t.data_inici, t.data_final, t.estat,
+                   t.data_inici_real, t.data_fi_real, t.notes, t.foto
+            FROM tasca t
+            JOIN treballador_tasca tt ON t.id_tasca = tt.id_tasca
+            WHERE tt.id_treballador = $id_treballador
+            AND (
+                COALESCE(t.data_inici_real, t.data_inici) <= LAST_DAY('$primer_dia')
+                AND COALESCE(t.data_fi_real, t.data_final, t.data_inici_real, t.data_inici) >= '$primer_dia'
+            )";
+}
+
+$tascas = $conn->query($sql);
 
 if (!$tascas) die("Error SQL: ".$conn->error);
 

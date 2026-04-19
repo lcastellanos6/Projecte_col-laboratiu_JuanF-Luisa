@@ -1,13 +1,24 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "web");
-if ($conn->connect_error) die("Error BD");
+session_start();
+require_once __DIR__ . '/db.php';
+$conn = db_connect();
 
-$res = $conn->query("
-    SELECT a.*, t.nom_complet
-    FROM absencia a
-    JOIN treballador t ON t.id_treballador = a.id_treballador
-    ORDER BY a.data_inici
-");
+$id_treballador = $_SESSION['id_treballador'] ?? 0;
+$rol_usuari = $_SESSION['rol'] ?? 'usuari';
+
+if ($rol_usuari === 'admin') {
+    $sql = "SELECT a.*, t.nom_complet
+            FROM absencia a
+            JOIN treballador t ON t.id_treballador = a.id_treballador
+            ORDER BY a.data_inici";
+} else {
+    $sql = "SELECT a.*, t.nom_complet
+            FROM absencia a
+            JOIN treballador t ON t.id_treballador = a.id_treballador
+            WHERE a.id_treballador = $id_treballador
+            ORDER BY a.data_inici";
+}
+$res = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="ca">
