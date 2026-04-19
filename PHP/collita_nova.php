@@ -19,10 +19,10 @@ $plantacions = $conn->query("
 $operaris = $conn->query("SELECT id_operari, nom FROM operari ORDER BY nom");
 
 // EQUIPS
-$equips = $conn->query("SELECT id_equip, nom FROM equip ORDER BY nom");
+$equips = $conn->query("SELECT id_equip, tipus FROM equip ORDER BY tipus");
 
 // ESTATS FENOLÒGICS
-$estats = $conn->query("SELECT id_estat, nom_estat FROM estat_fenologic ORDER BY id_estat");
+$estats = $conn->query("SELECT id_estat, nom FROM estat_fenologic ORDER BY id_estat");
 
 // CONSULTA COLLITES
 $collites = $conn->query("
@@ -100,7 +100,7 @@ th{background:#eee}
 <select name="id_equip">
   <option value="">-- Sense assignar --</option>
   <?php if ($equips): while($e = $equips->fetch_assoc()): ?>
-    <option value="<?= (int)$e['id_equip'] ?>"><?= htmlspecialchars($e['nom'] ?? '') ?></option>
+    <option value="<?= (int)$e['id_equip'] ?>"><?= htmlspecialchars($e['tipus'] ?? '') ?></option>
   <?php endwhile; endif; ?>
 </select>
 
@@ -124,7 +124,7 @@ th{background:#eee}
 <select name="id_estat">
   <option value="">-- No indicat --</option>
   <?php if ($estats): while($es = $estats->fetch_assoc()): ?>
-    <option value="<?= (int)$es['id_estat'] ?>"><?= htmlspecialchars($es['nom_estat'] ?? '') ?></option>
+    <option value="<?= (int)$es['id_estat'] ?>"><?= htmlspecialchars($es['nom'] ?? '') ?></option>
   <?php endwhile; endif; ?>
 </select>
 

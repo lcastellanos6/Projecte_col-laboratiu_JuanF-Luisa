@@ -22,7 +22,7 @@ if ($res) {
 
 $sql = "SELECT e.id_especie, e.nom_comu AS especie_nom_comu, e.nom_cientific AS especie_nom_cientific,
                v.id_varietat, v.nom_comu AS varietat_nom_comu, v.nom_cientific AS varietat_nom_cientific,
-               v.productivitat_mitjana, v.foto_url
+               v.productivitat_mitjana
         FROM especie e
         LEFT JOIN varietat v ON v.id_especie = e.id_especie";
 

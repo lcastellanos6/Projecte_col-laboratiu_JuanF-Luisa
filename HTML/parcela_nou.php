@@ -83,6 +83,29 @@ function selected_multi($key, $value) {
         <label>Superfície (ha):</label>
         <input type="number" step="0.01" name="superficie" id="superficie" value="<?= old('superficie') ?>">
 
+        <label>Pendent (%):</label>
+        <input type="number" step="0.01" name="pendent" value="<?= old('pendent') ?>">
+
+        <label>Orientació:</label>
+        <select name="orientacio">
+          <option value="">Selecciona orientació...</option>
+          <?php
+            $orientacions = ['N', 'S', 'E', 'O', 'NE', 'NO', 'SE', 'SO'];
+            foreach ($orientacions as $o) {
+              echo "<option value='$o' ".selected('orientacio', $o).">$o</option>";
+            }
+          ?>
+        </select>
+
+        <label>Informació edàfica:</label>
+        <textarea name="edafo"><?= old('edafo') ?></textarea>
+
+        <label>Documentació adicional:</label>
+        <textarea name="documentacio"><?= old('documentacio') ?></textarea>
+
+        <label>Fotografia:</label>
+        <input type="file" name="foto" accept="image/*">
+
         <input type="hidden" name="geometria" id="geometria" value="<?= old('geometria') ?>">
         <input type="hidden" name="geometria_kml" id="geometria_kml" value="<?= old('geometria_kml') ?>">
 

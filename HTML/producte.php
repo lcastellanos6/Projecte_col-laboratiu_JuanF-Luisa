@@ -1,0 +1,80 @@
+<?php
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
+    die("Accés denegat.");
+}
+?>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Producte</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+    <div class="mb-2">
+        <a href="javascript:history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i> Tornar
+        </a>
+    </div>
+
+<div class="page-header">
+  <h1>Registrar nou producte</h1>
+</div>
+
+<div class="panel">
+<form action="../PHP/guardar_producte.php" method="post">
+
+    <label for="tipus">Tipus de producte:</label>
+    <select name="tipus" id="tipus" required>
+        <option value="Fitosanitari">Fitosanitari</option>
+        <option value="Fertilitzant">Fertilitzant</option>
+    </select>
+
+    <label for="nom_comercial">Nom comercial:</label>
+    <input type="text" name="nom_comercial" required>
+
+    <label for="materia_activa">Matèria activa:</label>
+    <input type="text" name="materia_activa">
+
+    <label for="concentracio">Concentració:</label>
+    <input type="text" name="concentracio">
+
+    <label for="espectre_accio">Espectre d'acció:</label>
+    <textarea name="espectre_accio"></textarea>
+
+    <label for="cultius_autoritzats">Cultius autoritzats:</label>
+    <textarea name="cultius_autoritzats"></textarea>
+
+    <label for="dosi_recomendada">Dosi recomanada:</label>
+    <input type="text" name="dosi_recomendada">
+
+    <label for="dosi_maxima">Dosi màxima:</label>
+    <input type="text" name="dosi_maxima">
+
+    <label for="termini_seguretat_dies">Termini de seguretat (dies):</label>
+    <input type="number" name="termini_seguretat_dies">
+
+    <label for="classificacio_toxicologica">Classificació toxicològica:</label>
+    <input type="text" name="classificacio_toxicologica">
+
+    <label for="restriccions_usu">Restriccions d’ús:</label>
+    <textarea name="restriccions_usu"></textarea>
+
+    <label for="compatible_integrada">Compatible amb gestió integrada?</label>
+    <select name="compatible_integrada">
+        <option value="1">Sí</option>
+        <option value="0">No</option>
+    </select>
+
+    <label for="stock_minim">Stock mínim:</label>
+    <input type="number" step="0.001" name="stock_minim" value="0.000" min="0">
+
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Producte</button>
+</form>
+</div>
+
+</div>
+</body>
+</html>

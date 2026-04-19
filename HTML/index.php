@@ -10,8 +10,17 @@ if (isset($_SESSION['usuari'])) {
 $personalAlertSummary = null;
 if (isset($_SESSION['usuari'])) {
     require_once __DIR__ . '/../PHP/personal_alerts.php';
-    $personalAlertSummary = get_personal_alert_summary(30);
+    $personalAlertSummary = get_personal_alert_summary(60);
 }
+
+$tecnicaAlertSummary = null;
+if (isset($_SESSION['usuari'])) {
+    require_once __DIR__ . '/../PHP/tecnica_alerts.php';
+    $tecnicaAlertSummary = get_tecnica_alert_summary();
+}
+
+$nom_usuari = $_SESSION['usuari'] ?? null;
+$rol_usuari = $_SESSION['rol'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -175,36 +184,42 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
 
         <div class="hero-inline-actions">
-          <?php if (isset($_SESSION['usuari'])): ?>
-            <div class="hero-session-info">
-              <p><?= htmlspecialchars($_SESSION['usuari']) ?></p>
-              <small><?= date('d/m/Y') ?></small>
+          <?php if ($nom_usuari): ?>
+            <span style="color: white; margin-right: 15px; font-weight: 500;">
+              Hola, <?= htmlspecialchars($nom_usuari) ?>
+            </span>
+
+            <div class="flex gap-1">
+              <?php if (is_array($stockAlertSummary) && !empty($stockAlertSummary['available'])): ?>
+                <?php $count = (int)($stockAlertSummary['count'] ?? 0); ?>
+                <a class="btn <?= $count > 0 ? 'btn-primary' : 'btn-ghost' ?>" href="javascript:void(0)" onclick="openPage('../PHP/notificacions_stock.php')">
+                  Estoc (<?= $count ?>)
+                </a>
+              <?php endif; ?>
+
+              <?php if (is_array($personalAlertSummary) && !empty($personalAlertSummary['available'])): ?>
+                <?php $count = (int)($personalAlertSummary['count'] ?? 0); ?>
+                <a class="btn <?= $count > 0 ? 'btn-primary' : 'btn-ghost' ?>" href="javascript:void(0)" onclick="openPage('../PHP/notificacions_personal.php')">
+                  Personal (<?= $count ?>)
+                </a>
+              <?php endif; ?>
+
+              <?php if (is_array($tecnicaAlertSummary) && !empty($tecnicaAlertSummary['available'])): ?>
+                <?php $count = (int)($tecnicaAlertSummary['count'] ?? 0); ?>
+                <a class="btn <?= $count > 0 ? 'btn-primary' : 'btn-ghost' ?>" href="javascript:void(0)" onclick="openPage('../PHP/notificacions_tecniques.php')">
+                  Tècniques (<?= $count ?>)
+                </a>
+              <?php endif; ?>
             </div>
-            <?php if (is_array($stockAlertSummary) && !empty($stockAlertSummary['available'])): ?>
-              <?php if ((int)($stockAlertSummary['count'] ?? 0) > 0): ?>
-                <a class="btn btn-primary" href="../PHP/notificacions_stock.php" title="Productes amb stock baix">
-                  Alertes estoc (<?php echo (int) $stockAlertSummary['count']; ?>)
-                </a>
-              <?php else: ?>
-                <a class="btn btn-ghost" href="../PHP/notificacions_stock.php" title="No hi ha alertes d'estoc">
-                  Alertes estoc (0)
-                </a>
-              <?php endif; ?>
-            <?php endif; ?>
-            <?php if (is_array($personalAlertSummary) && !empty($personalAlertSummary['available'])): ?>
-              <?php if ((int)($personalAlertSummary['count'] ?? 0) > 0): ?>
-                <a class="btn btn-primary" href="../PHP/notificacions_personal.php" title="Alertes de personal">
-                  Alertes personal (<?php echo (int) $personalAlertSummary['count']; ?>)
-                </a>
-              <?php else: ?>
-                <a class="btn btn-ghost" href="../PHP/notificacions_personal.php" title="Alertes de personal">
-                  Alertes personal (0)
-                </a>
-              <?php endif; ?>
-            <?php endif; ?>
-            <a class="btn btn-ghost" href="logout.php">Tancar sessió</a>
+
+            <div class="flex gap-1 ml-2">
+              <a href="javascript:void(0)" onclick="openPage('../PHP/perfil_treballador.php')" class="btn btn-ghost btn-sm" style="color: white; border-color: rgba(255,255,255,0.3);">
+                El meu perfil
+              </a>
+              <a href="logout.php" class="btn btn-ghost btn-sm" style="color: white; border-color: rgba(255,255,255,0.3);">Sortir</a>
+            </div>
           <?php else: ?>
-            <a class="login-cta" href="login.html">Inicia sessió</a>
+            <a class="login-cta" href="login.php">Inicia sessió</a>
           <?php endif; ?>
         </div>
       </div>
@@ -228,12 +243,17 @@ document.addEventListener('DOMContentLoaded', function () {
             <button onclick="openPage('../PHP/planificacio_explotacio.php')" data-url="../PHP/planificacio_explotacio.php">Planificació i estimacions</button>
             <button onclick="openPage('../PHP/mapa_tematic_parceles.php')" data-url="../PHP/mapa_tematic_parceles.php">Mapa temàtic d'estat</button>
             <button onclick="openPage('../PHP/consulta_parcela_sector.php')" data-url="../PHP/consulta_parcela_sector.php">Parcel·les i sectors</button>
+            <button onclick="openPage('parcela_nou.php')" data-url="parcela_nou.php">Nova parcel·la</button>
+            <button onclick="openPage('sector_nou.php')" data-url="sector_nou.php">Nou sector</button>
+            <button onclick="openPage('especie.html')" data-url="especie.html">Nova espècie</button>
+            <button onclick="openPage('varietat.php')" data-url="varietat.php">Nova varietat</button>
             <button onclick="openPage('../PHP/consulta_cultius_varietats.php')" data-url="../PHP/consulta_cultius_varietats.php">Cultius i varietats</button>
             <button onclick="openPage('../PHP/comparativa_varietats.php')" data-url="../PHP/comparativa_varietats.php">Comparativa parcel·les i varietats</button>
             <button onclick="openPage('../PHP/infraestructura.php')" data-url="../PHP/infraestructura.php">Infraestructura</button>
-            <button onclick="openPage('plantacio.html')" data-url="plantacio.html">Plantació</button>
-            <button onclick="openPage('fila.html')" data-url="fila.html">Files</button>
-            <button onclick="openPage('previsio_collita.html')" data-url="previsio_collita.html">Previsió de collita</button>
+            <button onclick="openPage('../PHP/consulta_sol.php')" data-url="../PHP/consulta_sol.php">Consulta de sòls</button>
+            <button onclick="openPage('plantacio.php')" data-url="plantacio.php">Nova plantació</button>
+            <button onclick="openPage('fila.php')" data-url="fila.php">Nova fila</button>
+            <button onclick="openPage('previsio_collita.php')" data-url="previsio_collita.php">Previsió de collita</button>
           </div>
         </div>
 
@@ -251,18 +271,28 @@ document.addEventListener('DOMContentLoaded', function () {
             <button onclick="openPage('aplicacio.php')" data-url="aplicacio.php">Nova aplicació</button>
             <button onclick="openPage('../PHP/consulta_productes.php')" data-url="../PHP/consulta_productes.php">Consulta de productes</button>
             <button onclick="openPage('../PHP/notificacions_stock.php')" data-url="../PHP/notificacions_stock.php">Alertes</button>
-            <button onclick="openPage('producte.html')" data-url="producte.html">Nou producte</button>
-            <button onclick="openPage('magatzem.html')" data-url="magatzem.html">Nou magatzem</button>
+            <button onclick="openPage('producte.php')" data-url="producte.php">Nou producte</button>
+            <button onclick="openPage('magatzem.php')" data-url="magatzem.php">Nou magatzem</button>
             <button onclick="openPage('../PHP/tasca.php')" data-url="../PHP/tasca.php">Tasques</button>
             <button onclick="openPage('../PHP/calendari_tasques.php')" data-url="../PHP/calendari_tasques.php">Calendari de tasques</button>
             <button onclick="openPage('seguiment.php')" data-url="seguiment.php">Nou seguiment</button>
             <button onclick="openPage('registre.php')" data-url="registre.php">Nou registre</button>
             <button onclick="openPage('../PHP/collita_nova.php')" data-url="../PHP/collita_nova.php">Collita</button>
             <button onclick="openPage('../PHP/produccio.php')" data-url="../PHP/produccio.php">Producció de collita</button>
+            <button onclick="openPage('../PHP/consulta_qualitat.php')" data-url="../PHP/consulta_qualitat.php">Llistat controls qualitat</button>
             <button onclick="openPage('lot_produccio.php')" data-url="lot_produccio.php">Lot de producció</button>
             <button onclick="openPage('control_qualitat.php')" data-url="control_qualitat.php">Nou control de qualitat</button>
-            <button onclick="openPage('estat_fenologic.html')" data-url="estat_fenologic.html">Nou estat fenològic</button>
+            <button onclick="openPage('estat_fenologic.php')" data-url="estat_fenologic.php">Nou estat fenològic</button>
             <button onclick="openPage('../PHP/mapa_calor_parceles.php')" data-url="../PHP/mapa_calor_parceles.php">Mapa de calor</button>
+            <div class="menu-subheader">Anàlisi i Evolució</div>
+            <button onclick="openPage('../PHP/evolucio_produccio.php')" data-url="../PHP/evolucio_produccio.php">Evolució producció</button>
+            <button onclick="openPage('../PHP/evolucio_vendes.php')" data-url="../PHP/evolucio_vendes.php">Evolució vendes</button>
+            <button onclick="openPage('analisi.php')" data-url="analisi.php">Anàlisi agronòmic</button>
+            <button onclick="openPage('monitoratge_captures.php')" data-url="monitoratge_captures.php">Monitoratge de captures</button>
+            <button onclick="openPage('trampa.php')" data-url="trampa.php">Gestionar trampes</button>
+            <button onclick="openPage('calculadora_dosi.php')" data-url="calculadora_dosi.php">Calculadora de dosis</button>
+            <button onclick="openPage('cost_explotacio.php')" data-url="cost_explotacio.php">Costos d'explotació</button>
+            <button onclick="openPage('sensor_dades.php')" data-url="sensor_dades.php">Dades de sensors</button>
             <div class="menu-subheader">Detall tècnic</div>
             <button onclick="openPage('aplicacio_productes.php')" data-url="aplicacio_productes.php">Aplicació de productes</button>
             <button onclick="openPage('pla_producte.php')" data-url="pla_producte.php">Pla de producte</button>
@@ -273,24 +303,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="menu-section">
           <button class="menu-section-header" type="button">
+            <span class="menu-title"><span class="menu-icon"><i class="fa-solid fa-cart-flatbed" aria-hidden="true"></i></span><span class="menu-label">Comandes i Clients</span></span>
+            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="menu-section-body">
+            <button onclick="openPage('../PHP/consulta_comandes.php')" data-url="../PHP/consulta_comandes.php">Llistat de comandes</button>
+            <button onclick="openPage('comanda.php')" data-url="comanda.php">Nova comanda</button>
+            <button onclick="openPage('client.php')" data-url="client.php">Gestionar clients</button>
+            <button onclick="openPage('lot_produccio.php')" data-url="lot_produccio.php">Lots de producció</button>
+          </div>
+        </div>
+
+        <div class="menu-section">
+          <button class="menu-section-header" type="button">
             <span class="menu-title"><span class="menu-icon"><i class="fa-solid fa-people-group" aria-hidden="true"></i></span><span class="menu-label">Treballadors</span></span>
             <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
           </button>
           <div class="menu-section-body">
-            <button onclick="openPage('treballador.html')" data-url="treballador.html">Treballadors</button>
-            <button onclick="openPage('operari.html')" data-url="operari.html">Operari</button>
-            <button onclick="openPage('maquinaria.html')" data-url="maquinaria.html">Maquinària</button>
-            <button onclick="openPage('contracte.html')" data-url="contracte.html">Contractes</button>
-            <button onclick="openPage('absencia.php')" data-url="absencia.php">Absències</button>
+            <button onclick="openPage('../PHP/consulta_treballadors.php')" data-url="../PHP/consulta_treballadors.php">Llistat de treballadors</button>
+            <button onclick="openPage('../PHP/consulta_contractes.php')" data-url="../PHP/consulta_contractes.php">Llistat de contractes</button>
+            <button onclick="openPage('../PHP/consulta_absencies.php')" data-url="../PHP/consulta_absencies.php">Llistat d'absències</button>
+            <button onclick="openPage('../PHP/consulta_epis.php')" data-url="../PHP/consulta_epis.php">Llistat d'EPIs</button>
+            <button onclick="openPage('treballador.php')" data-url="treballador.php">Nou treballador</button>
+            <button onclick="openPage('operari.php')" data-url="operari.php">Nou operari</button>
+            <button onclick="openPage('maquinaria.php')" data-url="maquinaria.php">Nova maquinaria</button>
+            <button onclick="openPage('manteniment_maquinaria.php')" data-url="manteniment_maquinaria.php">Manteniment maquinaria</button>
+            <button onclick="openPage('contracte.php')" data-url="contracte.php">Nou contracte</button>
+            <button onclick="openPage('absencia.php')" data-url="absencia.php">Nova absència</button>
             <button onclick="openPage('../PHP/notificacions_personal.php')" data-url="../PHP/notificacions_personal.php">Alertes personal</button>
-            <button onclick="openPage('documentacio.html')" data-url="documentacio.html">Documentació</button>
-            <button onclick="openPage('departament.html')" data-url="departament.html">Departaments</button>
-            <button onclick="openPage('equip.html')" data-url="equip.html">Equips</button>
-            <button onclick="openPage('membres_equip.html')" data-url="membres_equip.html">Membres de l'equip</button>
-            <button onclick="openPage('epis.html')" data-url="epis.html">EPIs</button>
-            <button onclick="openPage('lliurament_epis.html')" data-url="lliurament_epis.html">Lliurament d'EPIs</button>
-            <button onclick="openPage('horari.html')" data-url="horari.html">Horaris model</button>
-            <button onclick="openPage('calendari.html')" data-url="calendari.html">Calendaris model</button>
+            <button onclick="openPage('documentacio.php')" data-url="documentacio.php">Documentació</button>
+            <button onclick="openPage('departament.php')" data-url="departament.php">Departaments</button>
+            <button onclick="openPage('equip.php')" data-url="equip.php">Equips</button>
+            <button onclick="openPage('membres_equip.php')" data-url="membres_equip.php">Membres de l'equip</button>
+            <button onclick="openPage('epis.php')" data-url="epis.php">EPIs (Configuració)</button>
+            <button onclick="openPage('lliurament_epis.php')" data-url="lliurament_epis.php">Lliurament d'EPIs</button>
+            <button onclick="openPage('horari.php')" data-url="horari.php">Horaris model</button>
+            <button onclick="openPage('calendari.php')" data-url="calendari.php">Calendaris model</button>
           </div>
         </div>
 
@@ -313,14 +361,19 @@ document.addEventListener('DOMContentLoaded', function () {
             <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
           </button>
           <div class="menu-section-body">
-            <button onclick="openPage('login.html')" data-url="login.html">Usuaris</button>
+            <?php if ($rol_usuari === 'admin'): ?>
+              <button onclick="openPage('../PHP/consulta_usuaris.php')" data-url="../PHP/consulta_usuaris.php">Gestió d'usuaris</button>
+              <button onclick="openPage('../PHP/usuari_nou.php')" data-url="../PHP/usuari_nou.php">Nou usuari</button>
+            <?php endif; ?>
+            <button onclick="openPage('../PHP/perfil_treballador.php')" data-url="../PHP/perfil_treballador.php">El meu perfil</button>
+            <button onclick="openPage('login.html')" data-url="login.html">Canviar d'usuari</button>
           </div>
         </div>
       </div>
     </aside>
 
     <div class="app-content">
-      <iframe id="contentFrame" src="../PHP/consulta_parcela_sector.php" title="Àrea de contingut"></iframe>
+      <iframe id="contentFrame" src="../PHP/dashboard.php" title="Àrea de contingut"></iframe>
     </div>
   </div>
 </div>

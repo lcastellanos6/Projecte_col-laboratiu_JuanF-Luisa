@@ -10,7 +10,7 @@ function ensure_session_started(): void
 
 function redirect_to_login(): void
 {
-    header('Location: ../HTML/login.html');
+    header('Location: ../HTML/login.php');
     exit;
 }
 
@@ -43,9 +43,12 @@ CREATE TABLE IF NOT EXISTS `usuari` (
   `contrasenya_hash` varchar(255) NOT NULL,
   `rol` enum('admin','usuari') NOT NULL DEFAULT 'usuari',
   `actiu` tinyint(1) NOT NULL DEFAULT 1,
+  `id_treballador` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_usuari`),
-  UNIQUE KEY `uq_usuari_usuari` (`usuari`)
+  UNIQUE KEY `uq_usuari_usuari` (`usuari`),
+  KEY `fk_usuari_treballador` (`id_treballador`),
+  CONSTRAINT `fk_usuari_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 ";
     $ok = (bool)$conn->query($sql);

@@ -1,0 +1,42 @@
+<?php
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
+    die("Accés denegat.");
+}
+?>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Afegir Operari</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+    <div class="mb-2">
+        <a href="javascript:history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i> Tornar
+        </a>
+    </div>
+
+<div class="page-header">
+  <h2>Afegir Operari</h2>
+</div>
+
+<div class="panel">
+<form action="../PHP/guardar_operari.php" method="post">
+    <label>Nom complet *</label>
+    <input type="text" name="nom" required>
+
+    <label>Carnet d'aplicador</label>
+    <input type="text" name="carnet_aplicador">
+
+    <label>DNI del treballador</label>
+    <input type="text" name="dni_treballador">
+
+    <button type="submit" class="btn btn-primary btn-full mt-2">Afegir Operari</button>
+</form>
+</div>
+</div>
+</body>
+</html>

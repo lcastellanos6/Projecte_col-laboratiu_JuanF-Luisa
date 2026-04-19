@@ -1,0 +1,51 @@
+<?php
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
+    die("Accés denegat.");
+}
+?>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Tipus d'EPI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+    <div class="mb-2">
+        <a href="javascript:history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i> Tornar
+        </a>
+    </div>
+
+<div class="page-header">
+  <h2>Registrar Tipus d'EPI</h2>
+</div>
+
+<div class="panel">
+<form action="../PHP/tipus_epi.php" method="POST">
+
+    <label for="nom">Nom del tipus d'EPI</label>
+    <input type="text" name="nom" required>
+
+    <label for="descripcio">Descripció (opcional)</label>
+    <textarea name="descripcio"></textarea>
+
+    <label for="stock_inicial">Stock inicial</label>
+    <input type="number" name="stock_inicial" value="0" min="0">
+
+    <label for="stock_actual">Stock actual</label>
+    <input type="number" name="stock_actual" value="0" min="0">
+
+    <label for="stock_minim">Stock mínim</label>
+    <input type="number" name="stock_minim" value="0" min="0">
+
+    <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Tipus d'EPI</button>
+
+</form>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<?php
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
+    die("Accés denegat.");
+}
+?>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Afegir Client</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="page">
+    <div class="mb-2">
+        <a href="javascript:history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i> Tornar
+        </a>
+    </div>
+  <div class="page-header">
+    <h1>Registrar client</h1>
+    <p class="page-subtitle">Dades bàsiques de contacte i facturació.</p>
+  </div>
+
+  <div class="panel">
+    <form action="../PHP/guardar_client.php" method="post">
+
+        <label>Nom *</label>
+        <input type="text" name="nom" required>
+
+        <label>Cognoms</label>
+        <input type="text" name="cognoms">
+
+        <label>NIF / CIF</label>
+        <input type="text" name="nif_cif">
+
+        <label>Telèfon</label>
+        <input type="text" name="telefon">
+
+        <label>Email</label>
+        <input type="email" name="email">
+
+        <label>Adreça</label>
+        <input type="text" name="adreca">
+
+        <label>Observacions</label>
+        <textarea name="observacions"></textarea>
+
+        <button type="submit" class="btn btn-primary btn-full mt-2">Guardar Client</button>
+
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

@@ -292,7 +292,11 @@ $conn->close();
           </tr>
           <?php foreach ($lots as $lot): ?>
           <tr>
-              <td><?php echo htmlspecialchars($lot['nom_comercial'] ?? ''); ?></td>
+              <td>
+                <a href="producte_detall.php?id_producte=<?php echo urlencode((string) ($lot['id_producte'] ?? '')); ?>" class="text-primary font-bold">
+                  <?php echo htmlspecialchars($lot['nom_comercial'] ?? ''); ?>
+                </a>
+              </td>
               <td><?php echo htmlspecialchars($lot['tipus'] ?? ''); ?></td>
               <td class="col-tecnica"><?php echo htmlspecialchars($lot['materia_activa'] ?? ''); ?></td>
               <td class="col-tecnica"><?php echo htmlspecialchars($lot['concentracio'] ?? ''); ?></td>
@@ -316,11 +320,13 @@ $conn->close();
               <td class="col-estoc"><?php echo htmlspecialchars($lot['preu_unitari'] ?? ''); ?></td>
               <td class="col-estoc">
                 <div class="table-actions">
-                  <a href="producte_detall.php?id_producte=<?php echo urlencode((string) ($lot['id_producte'] ?? '')); ?>">Detall producte</a>
+                  <a href="producte_detall.php?id_producte=<?php echo urlencode((string) ($lot['id_producte'] ?? '')); ?>" title="Veure producte"><i class="fa-solid fa-eye"></i></a>
+                  <a href="producte_editar.php?id_producte=<?php echo urlencode((string) ($lot['id_producte'] ?? '')); ?>" title="Editar producte"><i class="fa-solid fa-pen-to-square"></i></a>
                   |
-                  <a href="producte_lot_detall.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>">Detall lot</a>
+                  <a href="producte_lot_detall.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>" title="Veure lot"><i class="fa-solid fa-box"></i></a>
+                  <a href="producte_lot_editar.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>" title="Editar lot"><i class="fa-solid fa-box-open"></i></a>
                   |
-                  <a href="consulta_moviment_estoc.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>">Moviments</a>
+                  <a href="consulta_moviment_estoc.php?id_lot=<?php echo urlencode((string) ($lot['id_lot'] ?? '')); ?>" title="Moviments"><i class="fa-solid fa-truck-ramp-box"></i></a>
                 </div>
               </td>
           </tr>

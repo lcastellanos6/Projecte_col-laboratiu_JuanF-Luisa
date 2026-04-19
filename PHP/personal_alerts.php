@@ -95,6 +95,8 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
     $stmt->close();
 
     // 3) Existing alerts table (pending)
+    // Mostrem totes les pendents, independentment de la data, 
+    // ja que si és pendent s'ha de veure sempre.
     $sqlManual = "
         SELECT
           a.id_treballador,
@@ -106,7 +108,6 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         FROM alerta a
         JOIN treballador t ON t.id_treballador = a.id_treballador
         WHERE a.estat = 'Pendent'
-          AND a.data_avis <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
         ORDER BY a.data_avis ASC
     ";
     
@@ -117,13 +118,95 @@ function get_personal_alerts(int $dies = 30, ?mysqli $conn = null): array
         if ($owns) $conn->close();
         return $payload;
     }
-    $stmt->bind_param('i', $dies);
     $stmt->execute();
     $res = $stmt->get_result();
     $manuals = $res ? fetch_all_assoc($res) : [];
     $stmt->close();
 
-    $alerts = array_merge($contractes, $certs, $manuals);
+    // 4) EPIs expiring soon
+    $sqlEPIs = "
+        SELECT
+          t.id_treballador,
+          t.nom_complet,
+          'EPI' AS tipus_alerta,
+          le.data_caducitat AS data_avis,
+          CONCAT('Caducitat EPI: ', et.nom) AS titol,
+          CONCAT('Lliurament #', le.id_lliurament, ' · Quantitat: ', le.quantitat) AS detall
+        FROM epi_lliurament le
+        JOIN treballador t ON t.id_treballador = le.id_treballador
+        JOIN epi_tipus et ON et.id_epi_tipus = le.id_epi_tipus
+        WHERE le.data_caducitat IS NOT NULL
+          AND le.data_caducitat <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+        ORDER BY le.data_caducitat ASC
+    ";
+    
+    $stmt = $conn->prepare($sqlEPIs);
+    if ($stmt) {
+        $stmt->bind_param('i', $dies);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $epis = $res ? fetch_all_assoc($res) : [];
+        $stmt->close();
+    } else {
+        $epis = [];
+    }
+
+    // 5) Absències que finalitzen aviat (especialment Baixes)
+    $sqlAbsencies = "
+        SELECT
+          t.id_treballador,
+          t.nom_complet,
+          'Absència' AS tipus_alerta,
+          ab.data_fi AS data_avis,
+          CONCAT('Finalitza ', ab.tipus, ' (', ab.estat, ')') AS titol,
+          COALESCE(ab.observacions, '') AS detall
+        FROM absencia ab
+        JOIN treballador t ON t.id_treballador = ab.id_treballador
+        WHERE ab.estat != 'Tancada' AND ab.estat != 'Rebutjada'
+          AND ab.data_fi IS NOT NULL
+          AND ab.data_fi <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+        ORDER BY ab.data_fi ASC
+    ";
+    
+    $stmt = $conn->prepare($sqlAbsencies);
+    if ($stmt) {
+        $stmt->bind_param('i', $dies);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $absencies = $res ? fetch_all_assoc($res) : [];
+        $stmt->close();
+    } else {
+        $absencies = [];
+    }
+
+    // 6) Documents expiring soon
+    $sqlDocs = "
+        SELECT
+          t.id_treballador,
+          t.nom_complet,
+          'Document' AS tipus_alerta,
+          rd.data_caducitat AS data_avis,
+          CONCAT('Caducitat Document: ', rd.nom_document) AS titol,
+          COALESCE(rd.observacions, '') AS detall
+        FROM registre_document rd
+        JOIN treballador t ON t.id_treballador = rd.id_treballador
+        WHERE rd.data_caducitat IS NOT NULL
+          AND rd.data_caducitat <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+        ORDER BY rd.data_caducitat ASC
+    ";
+    
+    $stmt = $conn->prepare($sqlDocs);
+    if ($stmt) {
+        $stmt->bind_param('i', $dies);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $docs = $res ? fetch_all_assoc($res) : [];
+        $stmt->close();
+    } else {
+        $docs = [];
+    }
+
+    $alerts = array_merge($contractes, $certs, $manuals, $epis, $absencies, $docs);
 
     // Normalize for UI
     foreach ($alerts as &$a) {

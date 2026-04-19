@@ -1376,6 +1376,7 @@ DROP TABLE IF EXISTS `registre_document`;
 CREATE TABLE `registre_document` (
   `id_registre` int(11) NOT NULL AUTO_INCREMENT,
   `id_treballador` int(11) NOT NULL,
+  `tipus_document` varchar(100) DEFAULT NULL,
   `nom_document` varchar(255) DEFAULT NULL,
   `ruta_url` varchar(255) DEFAULT NULL,
   `data_emissio` date DEFAULT NULL,
@@ -1847,6 +1848,93 @@ INSERT INTO `varietat` VALUES (1,1,'Prunus persica var. platycarpa','Paraguayo',
 /*!40000 ALTER TABLE `varietat` ENABLE KEYS */;
 
 --
+-- Table structure for table `manteniment_maquinaria`
+--
+
+DROP TABLE IF EXISTS `manteniment_maquinaria`;
+CREATE TABLE `manteniment_maquinaria` (
+  `id_manteniment` int(11) NOT NULL AUTO_INCREMENT,
+  `id_equip` int(11) NOT NULL,
+  `data_manteniment` date NOT NULL,
+  `tipus` varchar(100) NOT NULL,
+  `hores_funcionament` decimal(10,2) DEFAULT NULL,
+  `descripcio` text DEFAULT NULL,
+  `cost` decimal(10,2) DEFAULT NULL,
+  `proxim_manteniment` date DEFAULT NULL,
+  PRIMARY KEY (`id_manteniment`),
+  KEY `fk_mant_equip` (`id_equip`),
+  CONSTRAINT `fk_mant_equip` FOREIGN KEY (`id_equip`) REFERENCES `equip` (`id_equip`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `trampa`
+--
+
+DROP TABLE IF EXISTS `trampa`;
+CREATE TABLE `trampa` (
+  `id_trampa` int(11) NOT NULL AUTO_INCREMENT,
+  `id_sector` int(11) NOT NULL,
+  `tipus` varchar(100) NOT NULL,
+  `model` varchar(100) DEFAULT NULL,
+  `observacions` text DEFAULT NULL,
+  PRIMARY KEY (`id_trampa`),
+  KEY `fk_trampa_sector` (`id_sector`),
+  CONSTRAINT `fk_trampa_sector` FOREIGN KEY (`id_sector`) REFERENCES `sector` (`id_sector`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `monitoratge_plaga`
+--
+
+DROP TABLE IF EXISTS `monitoratge_plaga`;
+CREATE TABLE `monitoratge_plaga` (
+  `id_monitoratge` int(11) NOT NULL AUTO_INCREMENT,
+  `id_trampa` int(11) NOT NULL,
+  `data_registre` date NOT NULL,
+  `plaga_objectiu` varchar(100) NOT NULL,
+  `quantitat_capturada` int(11) NOT NULL,
+  `observacions` text DEFAULT NULL,
+  PRIMARY KEY (`id_monitoratge`),
+  KEY `fk_mon_trampa` (`id_trampa`),
+  CONSTRAINT `fk_mon_trampa` FOREIGN KEY (`id_trampa`) REFERENCES `trampa` (`id_trampa`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `comanda`
+--
+
+DROP TABLE IF EXISTS `comanda`;
+CREATE TABLE `comanda` (
+  `id_comanda` int(11) NOT NULL AUTO_INCREMENT,
+  `id_client` int(11) NOT NULL,
+  `data_comanda` date NOT NULL,
+  `total_import` decimal(12,2) DEFAULT 0.00,
+  `estat` enum('Pendent','En procés','Enviat','Lliurat','Cancel·lat') DEFAULT 'Pendent',
+  `observacions` text DEFAULT NULL,
+  PRIMARY KEY (`id_comanda`),
+  KEY `fk_comanda_client` (`id_client`),
+  CONSTRAINT `fk_comanda_client` FOREIGN KEY (`id_client`) REFERENCES `desti_client` (`id_client`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `comanda_detall`
+--
+
+DROP TABLE IF EXISTS `comanda_detall`;
+CREATE TABLE `comanda_detall` (
+  `id_detall` int(11) NOT NULL AUTO_INCREMENT,
+  `id_comanda` int(11) NOT NULL,
+  `id_lot` int(11) NOT NULL,
+  `quantitat` decimal(12,2) NOT NULL,
+  `preu_unitari` decimal(12,2) NOT NULL,
+  PRIMARY KEY (`id_detall`),
+  KEY `fk_detall_comanda` (`id_comanda`),
+  KEY `fk_detall_lot` (`id_lot`),
+  CONSTRAINT `fk_detall_comanda` FOREIGN KEY (`id_comanda`) REFERENCES `comanda` (`id_comanda`) ON DELETE CASCADE,
+  CONSTRAINT `fk_detall_lot` FOREIGN KEY (`id_lot`) REFERENCES `lot_produccio` (`lot_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Table structure for table `usuari`
 --
 
@@ -1859,11 +1947,24 @@ CREATE TABLE `usuari` (
   `contrasenya_hash` varchar(255) NOT NULL,
   `rol` enum('admin','usuari') NOT NULL DEFAULT 'usuari',
   `actiu` tinyint(1) NOT NULL DEFAULT 1,
+  `id_treballador` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_usuari`),
-  UNIQUE KEY `uq_usuari_usuari` (`usuari`)
+  UNIQUE KEY `uq_usuari_usuari` (`usuari`),
+  KEY `fk_usuari_treballador` (`id_treballador`),
+  CONSTRAINT `fk_usuari_treballador` FOREIGN KEY (`id_treballador`) REFERENCES `treballador` (`id_treballador`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuari`
+--
+
+LOCK TABLES `usuari` WRITE;
+/*!40000 ALTER TABLE `usuari` DISABLE KEYS */;
+INSERT INTO `usuari` (usuari, contrasenya_hash, rol, actiu, id_treballador) VALUES ('admin','$2y$10$7/3.Xv9z4zZq.5v4f/Z5uO/0H6.0.0.0.0.0.0.0.0.0.0','admin',1,1);
+/*!40000 ALTER TABLE `usuari` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'web'
