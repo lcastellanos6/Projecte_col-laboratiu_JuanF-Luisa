@@ -18,6 +18,7 @@ $res = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Consulta de Lots</title>
     <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <div class="page">
@@ -33,7 +34,8 @@ $res = $conn->query($sql);
 
     <div class="panel">
         <h3 class="panel-title"><i class="fa-solid fa-list-ul"></i> Lots actius i venuts</h3>
-        <table>
+        <div class="table-scroll">
+        <table class="table">
             <thead>
                 <tr>
                     <th>Codi Lot</th>
@@ -73,6 +75,7 @@ $res = $conn->query($sql);
                 <?php endwhile; ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 </body>

@@ -146,7 +146,8 @@ canvas {
 <h1>📊 Anàlisi de Rendiments i Comparatives</h1>
 
 <h2>KPIs per Parcela</h2>
-<table>
+<div class="table-scroll">
+<table class="table">
 <tr>
     <th>Parcela</th>
     <th>Sector</th>
@@ -166,6 +167,7 @@ canvas {
 </tr>
 <?php endforeach; ?>
 </table>
+</div>
 
 <h2>Comparativa de Producció per Parcela</h2>
 <canvas id="graficaTotal" style="max-width:800px;"></canvas>

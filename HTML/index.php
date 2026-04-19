@@ -269,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <button onclick="openPage('pla_tractament.php')" data-url="pla_tractament.php">Nou pla de tractaments</button>
             <button onclick="openPage('../HTML/calendari_tractament.php')" data-url="../HTML/calendari_tractament.php">Calendari del pla</button>
             <button onclick="openPage('aplicacio.php')" data-url="aplicacio.php">Nova aplicació</button>
+            <button onclick="openPage('../PHP/consulta_aplicacions.php')" data-url="../PHP/consulta_aplicacions.php">Consulta aplicacions</button>
             <button onclick="openPage('../PHP/consulta_productes.php')" data-url="../PHP/consulta_productes.php">Consulta de productes</button>
             <button onclick="openPage('../PHP/notificacions_stock.php')" data-url="../PHP/notificacions_stock.php">Alertes</button>
             <button onclick="openPage('producte.php')" data-url="producte.php">Nou producte</button>
@@ -310,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <button onclick="openPage('../PHP/consulta_comandes.php')" data-url="../PHP/consulta_comandes.php">Llistat de comandes</button>
             <button onclick="openPage('comanda.php')" data-url="comanda.php">Nova comanda</button>
             <button onclick="openPage('client.php')" data-url="client.php">Gestionar clients</button>
-            <button onclick="openPage('lot_produccio.php')" data-url="lot_produccio.php">Lots de producció</button>
+            <button onclick="openPage('../PHP/consulta_lots.php')" data-url="../PHP/consulta_lots.php">Lots de producció</button>
           </div>
         </div>
 

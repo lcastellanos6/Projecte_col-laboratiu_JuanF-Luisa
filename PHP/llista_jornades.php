@@ -43,6 +43,7 @@ while($row = $res->fetch_assoc()) {
 <head>
 <meta charset="UTF-8">
 <title>Dashboard hores treballades per treballador</title>
+<link rel="stylesheet" href="../HTML/styles.css">
 <style>
 body { font-family: Arial,sans-serif; padding:20px; background:#f0f9f0; }
 h2 { text-align:center; color:#2f7d2f; }
@@ -59,7 +60,8 @@ tr.total { font-weight:bold; background:#dff0d8; }
 <?php foreach($totals_mes as $nom => $anys): ?>
     <?php foreach($anys as $any => $mesos): ?>
         <h3 style="color:<?= $colors[$nom] ?>;"><?= htmlspecialchars($nom) ?> - Any <?= $any ?></h3>
-        <table>
+        <div class="table-scroll">
+        <table class="table">
             <tr>
                 <th>Mes</th>
                 <th>Setmana</th>
@@ -83,6 +85,7 @@ tr.total { font-weight:bold; background:#dff0d8; }
                 </tr>
             <?php endforeach; ?>
         </table>
+        </div>
     <?php endforeach; ?>
 <?php endforeach; ?>
 

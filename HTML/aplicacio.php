@@ -22,6 +22,7 @@ $equips = $conn->query("SELECT id_equip, tipus FROM equip"); // CORREGIDO
   <div class="page-header">
     <h1>Registre d'aplicació de tractament</h1>
     <p class="page-subtitle">Desa les dades de cada aplicació.</p>
+    <p><a class="btn btn-primary" href="../PHP/consulta_aplicacions.php">Veure aplicacions</a></p>
   </div>
 
   <div class="panel">
