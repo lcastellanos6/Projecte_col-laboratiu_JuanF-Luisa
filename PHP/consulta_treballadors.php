@@ -73,6 +73,7 @@ $result = $conn->query($sql);
                 <a href="consulta_treballadors.php" class="text-primary">Netejar cerca</a>
             </div>
         <?php else: ?>
+            <div class="table-scroll">
             <table class="table">
                 <thead>
                     <tr>
@@ -131,6 +132,7 @@ $result = $conn->query($sql);
                     <?php endwhile; ?>
                 </tbody>
             </table>
+            </div>
         <?php endif; ?>
     </div>
 </div>

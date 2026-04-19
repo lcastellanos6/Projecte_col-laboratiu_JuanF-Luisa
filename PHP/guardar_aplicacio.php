@@ -56,7 +56,8 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo "<h3 style='color:green;'>✅ Aplicació guardada correctament!</h3>";
     echo "<p>ID: <b>" . $conn->insert_id . "</b></p>";
-    echo "<a href='../HTML/aplicacio.php'>🔙 Tornar</a>";
+    echo "<p><a href='consulta_aplicacions.php' style='display:inline-block;padding:10px 16px;background:#2f7d2f;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;'>Veure aplicacions</a></p>";
+    echo "<p><a href='../HTML/aplicacio.php' style='display:inline-block;padding:10px 16px;background:#e8f5e8;color:#2f4f2f;text-decoration:none;border:1px solid #c3d9c3;border-radius:6px;font-weight:600;'>🔙 Tornar</a></p>";
 } else {
 
     echo "<p style='color:red;'>❌ Error: " . $stmt->error . "</p>";

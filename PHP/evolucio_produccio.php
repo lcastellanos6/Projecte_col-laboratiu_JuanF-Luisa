@@ -117,7 +117,8 @@ canvas{background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(
 <canvas id="graficaEvolucio" style="max-width:900px;"></canvas>
 
 <h2>📋 Producció per Any</h2>
-<table>
+<div class="table-scroll">
+<table class="table">
 <tr>
     <th>Varietat</th>
     <?php foreach ($anys as $a): ?>
@@ -134,6 +135,7 @@ canvas{background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(
 </tr>
 <?php endforeach; ?>
 </table>
+</div>
 
 <script>
 new Chart(document.getElementById('graficaEvolucio'), {

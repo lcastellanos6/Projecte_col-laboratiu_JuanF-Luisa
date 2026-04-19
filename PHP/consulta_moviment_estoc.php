@@ -84,6 +84,7 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Consulta moviments d'estoc</title>
     <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <div class="page">
@@ -158,11 +159,17 @@ $conn->close();
                         <td><?php echo htmlspecialchars($row['id_aplicacio'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['observacions'] ?? ''); ?></td>
                         <td>
-                            <a href="moviment_estoc_detall.php?id_mov=<?php echo urlencode((string) ($row['id_mov'] ?? '')); ?>">Detall</a>
-                            |
-                            <a href="../HTML/moviment_lot.html?id_lot=<?php echo urlencode((string) ($row['id_lot'] ?? '')); ?>">Nou moviment per aquest lot</a>
-                            |
-                            <a href="consulta_productes.php?numero_lot=<?php echo urlencode((string) ($row['numero_lot'] ?? '')); ?>">Veure lot a consulta productes</a>
+                            <div class="table-actions">
+                                <a href="moviment_estoc_detall.php?id_mov=<?php echo urlencode((string) ($row['id_mov'] ?? '')); ?>" title="Detall">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a href="../HTML/moviment_lot.html?id_lot=<?php echo urlencode((string) ($row['id_lot'] ?? '')); ?>" title="Nou moviment per aquest lot">
+                                    <i class="fa-solid fa-plus"></i>
+                                </a>
+                                <a href="consulta_productes.php?numero_lot=<?php echo urlencode((string) ($row['numero_lot'] ?? '')); ?>" title="Veure lot a consulta productes">
+                                    <i class="fa-solid fa-box"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

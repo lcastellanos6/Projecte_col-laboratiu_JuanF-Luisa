@@ -147,6 +147,7 @@ $items = [
 
   <div class="panel mt-2">
     <h2 class="panel-title">Analisi del que falta</h2>
+    <div class="table-scroll">
     <table class="module-table">
       <thead>
       <tr>
@@ -176,6 +177,7 @@ $items = [
       <?php endforeach; ?>
       </tbody>
     </table>
+    </div>
   </div>
 </div>
 </body>

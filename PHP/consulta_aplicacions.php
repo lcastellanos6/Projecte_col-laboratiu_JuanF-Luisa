@@ -10,10 +10,39 @@ $metode = trim($_GET['metode'] ?? '');
 $data_des = trim($_GET['data_des'] ?? '');
 $data_fins = trim($_GET['data_fins'] ?? '');
 
+$plans = [];
+$operaris = [];
+$equips = [];
+
+$resPlans = $conn->query("SELECT id_pla, nom FROM pla_tractament ORDER BY nom ASC");
+if ($resPlans) {
+    while ($row = $resPlans->fetch_assoc()) {
+        $plans[] = $row;
+    }
+    $resPlans->free();
+}
+
+$resOperaris = $conn->query("SELECT id_operari, nom FROM operari ORDER BY nom ASC");
+if ($resOperaris) {
+    while ($row = $resOperaris->fetch_assoc()) {
+        $operaris[] = $row;
+    }
+    $resOperaris->free();
+}
+
+$resEquips = $conn->query("SELECT id_equip, tipus FROM equip ORDER BY tipus ASC");
+if ($resEquips) {
+    while ($row = $resEquips->fetch_assoc()) {
+        $equips[] = $row;
+    }
+    $resEquips->free();
+}
+
 $sql = "
     SELECT
         a.id_aplicacio,
         a.id_pla,
+        pt.nom AS pla_nom,
         a.data,
         a.hora_inici,
         a.hora_fi,
@@ -22,9 +51,12 @@ $sql = "
         a.id_operari,
         o.nom AS operari_nom,
         a.id_equip,
+        e.tipus AS equip_tipus,
         a.observacions
     FROM aplicacio a
+    LEFT JOIN pla_tractament pt ON pt.id_pla = a.id_pla
     LEFT JOIN operari o ON o.id_operari = a.id_operari
+    LEFT JOIN equip e ON e.id_equip = a.id_equip
 ";
 
 $conds = [];
@@ -91,6 +123,7 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Consulta aplicacions</title>
     <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 <div class="page">
@@ -101,21 +134,42 @@ $conn->close();
                 <p class="page-subtitle">Llistat d'aplicacions registrades amb filtres bàsics.</p>
             </div>
             <div class="page-header-actions">
-                <a class="btn btn-primary" href="../HTML/aplicacio.html">Nova aplicació</a>
+                <a class="btn btn-primary" href="../HTML/aplicacio.php">Nova aplicació</a>
             </div>
         </div>
     </div>
 
     <div class="panel">
         <form method="get" class="form-grid-2">
-            <label>ID Pla</label>
-            <input type="number" name="id_pla" value="<?php echo htmlspecialchars($id_pla); ?>">
+            <label>Pla</label>
+            <select name="id_pla">
+                <option value="">(Qualsevol)</option>
+                <?php foreach ($plans as $pla): ?>
+                    <option value="<?php echo (int) $pla['id_pla']; ?>" <?php echo ($id_pla !== '' && (int) $id_pla === (int) $pla['id_pla']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($pla['nom']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-            <label>ID Operari</label>
-            <input type="number" name="id_operari" value="<?php echo htmlspecialchars($id_operari); ?>">
+            <label>Operari</label>
+            <select name="id_operari">
+                <option value="">(Qualsevol)</option>
+                <?php foreach ($operaris as $operari): ?>
+                    <option value="<?php echo (int) $operari['id_operari']; ?>" <?php echo ($id_operari !== '' && (int) $id_operari === (int) $operari['id_operari']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($operari['nom']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-            <label>ID Equip</label>
-            <input type="number" name="id_equip" value="<?php echo htmlspecialchars($id_equip); ?>">
+            <label>Equip</label>
+            <select name="id_equip">
+                <option value="">(Qualsevol)</option>
+                <?php foreach ($equips as $equip): ?>
+                    <option value="<?php echo (int) $equip['id_equip']; ?>" <?php echo ($id_equip !== '' && (int) $id_equip === (int) $equip['id_equip']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($equip['tipus']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
             <label>Mètode</label>
             <select name="metode">
@@ -142,13 +196,12 @@ $conn->close();
                     <tr>
                         <th>ID Aplicació</th>
                         <th>Data</th>
-                        <th>ID Pla</th>
+                        <th>Pla</th>
                         <th>Mètode</th>
                         <th>Hora inici</th>
                         <th>Hora fi</th>
-                        <th>ID Operari</th>
                         <th>Operari</th>
-                        <th>ID Equip</th>
+                        <th>Equip</th>
                         <th>Condicions</th>
                         <th>Observacions</th>
                         <th>Accions</th>
@@ -156,31 +209,38 @@ $conn->close();
                 </thead>
                 <tbody>
                 <?php if (empty($rows)): ?>
-                    <tr><td colspan="12">No s'han trobat aplicacions.</td></tr>
+                    <tr><td colspan="11">No s'han trobat aplicacions.</td></tr>
                 <?php else: ?>
                     <?php foreach ($rows as $row): ?>
                     <tr>
                         <td><?php echo (int) $row['id_aplicacio']; ?></td>
                         <td><?php echo htmlspecialchars($row['data'] ?? ''); ?></td>
-                        <td><?php echo htmlspecialchars($row['id_pla'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($row['pla_nom'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['metode'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['hora_inici'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['hora_fi'] ?? ''); ?></td>
-                        <td><?php echo htmlspecialchars($row['id_operari'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['operari_nom'] ?? ''); ?></td>
-                        <td><?php echo htmlspecialchars($row['id_equip'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($row['equip_tipus'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['condicions_ambientals'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($row['observacions'] ?? ''); ?></td>
                         <td>
-                            <a href="aplicacio_detall.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>">Detall</a>
-                            |
-                            <a href="consulta_aplicacio_productes.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>">Veure productes aplicats</a>
-                            |
-                            <a href="../HTML/aplicacio_productes.html?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>">Afegir productes</a>
-                            |
-                            <a href="consulta_aplicacio_files.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>">Veure files tractades</a>
-                            |
-                            <a href="consulta_moviment_estoc.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>">Veure consum d'estoc</a>
+                            <div class="table-actions">
+                                <a href="aplicacio_detall.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>" title="Detall">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a href="consulta_aplicacio_productes.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>" title="Veure productes aplicats">
+                                    <i class="fa-solid fa-flask-vial"></i>
+                                </a>
+                                <a href="../HTML/aplicacio_productes.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>" title="Afegir productes">
+                                    <i class="fa-solid fa-plus"></i>
+                                </a>
+                                <a href="consulta_aplicacio_files.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>" title="Veure files tractades">
+                                    <i class="fa-solid fa-list-check"></i>
+                                </a>
+                                <a href="consulta_moviment_estoc.php?id_aplicacio=<?php echo urlencode((string) ($row['id_aplicacio'] ?? '')); ?>" title="Veure consum d'estoc">
+                                    <i class="fa-solid fa-truck-ramp-box"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

@@ -42,6 +42,7 @@ $result = $conn->query($sql);
     </div>
 
     <div class="panel">
+        <div class="table-scroll">
         <table class="table">
             <thead>
                 <tr>
@@ -85,6 +86,7 @@ $result = $conn->query($sql);
                 <?php endif; ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 </body>

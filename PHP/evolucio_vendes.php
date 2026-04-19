@@ -45,6 +45,7 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Evolució de Vendes</title>
     <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -61,7 +62,8 @@ $conn->close();
 
         <div class="panel">
             <h3 class="panel-title">Top 5 Clients (Volum de Vendes)</h3>
-            <table>
+            <div class="table-scroll">
+            <table class="table">
                 <thead>
                     <tr><th>Client</th><th>Total Invertit</th></tr>
                 </thead>
@@ -74,6 +76,7 @@ $conn->close();
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>

@@ -146,7 +146,8 @@ th{background:#eee}
 </div>
 
 <div id="taula" class="hidden">
-<table>
+<div class="table-scroll">
+<table class="table">
 <tr>
   <th>Sector</th>
   <th>Inici</th>
@@ -171,6 +172,7 @@ th{background:#eee}
 </tr>
 <?php endwhile; ?>
 </table>
+</div>
 </div>
 
 <script>
